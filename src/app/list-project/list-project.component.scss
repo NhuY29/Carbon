@@ -1,0 +1,19 @@
+[nz-button] {
+  margin-right: 8px;
+  margin-bottom: 12px;
+}
+
+.word-wrap {
+  word-wrap: break-word;
+  white-space: normal;
+}
+
+.nz-table-content table {
+  table-layout: fixed;
+}
+
+.nz-table-content td {
+  word-break: break-word;
+  white-space: normal;
+  overflow-wrap: break-word;
+}

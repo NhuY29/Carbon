@@ -1,0 +1,60 @@
+.nz-form-item {
+  margin-bottom: 16px;
+}
+
+
+.nz-form-label {
+  font-weight: 500;
+  font-size: 14px;
+  color: #595959;
+  line-height: 32px;
+}
+
+
+.nz-form-control {
+  margin-bottom: 8px;
+}
+
+
+input[nz-input],
+textarea[nz-input] {
+  width: 100%;
+  border-radius: 4px;
+  border: 1px solid #d9d9d9;
+  padding: 8px;
+}
+
+
+textarea[nz-input] {
+  resize: vertical;
+  min-height: 120px;
+}
+
+
+button[nz-button] {
+  width: 100%;
+  border-radius: 4px;
+}
+
+
+.nz-form-explain {
+  color: #f5222d;
+  font-size: 12px;
+  margin-top: 8px;
+}
+
+
+form {
+  max-width: 600px;
+  margin: 0 auto;
+  background: #ffffff;
+  padding: 24px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+
+input[disabled] {
+  background-color: #f5f5f5;
+  cursor: not-allowed;
+}

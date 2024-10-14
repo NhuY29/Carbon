@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Giấy Xác Nhận</title>
+</head>
+
+<body>
+  <div>
+    <button nz-button nzType="primary" (click)="SendexportToPDF()" style="margin-right: 20px;">
+      <span nz-icon nzType="send" nzTheme="outline"></span>Gửi Yêu cầu
+    </button>
+    <button nz-button nzType="primary" (click)="exportToPDF()">
+      <span nz-icon nzType="printer" nzTheme="outline"></span>Xuất PDF
+    </button>
+  </div>
+  <div class="container" *ngIf="project" #pdfContent>
+    <div class="header">
+      <div class="left">
+        <p class="upper"><strong>{{ sellerInfo.companyName || '________________________' }}</strong></p>
+        <p>----------o0o----------</p>
+      </div>
+      <div class="right">
+        <p><strong>CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM</strong></p>
+        <p><strong>Độc lập - Tự do - Hạnh phúc</strong></p>
+        <p>----------o0o----------</p>
+      </div>
+    </div>
+    <h1><b>ĐƠN ĐỀ NGHỊ XÁC NHẬN TÍN CHỈ CARBON, HẠN NGẠCH PHÁT THẢI NHÀ KÍNH</b></h1>
+    <p class="header_content">Kính gửi: Bộ Tài nguyên và Môi trường</p>
+
+    <div class="content">
+      <p>
+        <strong>Tên doanh nghiệp:</strong> {{ sellerInfo.companyName || '________________________' }}
+      </p>
+      <p>
+        <strong>Email:</strong> {{ sellerInfo.contactEmail || '________________________' }}
+      </p>
+      <p>
+        <strong>Địa chỉ:</strong> {{ sellerInfo.contactPerson || '________________________' }}
+      </p>
+      <p>
+        <strong>Điện thoại:</strong> {{ sellerInfo.contactPhone || '________________________' }}
+      </p>
+      <h3><b>1. Thông tin dự án</b></h3>
+      <p>- Cơ chế trao đổi, bù trừ tín chỉ carbon ứng dụng cho chương trình/dự án: {{ project.projectName }}</p>
+      <p>- Lĩnh vực hoạt động của chương trình/dự án: {{ project.field }}</p>
+      <p>- Giai đoạn nhận tín chỉ carbon (hoặc hạn ngạch phát thải nhà kính) của chương trình/dự án từ {{
+        project.projectStartDate | date:'dd/MM/yyyy' }}
+        đến {{ project.projectEndDate | date:'dd/MM/yyyy' }}</p>
+
+      <h3><b>2. Đề nghị xác nhận</b></h3>
+      <p>
+        Lượng tín chỉ carbon (hoặc hạn ngạch phát thải khí nhà kính) đề nghị xác nhận giao dịch: {{ numberOfProposals }}
+      </p>
+    </div>
+
+    <div class="sign-section">
+      <div class="sign"></div>
+      <div class="sign">
+        <p><strong>{{ getFormattedDate() }}</strong></p>
+        <p class="upper">TM.{{ sellerInfo.companyName || '________________________' }}</p>
+        <p>(Ký tên, ghi rõ họ tên và đóng dấu)</p>
+        <img class="imgSignature" *ngIf="signatureDataUrl" [src]="signatureDataUrl" alt="Chữ ký" />
+      </div>
+    </div>
+  </div>
+
+</body>
+
+</html>

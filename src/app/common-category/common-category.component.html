@@ -1,0 +1,100 @@
+<button nz-button nzType="primary" (click)="showForm = true; isEditing = false">Thêm danh mục</button>
+
+<div class="search-container">
+  <input nz-input placeholder="Tìm kiếm..." [(ngModel)]="searchTerm" (ngModelChange)="searchCategories()" />
+  <nz-select [(ngModel)]="category" nzAllowClear nzPlaceHolder="Choose" nzShowSearch
+    (ngModelChange)="searchCategories()">
+    <nz-option nzValue="TIEU_CHUAN" nzLabel="Tiêu chuẩn"></nz-option>
+    <nz-option nzValue="LOAI_HINH" nzLabel="Loại hình"></nz-option>
+    <nz-option nzValue="CHAT" nzLabel="Chất"></nz-option>
+  </nz-select>
+</div>
+<div class="overlay" *ngIf="showForm">
+  <div class="form-container">
+    <form [formGroup]="categoryForm" (ngSubmit)="onSubmit()">
+      <nz-form-item>
+        <nz-form-label [nzSpan]="6" nzRequired>Mã</nz-form-label>
+        <nz-form-control [nzSpan]="14" nzErrorTip="Please input the code!">
+          <input nz-input formControlName="code" />
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label [nzSpan]="6" nzRequired>Tên</nz-form-label>
+        <nz-form-control [nzSpan]="14" nzErrorTip="Please input the name!">
+          <input nz-input formControlName="name" />
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label [nzSpan]="6">Mô tả</nz-form-label>
+        <nz-form-control [nzSpan]="14">
+          <input nz-input formControlName="description" />
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label [nzSpan]="6" nzRequired>Loại</nz-form-label>
+        <nz-form-control [nzSpan]="14" nzErrorTip="Please select a category!">
+          <nz-select formControlName="category" (ngModelChange)="onCategoryChange($event)">
+            <nz-option *ngFor="let cat of categories" [nzValue]="cat" [nzLabel]="cat"></nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item *ngIf="isSubstancesCategory()">
+        <nz-form-label [nzSpan]="6">Đơn vị đo</nz-form-label>
+        <nz-form-control [nzSpan]="14">
+          <input nz-input formControlName="unit" placeholder="tấn" />
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item *ngIf="isSubstancesCategory()">
+        <nz-form-label [nzSpan]="6">Đơn giá quy đổi</nz-form-label>
+        <nz-form-control [nzSpan]="14">
+          <input nz-input formControlName="conversionPrice" type="number" />
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-control [nzSpan]="14" [nzOffset]="6">
+          <button nz-button nzType="primary" type="submit">
+            {{ isEditing ? 'Cập nhật danh mục' : 'Tạo danh mục' }}
+          </button>
+          <button nz-button nzType="default" (click)="showForm = false">Hủy</button>
+        </nz-form-control>
+      </nz-form-item>
+    </form>
+  </div>
+</div>
+
+<nz-table #basicTable [nzData]="filteredCategories" [nzScroll]="{ x: '1000px', y: '500px' }" [nzBordered]="true"
+  [nzPageSize]="5" [nzShowPagination]="true" ngSkipHydration>
+  <thead>
+    <tr>
+      <th nzWidth="10%">Mã</th>
+      <th nzWidth="20%">Tên</th>
+      <th nzWidth="30%">Mô tả</th>
+      <th nzWidth="10%">Loại</th>
+      <th nzWidth="10%">Đơn vị đo</th>
+      <th nzWidth="10%">Đơn giá quy đổi</th>
+      <th nzWidth="10%">Thao tác</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let category of basicTable.data">
+      <td>{{ category.code }}</td>
+      <td>{{ category.name }}</td>
+      <td>{{ category.description }}</td>
+      <td>{{ category.category }}</td>
+      <td>{{ category.unit }}</td>
+      <td>{{ category.conversionPrice }}</td>
+      <td>
+        <button nz-button nzType="primary" (click)="editCategory(category)"><span nz-icon nzType="edit"
+            nzTheme="outline"></span></button>
+        <button nz-button nzType="primary" nzDanger (click)="deleteCategory(category.id)"><span nz-icon nzType="delete"
+            nzTheme="outline"></span></button>
+      </td>
+    </tr>
+  </tbody>
+</nz-table>

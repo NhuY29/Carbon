@@ -1,0 +1,23 @@
+<div style="padding: 20px;">
+  <h2>Airdrop Funds</h2>
+  <form (ngSubmit)="airdrop()">
+    <nz-form-item>
+      <nz-form-label [nzSm]="8" [nzXs]="24" for="recipientPubkey">Recipient Public Key:</nz-form-label>
+      <nz-form-control [nzSm]="16" [nzXs]="24">
+        <input id="recipientPubkey" nz-input [(ngModel)]="recipientPubkey" name="recipientPubkey" required />
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSm]="8" [nzXs]="24" for="amount">Amount (SOL):</nz-form-label>
+      <nz-form-control [nzSm]="16" [nzXs]="24">
+        <input id="amount" nz-input type="number" [(ngModel)]="amount" name="amount" required />
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-control [nzSm]="16" [nzXs]="24">
+        <button nz-button nzType="primary" type="submit">Airdrop</button>
+      </nz-form-control>
+    </nz-form-item>
+  </form>
+  <nz-alert *ngIf="responseMessage" [nzMessage]="responseMessage" [nzType]="'info'" [nzShowIcon]="true"></nz-alert>
+</div>

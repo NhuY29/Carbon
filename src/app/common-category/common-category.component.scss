@@ -1,0 +1,74 @@
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.form-container {
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  width: 80%;
+  max-width: 600px;
+}
+
+.nx-table {
+  margin-top: 20px;
+}
+
+[nz-button] {
+  margin-right: 8px;
+  margin-bottom: 12px;
+}
+
+.word-wrap {
+  word-wrap: break-word;
+  white-space: normal;
+}
+
+.nz-table-content table {
+  table-layout: fixed;
+}
+
+.nz-table-content td {
+  word-break: break-word;
+  white-space: normal;
+  overflow-wrap: break-word;
+}
+
+.wrap-text {
+  word-wrap: break-word;
+  white-space: normal;
+}
+
+.search-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+input[nz-input],
+select,
+nz-select {
+  flex: 1;
+  min-width: 200px;
+  padding: 8px;
+
+  border-radius: 4px;
+  transition: border-color 0.3s;
+}
+
+input[nz-input]:focus,
+select:focus {
+  border-color: #40a9ff;
+  outline: none;
+}

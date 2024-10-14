@@ -1,0 +1,31 @@
+<nz-table #categoryTable [nzData]="rows" [nzBordered]="true" [nzPageSize]="5" [nzShowPagination]="true" ngSkipHydration>
+  <thead>
+    <tr>
+      <th nzWidth="5%">STT</th>
+      <th nzWidth="10%">Nguồn phát thải</th>
+      <th nzWidth="10%" *ngFor="let column of columns">{{ column.name }} - {{ column.unit }} -
+        {{column.conversionPrice}} </th>
+      <th nzWidth="10%">Tổng</th>
+    </tr>
+  </thead>
+  <tbody>
+    <ng-container *ngFor="let row of rows">
+      <ng-container *ngTemplateOutlet="recursiveTable; context: { $implicit: row, level: 0 }"></ng-container>
+      <ng-template #recursiveTable let-row let-level="level">
+        <tr [class.parent-row]="level === 0">
+          <td>{{ serialNumbers[row.id] }} </td>
+          <td>{{ row.name }}</td>
+          <td *ngFor="let column of columns"> {{ getValue(row.id, column.id) }} </td>
+          <td>{{ getRowTotal(row.id) }}</td>
+        </tr>
+        <ng-container *ngFor="let child of row.children">
+          <ng-container
+            *ngTemplateOutlet="recursiveTable; context: { $implicit: child, level: level + 1 }"></ng-container>
+        </ng-container>
+      </ng-template>
+    </ng-container>
+  </tbody>
+</nz-table>
+<div class="total-sum">
+  Tổng của tất cả: {{ getTotalSum() | number:'1.0-2' }} TC
+</div>

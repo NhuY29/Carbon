@@ -1,0 +1,146 @@
+<nz-layout>
+    <div class="container">
+        <div class="additional-info" (mouseenter)="isPopoverVisible = true" (mouseleave)="isPopoverVisible = false">
+            <nz-avatar [nzText]="username ? username.charAt(0).toUpperCase() : 'U'" nzShape="circle"></nz-avatar>
+            <span class="user-name">{{ username }}</span>
+            <div class="popover" *ngIf="isPopoverVisible">
+                <p id="popover-content">{{ walletInfo?.address || 'Đây là thông tin thêm' }}</p>
+                <button nz-button nzType="default" (click)="copyContent()">
+                    <i nz-icon [nzType]="isCopied ? 'check' : 'copy'" nzTheme="outline"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="user-info">
+            <nz-input-group>
+                <input nz-input placeholder="Tìm kiếm" *ngIf="isSearchVisible" />
+                <button nz-button nzType="default" (click)="toggleSearch()">
+                    <i nz-icon nzType="search"></i>
+                </button>
+            </nz-input-group>
+        </div>
+    </div>
+</nz-layout>
+
+<div class="sol">
+    <div class="top-div">
+        {{ (walletInfo?.balance || 0) | currency:'VND':'symbol':'1.0-0' }} VND
+    </div>
+    <div class="bottom-div">
+        <button nz-button nzType="primary" (click)="showQRCode()">
+            <i nz-icon nzType="qrcode" nzTheme="outline"></i> Nhận
+        </button>
+        <button nz-button nzType="primary" class="file-upload-btn">
+            <i nz-icon nzType="upload" nzTheme="outline"></i> Tải QR Lên
+            <input type="file" (change)="onFileSelected($event)" accept="image/*" />
+        </button>
+        <button nz-button nzType="primary" (click)="toggleScanning()">
+            <i nz-icon [nzType]="isScanning ? 'pause' : 'scan'" nzTheme="outline"></i>
+            {{ isScanning ? 'Dừng' : 'Quét QR' }}
+        </button>
+        <div class="scanner-wrapper" *ngIf="isScanning">
+            <div class="scanner-container">
+                <zxing-scanner (scanSuccess)="handleQrCodeResult($event)"></zxing-scanner>
+            </div>
+        </div>
+        <button nz-button nzType="primary" (click)="openSendForm()">
+            <i nz-icon nzType="send" nzTheme="outline"></i> Gửi
+        </button>
+        <button nz-button nzType="primary">
+            <i nz-icon nzType="retweet" nzTheme="outline"></i> Hoán Đổi
+        </button>
+        <button nz-button nzType="primary">
+            <i nz-icon nzType="money-collect" nzTheme="outline"></i> Mua
+        </button>
+    </div>
+</div>
+
+
+<nz-tabset [(nzSelectedIndex)]="selectedIndex">
+    <nz-tab nzTitle="Lịch sử Giao Dịch">
+        <app-transaction-history></app-transaction-history>
+    </nz-tab>
+    <nz-tab nzTitle="Tín Chỉ Sở Hữu">
+        <app-token></app-token>
+    </nz-tab>
+</nz-tabset>
+
+<div *ngIf="qrCodeVisible" class="qr-code-modal">
+    <div class="qr-code-content">
+        <h3>Mã QR Địa Chỉ Ví</h3>
+        <nz-qrcode [nzValue]="walletInfo?.address" [size]="200"></nz-qrcode>
+        <button nz-button nzType="default" (click)="closeQRCode()">Đóng</button>
+    </div>
+</div>
+
+<div *ngIf="SendVisible" class="send-form-overlay" (click)="closeSendForm()"></div>
+<div *ngIf="SendVisible" class="send-form-modal">
+    <button class="close-button" (click)="closeSendForm()" aria-label="Đóng">
+        &times;
+    </button>
+    <div class="account-info">
+        <h3>Tài Khoản Nguồn: {{ walletInfo?.address || 'Đây là thông tin thêm' }}</h3>
+        <h4>Chủ sở hữu: {{ username }}</h4>
+        <p>Số Dư: {{ (walletInfo?.balance || 0) | currency:'VND':'symbol':'1.0-0' }} VND</p>
+    </div>
+
+    <form [formGroup]="transactionForm" (ngSubmit)="onSubmit()">
+        <nz-form-item>
+            <nz-form-label [nzSpan]="6" nzRequired>Địa chỉ người nhận</nz-form-label>
+            <nz-form-control [nzSpan]="18">
+                <div class="input-with-button">
+                    <input nz-input formControlName="recipient" placeholder="Nhập địa chỉ ví người nhận"
+                        (input)="fetchUsernameFromPublicKey(transactionForm.get('recipient')?.value)" />
+                    <button nz-button nzType="default" (click)="openContactList()" class="contact-button" type="button">
+                        <i nz-icon nzType="contacts"></i>
+                    </button>
+                </div>
+            </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+            <nz-form-label [nzSpan]="6">Tên người nhận</nz-form-label>
+            <nz-form-control [nzSpan]="18">
+                <input nz-input [value]="recipientName" placeholder="Tên người dùng" disabled />
+            </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+            <nz-form-label [nzSpan]="6" nzRequired>Số tiền</nz-form-label>
+            <nz-form-control [nzSpan]="18" nzHasFeedback [nzValidateStatus]="transactionForm.controls['amount']">
+                <input nz-input formControlName="amount" placeholder="Nhập số tiền" type="number" />
+                <div
+                    *ngIf="transactionForm.controls['amount'].invalid && (transactionForm.controls['amount'].dirty || transactionForm.controls['amount'].touched)">
+                    <ng-container *ngIf="transactionForm.controls['amount'].errors?.['required']">
+                        Số tiền là bắt buộc.
+                    </ng-container>
+                    <ng-container *ngIf="transactionForm.controls['amount'].errors?.['min']">
+                        Số tiền phải lớn hơn hoặc bằng 1000.
+                    </ng-container>
+                    <ng-container *ngIf="transactionForm.controls['amount'].errors?.['maxBalance']">
+                        Số tiền không được vượt quá số dư hiện tại (đã trừ phí duy trì).
+                    </ng-container>
+                </div>
+            </nz-form-control>
+        </nz-form-item>
+
+
+
+        <nz-form-item>
+            <nz-form-label [nzSpan]="6">Tin nhắn</nz-form-label>
+            <nz-form-control [nzSpan]="18">
+                <textarea nz-input formControlName="message" placeholder="Nhập tin nhắn"></textarea>
+            </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+            <nz-form-control [nzSpan]="18" [nzOffset]="6">
+                <button nz-button nzType="primary" type="submit">Gửi</button>
+            </nz-form-control>
+        </nz-form-item>
+    </form>
+    <div *ngIf="isContactListVisible" class="contact-list-modal">
+        <app-contact [senderSecretKey]="secretKeyValue" (contactSelected)="onContactSelected($event)"></app-contact>
+    </div>
+
+</div>

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Giấy Xác Nhận</title>
+</head>
+
+<body>
+  <div>
+    <button nz-button nzType="primary" (click)="exportToPDF()">
+      <span nz-icon nzType="printer" nzTheme="outline"></span> Xuất PDF
+    </button>
+    <button nz-button nzType="primary" (click)="SendexportToPDF()">
+      <span nz-icon nzType="printer" nzTheme="outline"></span> Phản hồi yêu cầu
+    </button>
+  </div>
+
+  <div class="container" *ngIf="project" #pdfContent>
+    <div class="header">
+      <div class="left">
+        <p class="upper"><strong>BỘ TÀI NGUYÊN VÀ MÔI TRƯỜNG</strong></p>
+        <p>----------o0o----------</p>
+        <p>Số:.../GXN-BĐKH</p>
+      </div>
+      <div class="right">
+        <p><strong>CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM</strong></p>
+        <p><strong>Độc lập - Tự do - Hạnh phúc</strong></p>
+        <p>----------o0o----------</p>
+        <p>{{ getFormattedDate() }}</p>
+      </div>
+    </div>
+    <h1><b>GIẤY XÁC NHẬN TÍN CHỈ CARBON, HẠN NGẠCH PHÁT THẢI KHÍ NHÀ KÍNH ĐƯỢC GIAO DỊCH</b></h1>
+
+    <div class="content">
+      <p>
+        Căn cứ Nghị định số 06/2022/NĐ-CP ngày 07 tháng 01 năm 2022 của Chính phủ quy định giảm nhẹ phát thải khí nhà
+        kính và bảo vệ tầng ozon
+      </p>
+      <p>
+        Căn cứ đề nghị xác nhận tín chỉ carbon, hạn ngạch phát thải khí nhà kính được giao dịch của: {{
+        sellerInfo.companyName || '________________________' }} tại văn bản
+        số {{documentNumber}}
+      </p>
+      <p>
+        Bộ Tài nguyên và Môi trường xác nhận lượng tín chỉ carbon, hạn ngạch phát thải khí nhà kính được giao dịch như
+        sau:
+      </p>
+      <h3><b>1. Thông tin dự án</b></h3>
+      <p>- Cơ chế trao đổi, bù trừ tín chỉ carbon ứng dụng cho chương trình/dự án: {{ project.projectName }}</p>
+      <p>- Lĩnh vực hoạt động của chương trình/dự án: {{ project.field }}</p>
+      <p>- Giai đoạn nhận tín chỉ carbon (hoặc hạn ngạch phát thải nhà kính) của chương trình/dự án từ {{
+        project.projectStartDate | date:'dd/MM/yyyy' }}
+        đến {{ project.projectEndDate | date:'dd/MM/yyyy' }}</p>
+
+      <h3><b>2. Đề nghị xác nhận</b></h3>
+      <p>
+        Lượng tín chỉ carbon (hoặc hạn ngạch phát thải khí nhà kính) đề nghị xác nhận giao dịch:
+      </p>
+
+    </div>
+    <div>
+      <app-measurement-data [id]="id" (totalSumChange)="onTotalSumChange($event)"></app-measurement-data>
+    </div>
+    <div class="sign-section">
+      <div class="sign"></div>
+      <div class="sign">
+        <p class="upper"><b>BỘ TRƯỞNG</b></p>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>

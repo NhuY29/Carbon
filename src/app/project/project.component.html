@@ -1,0 +1,108 @@
+<div class="container">
+  <div class="form-container">
+    <form [formGroup]="projectForm" (ngSubmit)="onSubmit()">
+      <nz-form [formGroup]="projectForm">
+        <nz-form-item>
+          <nz-form-label [nzSpan]="6" [nzRequired]="true">Ảnh</nz-form-label>
+          <nz-form-control [nzSpan]="18">
+            <nz-upload nzListType="picture-card" [nzMultiple]="true" [nzShowUploadList]="true"
+              [nzFileList]="selectedFiles" (nzChange)="handleChange($event)" [nzDisabled]="isViewMode">
+              <span *ngIf="!isViewMode" class="upload-icon" nz-icon nzType="plus"></span>
+              <div *ngIf="!isViewMode" class="ant-upload-text">Tải lên</div>
+            </nz-upload>
+
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-label [nzSpan]="6" [nzRequired]="true">Mã dự án</nz-form-label>
+          <nz-form-control [nzSpan]="18">
+            <input nz-input formControlName="projectCode" placeholder="Enter project code" [disabled]="isViewMode" />
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-label [nzSpan]="6" [nzRequired]="true">Tên dự án</nz-form-label>
+          <nz-form-control [nzSpan]="18">
+            <input nz-input formControlName="projectName" placeholder="Nhập tên dự án" [disabled]="isViewMode" />
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-label [nzSpan]="6" [nzRequired]="true">Mô tả dự án</nz-form-label>
+          <nz-form-control [nzSpan]="18">
+            <textarea nz-input formControlName="projectDescription" placeholder="Nhập mô tả"
+              [disabled]="isViewMode"></textarea>
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-label [nzSpan]="6" [nzRequired]="true">Lĩnh vực hoạt động</nz-form-label>
+          <nz-form-control [nzSpan]="18">
+            <textarea nz-input formControlName="field" placeholder="Nhập lĩnh vực" [disabled]="isViewMode"></textarea>
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-label [nzSpan]="6" [nzRequired]="true">Trạng thái</nz-form-label>
+          <nz-form-control [nzSpan]="18">
+            <nz-select formControlName="projectStatus" placeholder="Chọn" [disabled]="isViewMode">
+              <nz-option nzValue="Đang hoạt động" nzLabel="Active"></nz-option>
+              <nz-option nzValue="Không hoạt động" nzLabel="Inactive"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-label [nzSpan]="6" [nzRequired]="true" nzFor="projectStartDate">Ngày bắt đầu</nz-form-label>
+          <nz-form-control [nzSpan]="18">
+            <input nz-input formControlName="projectStartDate" type="date" [disabled]="isViewMode" />
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-label [nzSpan]="6" [nzRequired]="true" nzFor="projectEndDate">Ngày kết thúc</nz-form-label>
+          <nz-form-control [nzSpan]="18">
+            <input nz-input formControlName="projectEndDate" type="date" [disabled]="isViewMode" />
+            <div *ngIf="projectForm.hasError('dateRangeInvalid')">
+              <p class="error">Ngày bắt đầu phải trước ngày kết thúc</p>
+            </div>
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-label [nzSpan]="6" [nzRequired]="true">Loại hình</nz-form-label>
+          <nz-form-control [nzSpan]="18">
+            <nz-select formControlName="type" placeholder="Select type" [disabled]="isViewMode">
+              <nz-option *ngFor="let category of categoriesType" [nzValue]="category.id"
+                [nzLabel]="category.name"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-label [nzSpan]="6" [nzRequired]="true">Tiêu chuẩn</nz-form-label>
+          <nz-form-control [nzSpan]="18">
+            <nz-select formControlName="standard" placeholder="Select standard" [disabled]="isViewMode">
+              <nz-option *ngFor="let category of categoriesStandard" [nzValue]="category.id"
+                [nzLabel]="category.name"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item *ngIf="!isViewMode">
+          <nz-form-control [nzSpan]="18" [nzOffset]="6">
+            <button nz-button nzType="primary" type="submit">
+              {{ isUpdateMode ? 'Update Project' : 'Add Project' }}
+            </button>
+          </nz-form-control>
+        </nz-form-item>
+      </nz-form>
+    </form>
+  </div>
+  <button nz-button nzType="default" (click)="getDirections()">Chỉ đường</button>
+  <div class="map-container">
+    <app-map [initialCoordinates]="initialCoordinates" (coordinatesChanged)="onCoordinatesChanged($event)">
+    </app-map>
+  </div>
+</div>

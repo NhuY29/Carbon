@@ -1,0 +1,138 @@
+<div class="form-overlay">
+  <form nz-form [formGroup]="validateForm" (ngSubmit)="submitForm()">
+    <div class="container">
+      <div class="wrapper">
+        <div class="close-btn" (click)="closeForm()">&#10005;</div>
+        <div class="title"><span>Đăng ký</span></div>
+
+        <nz-form-item>
+          <nz-form-label [nzSpan]="5">Tên người dùng</nz-form-label>
+          <nz-form-control nzHasFeedback [nzSpan]="12" nzErrorTip="Tên người dùng là email">
+            <input nz-input formControlName="username" />
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-label [nzSpan]="5">Mật khẩu</nz-form-label>
+          <nz-form-control nzHasFeedback [nzSpan]="12" nzErrorTip="Mật khẩu ít nhất 6 kí tự">
+            <input nz-input type="password" formControlName="password" />
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-label [nzSpan]="5">Xác nhận mật khẩu</nz-form-label>
+          <nz-form-control nzHasFeedback [nzSpan]="12" nzErrorTip="Mật khẩu không khớp">
+            <input nz-input type="password" formControlName="confirmPassword" />
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-label [nzSpan]="5">Tên</nz-form-label>
+          <nz-form-control nzHasFeedback [nzSpan]="12" nzErrorTip="Tên không để trống">
+            <input nz-input formControlName="firstname" />
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-label [nzSpan]="5">Họ</nz-form-label>
+          <nz-form-control nzHasFeedback [nzSpan]="12" nzErrorTip="Họ không để trống">
+            <input nz-input formControlName="lastname" />
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-label [nzSpan]="5">Vai trò</nz-form-label>
+          <nz-form-control nzHasFeedback [nzSpan]="12" nzErrorTip="Vai trò không để trống">
+            <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Lựa chọn vai trò" formControlName="roles">
+              <nz-option nzLabel="Tôi là người cần bán" nzValue="SELLER"></nz-option>
+              <nz-option nzLabel="Tôi là người cần mua" nzValue="BUYER"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+
+        <div *ngIf="showBuyerFields">
+          <nz-form-item>
+            <nz-form-label [nzSpan]="5">Loại người mua</nz-form-label>
+            <nz-form-control nzHasFeedback [nzSpan]="12" nzErrorTip="Không để trống">
+              <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Lựa chọn" formControlName="buyerType">
+                <nz-option nzLabel="Cá nhân" nzValue="INDIVIDUAL"></nz-option>
+                <nz-option nzLabel="Tổ chức " nzValue="ORGANIZATION"></nz-option>
+              </nz-select>
+            </nz-form-control>
+          </nz-form-item>
+
+          <nz-form-item>
+            <nz-form-label [nzSpan]="5">Họ và Tên</nz-form-label>
+            <nz-form-control nzHasFeedback [nzSpan]="12" nzErrorTip="Họ tên không để trống">
+              <input nz-input formControlName="fullName" />
+            </nz-form-control>
+          </nz-form-item>
+
+          <nz-form-item>
+            <nz-form-label [nzSpan]="5">Địa chỉ</nz-form-label>
+            <nz-form-control nzHasFeedback [nzSpan]="12" nzErrorTip="Địa chỉ không để trống">
+              <input nz-input formControlName="address" />
+            </nz-form-control>
+          </nz-form-item>
+
+          <nz-form-item>
+            <nz-form-label [nzSpan]="5">SDT</nz-form-label>
+            <nz-form-control nzHasFeedback [nzSpan]="12" nzErrorTip="SDT không để trống">
+              <input nz-input formControlName="phone" />
+            </nz-form-control>
+          </nz-form-item>
+
+          <nz-form-item>
+            <nz-form-label [nzSpan]="5">Tên tổ chức</nz-form-label>
+            <nz-form-control nzHasFeedback [nzSpan]="12">
+              <input nz-input formControlName="organizationName" />
+            </nz-form-control>
+          </nz-form-item>
+
+          <nz-form-item>
+            <nz-form-label [nzSpan]="5">Mã</nz-form-label>
+            <nz-form-control nzHasFeedback [nzSpan]="12" nzErrorTip="Mã không để trống">
+              <input nz-input formControlName="personalId" />
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+
+        <div *ngIf="showSellerFields">
+          <nz-form-item>
+            <nz-form-label [nzSpan]="5">Tên công ty</nz-form-label>
+            <nz-form-control nzHasFeedback [nzSpan]="12" nzErrorTip="Tên công ty không để trống">
+              <input nz-input formControlName="sellerCompanyName" />
+            </nz-form-control>
+          </nz-form-item>
+
+          <nz-form-item>
+            <nz-form-label [nzSpan]="5">Địa chỉ</nz-form-label>
+            <nz-form-control nzHasFeedback [nzSpan]="12" nzErrorTip="Địa chỉ không để trống">
+              <input nz-input formControlName="contactPerson" />
+            </nz-form-control>
+          </nz-form-item>
+
+          <nz-form-item>
+            <nz-form-label [nzSpan]="5">Email</nz-form-label>
+            <nz-form-control nzHasFeedback [nzSpan]="12" nzErrorTip="Email không để trống">
+              <input nz-input formControlName="contactEmail" />
+            </nz-form-control>
+          </nz-form-item>
+
+          <nz-form-item>
+            <nz-form-label [nzSpan]="5">SDT</nz-form-label>
+            <nz-form-control nzHasFeedback [nzSpan]="12" nzErrorTip="SDT không để trống">
+              <input nz-input formControlName="contactPhone" />
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+
+        <nz-form-item>
+          <nz-form-control [nzSpan]="12" [nzOffset]="5">
+            <button nz-button nzType="primary" type="submit">Xác nhận</button>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+    </div>
+  </form>
+</div>

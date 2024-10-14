@@ -1,0 +1,82 @@
+.category-manager {
+  ul {
+    list-style-type: none;
+    padding-left: 20px;
+
+    li {
+      margin-bottom: 10px;
+
+      button {
+        margin-left: 10px;
+      }
+    }
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    input,
+    textarea,
+    select {
+      padding: 8px;
+      font-size: 14px;
+    }
+
+    button {
+      width: 100px;
+      padding: 8px;
+      font-size: 14px;
+    }
+  }
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.form-container {
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  width: 80%;
+  max-width: 600px;
+}
+
+.custom-button {
+  margin-right: 10px;
+  padding: 8px 16px;
+  font-size: 14px;
+  border-radius: 4px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  text-align: center;
+  line-height: 1.5;
+
+  &:hover {
+    background-color: #40a9ff;
+    color: #fff;
+  }
+}
+
+.cancel-button {
+  background-color: #f5222d;
+  color: #fff;
+  text-align: center;
+  line-height: 1.5;
+
+  &:hover {
+    background-color: #ff4d4f;
+    color: #fff;
+  }
+}

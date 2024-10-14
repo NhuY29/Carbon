@@ -1,0 +1,27 @@
+<form [formGroup]="transactionForm" (ngSubmit)="submitTransaction()">
+  <nz-form-item>
+    <nz-form-label [nzSpan]="6">Tài khoản nguồn</nz-form-label>
+    <nz-form-control [nzSpan]="14">
+      <input nz-input formControlName="sourceAccount" />
+    </nz-form-control>
+  </nz-form-item>
+
+  <nz-form-item>
+    <nz-form-label [nzSpan]="6">Địa chỉ ví</nz-form-label>
+    <nz-form-control [nzSpan]="14">
+      <input nz-input formControlName="recipientAddress" />
+    </nz-form-control>
+  </nz-form-item>
+
+  <nz-form-item>
+    <nz-form-label [nzSpan]="6">Số tiền</nz-form-label>
+    <nz-form-control [nzSpan]="14">
+      <input nz-input type="number" formControlName="amount" />
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-control [nzSpan]="14" [nzOffset]="6">
+      <button nz-button nzType="primary" [disabled]="!transactionForm.valid">Xác nhận</button>
+    </nz-form-control>
+  </nz-form-item>
+</form>

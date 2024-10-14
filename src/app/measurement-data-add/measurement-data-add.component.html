@@ -1,0 +1,85 @@
+<form [formGroup]="measurementForm" (ngSubmit)="onSubmit()" class="measurement-form">
+  <div class="measurement-list">
+    <div formArrayName="measurements">
+      <div *ngFor="let measurement of measurements.controls; let i = index" [formGroupName]="i" class="measurement-item">
+        <nz-form-item>
+          <nz-form-label [nzFor]="'wasteSource-' + i">Nguồn phát thải:</nz-form-label>
+          <nz-form-control>
+            <nz-select formControlName="wasteSource" id="wasteSource-{{i}}" nzPlaceHolder="Chọn nguồn phát thải">
+              <nz-option *ngFor="let category of categoriesPC" [nzLabel]="category.name" [nzValue]="category.id"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-label [nzFor]="'gas-' + i">Khí:</nz-form-label>
+          <nz-form-control>
+            <nz-select formControlName="gas" id="gas-{{i}}" nzPlaceHolder="Chọn khí">
+              <nz-option *ngFor="let category of categories" [nzLabel]="category.name" [nzValue]="category.id"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-label [nzFor]="'data-' + i">Dữ liệu:</nz-form-label>
+          <nz-form-control>
+            <input nz-input formControlName="data" id="data-{{i}}" type="text"/>
+          </nz-form-control>
+        </nz-form-item>
+
+        <button nz-button type="button" (click)="removeMeasurement(i)" class="remove-button">Xóa</button>
+      </div>
+    </div>
+  </div>
+  
+  <div class="measurement-add">
+    <nz-form-item class="form-group">
+      <nz-form-label [nzFor]="'measurer'">Người đo:</nz-form-label>
+      <nz-form-control>
+        <input nz-input formControlName="measurer" id="measurer" type="text"/>
+      </nz-form-control>
+    </nz-form-item>
+
+    <nz-form-item class="form-group">
+      <nz-form-label [nzFor]="'measurementDate'">Ngày đo:</nz-form-label>
+      <nz-form-control>
+        <input nz-input formControlName="measurementDate" id="measurementDate" type="date"/>
+      </nz-form-control>
+    </nz-form-item>
+
+    <nz-form-item class="form-group">
+      <nz-form-label [nzFor]="'farmingProcess'">Quá trình canh tác:</nz-form-label>
+      <nz-form-control>
+        <input nz-input formControlName="farmingProcess" id="farmingProcess" type="text"/>
+      </nz-form-control>
+    </nz-form-item>
+
+    <nz-form-item class="form-group">
+      <nz-form-label [nzFor]="'phonelandowner'">Số điện thoại chủ đất:</nz-form-label>
+      <nz-form-control>
+        <input nz-input formControlName="phonelandowner" id="phonelandowner" type="text"/>
+      </nz-form-control>
+    </nz-form-item>
+
+    <nz-form-item class="form-group">
+      <nz-form-label [nzFor]="'namelandowner'">Tên chủ đất:</nz-form-label>
+      <nz-form-control>
+        <input nz-input formControlName="namelandowner" id="namelandowner" type="text"/>
+      </nz-form-control>
+    </nz-form-item>
+
+    <nz-form-item class="form-group">
+      <nz-form-label [nzFor]="'projectId'">Mã dự án:</nz-form-label>
+      <nz-form-control>
+        <nz-select formControlName="projectId" id="projectId" nzPlaceHolder="Chọn mã dự án">
+          <nz-option *ngFor="let project of projects" [nzLabel]="project.projectName" [nzValue]="project.projectId"></nz-option>
+        </nz-select>
+      </nz-form-control>
+    </nz-form-item>
+  </div>
+  
+  <div class="form-actions">
+    <button nz-button nzType="default" type="button" (click)="addMeasurement()" class="add-button">Thêm đo</button>
+    <button nz-button nzType="primary" type="submit" class="submit-button">Gửi</button>
+  </div>
+</form>

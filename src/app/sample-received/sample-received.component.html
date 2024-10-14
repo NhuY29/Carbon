@@ -1,0 +1,116 @@
+<div class="statistics-container">
+
+    <div class="statistics-container">
+        <div class="stat-box" id="active-contracts">
+            <i class="icon calendar"></i>
+            <h4>Tổng yêu cầu hôm nay</h4>
+            <p class="stat-number">{{ projectsSentToday?.length ||0 }}</p>
+        </div>
+    
+        <div class="stat-box" id="expired-contracts">
+            <i class="icon expired"></i>
+            <h4>Số yêu cầu chưa giải quyết</h4>
+            <p class="stat-number">{{ pendingProjects?.length ||0 }}</p>
+        </div>
+    
+        <div class="stat-box" id="expiring-contracts">
+            <i class="icon clock"></i>
+            <h4>Số yêu cầu đã giải quyết</h4>
+            <p class="stat-number">{{ doneProjects?.length ||0 }}</p>
+        </div>
+    </div>
+    
+
+</div>
+
+<nz-tabset>
+    <nz-tab nzTitle="Yêu cầu hôm nay">
+        <nz-table #basicTable4 [nzData]="projectsSentToday" [nzBordered]="true">
+            <thead>
+                <tr>
+                    <th>Dự án</th>
+                    <th>Ngày gửi</th> 
+                    <th>Xem dự án</th>
+                    <th>Đơn yêu cầu</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let item of basicTable4.data">
+                    <td>{{ item.projectId }}</td> 
+                    <td>{{ item.sendDate | date:'short' }}</td> 
+                    
+                    <td>
+                        <button nz-button (click)="navigateToProject(item.projectId)">Xem</button>
+                    </td>
+                    <td>
+                        <button nz-button (click)="downloadPdf(item.projectId,item.id)">Đơn yêu cầu</button>
+                    </td>
+                </tr>
+            </tbody>
+        </nz-table>
+    </nz-tab>
+    <nz-tab [nzTitle]="pendingTabTemplate">
+        <ng-template #pendingTabTemplate>
+            Chưa giải quyết
+            <nz-badge [nzCount]="pendingProjects?.length || 0"></nz-badge>
+        </ng-template>
+        <nz-table #basicTable2 [nzData]="pendingProjects" [nzBordered]="true">
+            <thead>
+                <tr>
+                    <th>Dự án</th>
+                    <th>Ngày gửi</th> 
+                    <th>Id</th>
+                    <th>Xem dự án</th>
+                    <th>Đơn yêu cầu</th>
+                    <th>Dữ liệu đo</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let item of basicTable2.data">
+                    <td>{{ item.projectId }}</td> 
+                    <td>{{ item.sendDate | date:'short' }}</td>
+                    <td>{{ item.id }}</td> 
+                    
+                    <td>
+                        <button nz-button (click)="navigateToProject(item.projectId)">Xem</button>
+                    </td>
+                    <td>
+                        <button nz-button (click)="downloadPdf(item.projectId,item.id)">Đơn yêu cầu</button>
+                    </td>
+                    <td>
+                        <button nz-button (click)="handleProjectId(item.projectId,item.id)">Dữ liệu đo</button>
+                    </td>
+                </tr>
+            </tbody>
+        </nz-table>
+    </nz-tab>
+    <nz-tab nzTitle="Đã giải quyết">
+        <nz-table #basicTable3 [nzData]="doneProjects" [nzBordered]="true">
+            <thead>
+                <tr>
+                    <th>Dự án</th>
+                    <th>Ngày gửi</th> 
+                    <th>Xem dự án</th>
+                    <th>Đơn yêu cầu</th>
+                    <th>Đơn xác nhận</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let item of basicTable3.data">
+                    <td>{{ item.projectId }}</td> 
+                    <td>{{ item.sendDate | date:'short' }}</td> 
+                    
+                    <td>
+                        <button nz-button (click)="navigateToProject(item.projectId)">Xem</button>
+                    </td>
+                    <td>
+                        <button nz-button (click)="downloadPdf(item.projectId,item.id)">Đơn yêu cầu</button>
+                    </td>
+                    <td>
+                        <button nz-button (click)="downPdfReceived(item.projectId,item.id)">Đơn xác nhận</button>
+                    </td>
+                </tr>
+            </tbody>
+        </nz-table>
+    </nz-tab>
+</nz-tabset>

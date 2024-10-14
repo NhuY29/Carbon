@@ -1,0 +1,16 @@
+<nz-table #nestedTable [nzData]="listOfData" [nzPageSize]="10" ngSkipHydration>
+    <thead>
+        <tr>
+            <th></th>
+            <th>Loại Tín Chỉ</th>
+            <th>Số Lượng</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let item of listOfData">
+            <td></td>
+            <td>{{ item.mint }}</td>
+            <td>{{ item.amount / 1000000000 }}</td>
+        </tr>
+    </tbody>
+</nz-table>

@@ -1,0 +1,50 @@
+<nz-table [nzData]="transactions" [nzPageSize]="10">
+  <thead>
+    <tr>
+      <th></th>
+      <th nzWidth="20%">Chữ ký</th>
+      <th nzWidth="20%">Ngày giao dịch</th>
+      <th nzWidth="20%">Block</th>
+      <th nzWidth="20%">Age</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <ng-container *ngFor="let transaction of transactions">
+      <tr>
+        <td [(nzExpand)]="transaction.expand" (click)="viewTransactionDetails(transaction)"></td>
+        <td>{{ transaction.signature }}</td>
+        <td>{{ transaction.date }}</td>
+        <td>{{ transaction.block}}</td>
+        <td>{{ transaction.age}}</td>
+      </tr>
+
+      <tr *ngIf="transaction.expand && transaction.details">
+        <td colspan="4">
+          <nz-table [nzData]="[transaction.details]" nzSize="middle" [nzShowPagination]="false">
+            <thead>
+              <tr>
+                <th>Nội Dung Giao Dịch</th>
+                <th>Người Gửi</th>
+                <th>Người Nhận</th>
+                <th>Số Tiền Giao Dịch</th>
+              </tr>
+            </thead>
+  <tbody>
+    <tr>
+      <td>
+        <li *ngFor="let memo of transaction.details.memo">
+          {{ memo.memo }}
+        </li>
+      </td>
+      <td>{{ transaction.details.sender }}</td>
+      <td>{{ transaction.details.recipient }}</td>
+      <td>{{ transaction.details.transactionAmount }} VND</td>
+    </tr>
+  </tbody>
+</nz-table>
+</td>
+</tr>
+</ng-container>
+</tbody>
+</nz-table>

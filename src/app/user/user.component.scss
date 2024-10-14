@@ -1,0 +1,101 @@
+.tab-content {
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.tab-content.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+[nz-button] {
+  margin-right: 8px;
+  margin-bottom: 12px;
+}
+
+nz-button-group [nz-button] {
+  margin-right: 0;
+}
+
+.add-user-form {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+  display: flex;
+  gap: 20px;
+}
+
+.nz-form-item {
+  display: flex;
+  align-items: center;
+}
+
+.nz-form-label {
+  font-weight: bold;
+  text-align: right;
+  margin-right: 20px;
+}
+
+.nz-form-control {
+  flex: 1;
+}
+
+
+.nz-input-group {
+  margin-bottom: 16px;
+}
+
+.nz-input-group input[nz-input] {
+  height: 40px;
+  padding: 0 12px;
+  border-radius: 5px;
+  border: 1px solid #d9d9d9;
+}
+
+
+button[nz-button] {
+  height: 40px;
+  border-radius: 5px;
+  margin-right: 10px;
+}
+
+button[nz-button]:last-child {
+  margin-right: 0;
+}
+
+
+.nz-tabset {
+  margin-top: 20px;
+}
+
+.nz-tab {
+  padding: 16px;
+  background-color: #f7f7f7;
+  border-radius: 8px;
+}
+
+.nz-table {
+  margin-top: 10px;
+}
+
+.nz-table th {
+  text-align: center;
+}
+
+.table-icon {
+  cursor: pointer;
+  font-size: 18px;
+  color: #1890ff;
+}
+
+.nz-divider {
+  height: 20px;
+}
+
+.nz-switch {
+  display: inline-block;
+  vertical-align: middle;
+}

@@ -1,0 +1,102 @@
+<nz-layout class="app-layout">
+  <nz-sider class="menu-sidebar" nzCollapsible nzWidth="256px" nzBreakpoint="md" [(nzCollapsed)]="isCollapsed" [nzTrigger]="null">
+    <div class="sidebar-logo">
+      <a href="https://ng.ant.design/" target="_blank">
+        <img src="https://ng.ant.design/assets/img/logo.svg" alt="logo">
+        <h1>Sàn Giao dịch TC Carbon</h1>
+      </a>
+    </div>
+    <ul nz-menu nzTheme="dark" nzMode="inline" [nzInlineCollapsed]="isCollapsed">
+      <li nz-submenu nzOpen nzTitle="Quản lý về người dùng" nzIcon="dashboard">
+        <ul>
+          <li nz-menu-item nzMatchRouter>
+            <span nz-icon nzType="ordered-list" nzTheme="outline"></span>
+            <a routerLink="/user">Danh sách người dùng</a>
+          </li>
+          <li nz-menu-item nzMatchRouter>
+            <span nz-icon nzType="global" nzTheme="outline"></span>
+            <a routerLink="/ggmap">Bản đồ</a>
+          </li>
+          <li nz-menu-item nzMatchRouter>
+            <a routerLink="/wallet">Tra Thông Tin Ví</a>
+          </li>
+          <li nz-menu-item nzMatchRouter>
+            <a routerLink="/airdrop">Nạp tiền</a>
+          </li>
+          <li nz-menu-item nzMatchRouter>
+            <a routerLink="/gdvi">My Wallet</a>
+          </li>
+        </ul>
+      </li>
+      <li nz-submenu nzOpen nzTitle="Quản lý dự án" nzIcon="dashboard">
+        <ul>
+          <li nz-menu-item nzMatchRouter>
+            <a routerLink="/list-project">Danh sách dự án</a>
+          </li>
+          <li nz-menu-item nzMatchRouter>
+            <a routerLink="/sampleReceived">Duyệt yêu cầu xác nhận</a>
+          </li>
+          <li nz-menu-item nzMatchRouter>
+            <a routerLink="/commomCategoryParentChild">Danh mục nguồn phát thải</a>
+          </li>
+          <li nz-menu-item nzMatchRouter>
+            <a routerLink="/commomCategory">Danh mục chung</a>
+          </li>
+          <li nz-menu-item nzMatchRouter>
+            <a routerLink="/measurementDataListAdd">Nhập liệu đo đạc</a>
+          </li>
+          <li nz-menu-item nzMatchRouter>
+            <a routerLink="/myproject">Dự án của tôi</a>
+          </li>
+          <li nz-menu-item nzMatchRouter>
+            <a routerLink="/sampleSent">Mẫu đã gửi</a>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </nz-sider>
+  
+  <nz-layout>
+    <nz-header>
+      <div class="app-header">
+        <ul nz-menu nzMode="horizontal">
+          <li nz-menu-item nzSelected>
+            <span class="header-trigger" (click)="isCollapsed = !isCollapsed">
+              <span class="trigger" nz-icon [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'"></span>
+            </span>
+          </li>
+          <li nz-menu-item>
+            <span nz-icon (click)="openTransactionForm()">Giao dịch</span>
+          </li>
+          <li nz-menu-item>
+            <span nz-icon (click)="openTransactionHistory()">Lịch sử giao dịch</span>
+          </li>
+          <li nz-menu-item>
+            <a routerLink="/login">
+              <span nz-icon nzType="login" nzTheme="outline"></span>
+              Đăng nhập
+            </a>
+          </li>
+          <li nz-menu-item>
+            <a (click)="logout()">
+              <span nz-icon nzType="logout" nzTheme="outline"></span>
+              Đăng xuất
+            </a>
+          </li>
+          <li nz-menu-item>
+            <a routerLink="/register">
+              <span nz-icon nzType="delete" nzTheme="outline"></span>
+              Đăng ký
+            </a>
+          </li>
+        </ul>
+      </div>
+    </nz-header>
+
+    <nz-content>
+      <div class="inner-content">
+        <router-outlet></router-outlet>
+      </div>
+    </nz-content>
+  </nz-layout>
+</nz-layout>

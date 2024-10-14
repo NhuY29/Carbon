@@ -1,0 +1,27 @@
+<nz-table #basicTable [nzData]="measurement" [nzScroll]="{ x: '1600px', y: '550px' }" [nzBordered]="true" [nzPageSize]="5" [nzShowPagination]="true">
+  <thead>
+    <tr>
+      <th nzWidth="10%">Người đo lường</th>
+      <th nzWidth="10%">Ngày đo lường</th>
+      <th nzWidth="30%">Quy trình canh tác</th>
+      <th nzWidth="10%">Tên chủ đất</th>
+      <th nzWidth="10%">SDT chủ đất</th>
+      <th nzWidth="10%">Active</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let measurement of basicTable.data">
+      <td>{{ measurement.measurer }}</td>
+      <td>{{ measurement.measurementDate }}</td>
+      <td>{{ measurement.farmingProcess }}</td>
+      <td>{{ measurement.namelandowner }}</td>
+      <td>{{ measurement.phonelandowner }}</td>
+      <td>
+        <button nz-button nzType="primary" (click)="navigateToMeasurement(measurement.id)">Xem dữ liệu đo</button>
+        <button nz-button nzType="primary" (click)="confirmDeleteMeasurementData(measurement.id)"> Xóa bảng đo</button>  
+        <button nz-button nzType="default" (click)="navigateToUpdateMeasurement(measurement.id)">Cập nhật</button>       
+        <button nz-button (click)="navigateToRequest2(measurement)">Xác nhận mua bán</button>
+      </td>
+    </tr>
+  </tbody>
+</nz-table>

@@ -1,0 +1,89 @@
+.measurement-form {
+    min-width: 200px;
+    min-height: 700px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+.measurement-add {
+    display: flex;
+    flex-direction: column; 
+    align-items: center; 
+    width: 80%; 
+}
+
+.measurement-add nz-form-item {
+    width: 100%;
+    max-width: 600px; 
+}
+
+.measurement-item {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #f0f0f0;
+    margin-bottom: 16px;
+}
+
+.nz-form-item {
+    width: 100%; 
+}
+
+.nz-form-item nz-form-label,
+.nz-form-item nz-form-control {
+    margin-bottom: 10px;
+}
+
+.nz-select,
+.nz-input {
+    width: 300px; 
+}
+
+.remove-button {
+    margin-top: 10px;
+    background-color: #ff4d4f;
+    color: white;
+}
+
+.form-group {
+    margin-bottom: 16px;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.add-button {
+    background-color: #1890ff;
+    color: white;
+}
+
+.submit-button {
+    background-color: #52c41a;
+    color: white;
+}
+
+.measurement-list {
+    max-height: 250px;
+    overflow-y: auto;
+    border: 1px solid #d9d9d9;
+    padding: 10px;
+    margin-bottom: 20px;
+}
+
+
+.remove-button {
+    margin-top: 10px;
+}
+nz-form-label {
+    min-width: 200px;
+}
+nz-form-control{
+    max-width: 700px;
+
+}

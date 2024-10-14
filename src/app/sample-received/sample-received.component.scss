@@ -1,0 +1,100 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f4f9;
+    padding: 20px;
+  }
+  
+  .statistics-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+  }
+  
+  .stat-box {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+    padding: 20px;
+    color: #fff;
+    width: 250px;
+    height: 100px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    position: relative;
+  }
+  
+  #new-requests {
+    background-color: #00bcd4; 
+  }
+  
+  #active-contracts {
+    background-color: #4caf50; 
+  }
+  
+  #expiring-contracts {
+    background-color: #ff9800; 
+  }
+  
+  #expired-contracts {
+    background-color: #f44336;
+  }
+  .stat-box h4 {
+    font-size: 1rem;
+    margin-bottom: 10px;
+  }
+  
+  .stat-number {
+    font-size: 1.5rem;
+    font-weight: bold;
+  }
+  
+  .icon {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    font-size: 2.5rem;
+    opacity: 0.1;
+  }
+  
+  .icon.new::before {
+    content: "\f02e";
+  }
+  
+  .icon.calendar::before {
+    content: "\f073";
+  }
+
+  .icon.clock::before {
+    content: "\f017"; 
+  }
+  
+  .icon.expired::before {
+    content: "\f071";
+  }
+  
+  @media (max-width: 768px) {
+    .statistics-container {
+      flex-direction: column;
+      align-items: center;
+    }
+  
+    .stat-box {
+      width: 100%;
+      margin-bottom: 20px;
+    }
+  }
+  .custom-icon {
+    font-size: 24px; 
+    cursor: pointer; 
+    color: #1890ff;
+}
