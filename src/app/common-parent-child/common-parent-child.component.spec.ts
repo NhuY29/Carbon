@@ -10,7 +10,7 @@ describe('CommonParentChildComponent', () => {
     await TestBed.configureTestingModule({
       imports: [CommonParentChildComponent]
     })
-      .compileComponents();
+    .compileComponents();
 
     fixture = TestBed.createComponent(CommonParentChildComponent);
     component = fixture.componentInstance;

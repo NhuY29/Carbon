@@ -553,7 +553,7 @@ export class ApiService {
     const payload = new URLSearchParams();
     payload.set('projectId', projectId);
     payload.set('signatureDataUrl', signatureDataUrl);
-    payload.set('numberOfProposals', numberOfProposals.toString()); 
+    payload.set('numberOfProposals', numberOfProposals.toString()); // Thêm số lượng đề xuất
 
     return this.http.post(`${this.apiUrl}/signature/save`, payload.toString(), { headers });
   }
@@ -604,6 +604,7 @@ export class ApiService {
   getPdfByProjectIdAndId(projectId: string, id: string): Observable<Blob> {
     const token = localStorage.getItem('token');
 
+    // Kiểm tra nếu token không tồn tại
     if (!token) {
       throw new Error('Token không tồn tại.');
     }
@@ -612,10 +613,11 @@ export class ApiService {
       'Authorization': `Bearer ${token}`
     });
 
+    // Gọi API với cả projectId và id
     return this.http.get(`${this.apiUrl}/sampleSent/getPdf`, {
       headers,
-      params: { projectId, id },  
-      responseType: 'blob'  
+      params: { projectId, id },  // Sử dụng params để truyền cả projectId và id
+      responseType: 'blob'  // Đặt kiểu phản hồi là 'blob' để xử lý file PDF
     });
   }
 
@@ -631,9 +633,9 @@ export class ApiService {
 
     const formData = new FormData();
     formData.append('projectId', projectId);
-    formData.append('id', id);
+    formData.append('id', id); // Thêm ID vào FormData
     formData.append('file', file);
-    formData.append('quantity', quantity.toString()); 
+    formData.append('quantity', quantity.toString()); // Thêm quantity vào FormData
 
     return this.http.post(`${this.apiUrl}/sampleSent/uploadReceived`, formData, { headers });
   }
@@ -736,12 +738,12 @@ export class ApiService {
       'Content-Type': 'application/json'
     });
 
-
+    // Truyền cả projectId và quantity trong params
     const params = new HttpParams()
       .set('projectId', projectId)
       .set('quantity', quantity.toString());
 
-
+    // Thực hiện POST request với params và headers
     return this.http.post<any>(`${this.apiUrl}/sampleSent/TokenSupply`, null, { headers, params })
       .pipe(
         catchError((error) => {
@@ -854,7 +856,7 @@ addContact(publicKey: string, contact: Contact): Observable<any> {
         'Content-Type': 'application/json'
     });
 
-
+    // Thay đổi để trả về thông báo từ server
     return this.http.delete<{ message: string }>(`${this.apiUrl}/contacts/${id}`, { headers });
 }
 

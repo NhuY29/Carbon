@@ -2,8 +2,7 @@
 
 <div class="search-container">
   <input nz-input placeholder="Tìm kiếm..." [(ngModel)]="searchTerm" (ngModelChange)="searchCategories()" />
-  <nz-select [(ngModel)]="category" nzAllowClear nzPlaceHolder="Choose" nzShowSearch
-    (ngModelChange)="searchCategories()">
+  <nz-select [(ngModel)]="category" nzAllowClear nzPlaceHolder="Choose" nzShowSearch (ngModelChange)="searchCategories()">
     <nz-option nzValue="TIEU_CHUAN" nzLabel="Tiêu chuẩn"></nz-option>
     <nz-option nzValue="LOAI_HINH" nzLabel="Loại hình"></nz-option>
     <nz-option nzValue="CHAT" nzLabel="Chất"></nz-option>
@@ -55,7 +54,7 @@
           <input nz-input formControlName="conversionPrice" type="number" />
         </nz-form-control>
       </nz-form-item>
-
+      
       <nz-form-item>
         <nz-form-control [nzSpan]="14" [nzOffset]="6">
           <button nz-button nzType="primary" type="submit">
@@ -90,10 +89,8 @@
       <td>{{ category.unit }}</td>
       <td>{{ category.conversionPrice }}</td>
       <td>
-        <button nz-button nzType="primary" (click)="editCategory(category)"><span nz-icon nzType="edit"
-            nzTheme="outline"></span></button>
-        <button nz-button nzType="primary" nzDanger (click)="deleteCategory(category.id)"><span nz-icon nzType="delete"
-            nzTheme="outline"></span></button>
+        <button nz-button nzType="primary" (click)="editCategory(category)"><span nz-icon nzType="edit" nzTheme="outline"></span></button>
+        <button nz-button nzType="primary" nzDanger (click)="deleteCategory(category.id)"><span nz-icon nzType="delete" nzTheme="outline"></span></button>
       </td>
     </tr>
   </tbody>

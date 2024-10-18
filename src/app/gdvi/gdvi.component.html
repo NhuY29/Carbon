@@ -91,9 +91,9 @@
                 <div class="input-with-button">
                     <input nz-input formControlName="recipient" placeholder="Nhập địa chỉ ví người nhận"
                         (input)="fetchUsernameFromPublicKey(transactionForm.get('recipient')?.value)" />
-                    <button nz-button nzType="default" (click)="openContactList()" class="contact-button" type="button">
-                        <i nz-icon nzType="contacts"></i>
-                    </button>
+                        <button nz-button nzType="default" (click)="openContactList()" class="contact-button">
+                            <i nz-icon nzType="contacts"></i>
+                        </button>
                 </div>
             </nz-form-control>
         </nz-form-item>
@@ -107,24 +107,10 @@
 
         <nz-form-item>
             <nz-form-label [nzSpan]="6" nzRequired>Số tiền</nz-form-label>
-            <nz-form-control [nzSpan]="18" nzHasFeedback [nzValidateStatus]="transactionForm.controls['amount']">
+            <nz-form-control [nzSpan]="18">
                 <input nz-input formControlName="amount" placeholder="Nhập số tiền" type="number" />
-                <div
-                    *ngIf="transactionForm.controls['amount'].invalid && (transactionForm.controls['amount'].dirty || transactionForm.controls['amount'].touched)">
-                    <ng-container *ngIf="transactionForm.controls['amount'].errors?.['required']">
-                        Số tiền là bắt buộc.
-                    </ng-container>
-                    <ng-container *ngIf="transactionForm.controls['amount'].errors?.['min']">
-                        Số tiền phải lớn hơn hoặc bằng 1000.
-                    </ng-container>
-                    <ng-container *ngIf="transactionForm.controls['amount'].errors?.['maxBalance']">
-                        Số tiền không được vượt quá số dư hiện tại (đã trừ phí duy trì).
-                    </ng-container>
-                </div>
             </nz-form-control>
         </nz-form-item>
-
-
 
         <nz-form-item>
             <nz-form-label [nzSpan]="6">Tin nhắn</nz-form-label>
@@ -141,6 +127,6 @@
     </form>
     <div *ngIf="isContactListVisible" class="contact-list-modal">
         <app-contact [senderSecretKey]="secretKeyValue" (contactSelected)="onContactSelected($event)"></app-contact>
-    </div>
-
+      </div>
+      
 </div>

@@ -3,8 +3,7 @@
     <tr>
       <th nzWidth="5%">STT</th>
       <th nzWidth="10%">Nguồn phát thải</th>
-      <th nzWidth="10%" *ngFor="let column of columns">{{ column.name }} - {{ column.unit }} -
-        {{column.conversionPrice}} </th>
+      <th nzWidth="10%" *ngFor="let column of columns">{{ column.name }} - {{ column.unit }} - {{column.conversionPrice}} </th>
       <th nzWidth="10%">Tổng</th>
     </tr>
   </thead>
@@ -16,11 +15,10 @@
           <td>{{ serialNumbers[row.id] }} </td>
           <td>{{ row.name }}</td>
           <td *ngFor="let column of columns"> {{ getValue(row.id, column.id) }} </td>
-          <td>{{ getRowTotal(row.id) }}</td>
+          <td>{{ getRowTotal(row.id) }}</td>  
         </tr>
         <ng-container *ngFor="let child of row.children">
-          <ng-container
-            *ngTemplateOutlet="recursiveTable; context: { $implicit: child, level: level + 1 }"></ng-container>
+          <ng-container *ngTemplateOutlet="recursiveTable; context: { $implicit: child, level: level + 1 }"></ng-container>
         </ng-container>
       </ng-template>
     </ng-container>

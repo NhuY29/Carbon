@@ -9,14 +9,14 @@
 }
 .measurement-add {
     display: flex;
-    flex-direction: column; 
-    align-items: center; 
-    width: 80%; 
+    flex-direction: column; /* Căn chỉnh theo chiều dọc */
+    align-items: center; /* Căn giữa theo chiều ngang */
+    width: 80%; /* Chiếm toàn bộ chiều rộng */
 }
 
 .measurement-add nz-form-item {
-    width: 100%;
-    max-width: 600px; 
+    width: 100%; /* Đảm bảo mỗi form item chiếm toàn bộ chiều rộng */
+    max-width: 600px; /* Giới hạn chiều rộng tối đa */
 }
 
 .measurement-item {
@@ -29,7 +29,7 @@
 }
 
 .nz-form-item {
-    width: 100%; 
+    width: 100%; /* Đảm bảo mỗi form item chiếm toàn bộ chiều rộng */
 }
 
 .nz-form-item nz-form-label,
@@ -37,9 +37,10 @@
     margin-bottom: 10px;
 }
 
+/* Đặt chiều rộng cụ thể cho các input và select */
 .nz-select,
 .nz-input {
-    width: 300px; 
+    width: 300px; /* Giới hạn chiều rộng của select và input */
 }
 
 .remove-button {

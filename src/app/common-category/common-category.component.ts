@@ -48,15 +48,15 @@ import { FormsModule } from '@angular/forms';
 })
 export class CommonCategoryComponent implements OnInit {
   categoryForm: any;
-  categories = Object.values(Category);
+  categories = Object.values(Category); 
   allCategories: CommonCategoryRequest[] = [];
-  showForm = false;
+  showForm = false; 
   isEditing = false;
-  selectedCategory: CommonCategoryRequest | null = null;
-  filteredCategories: CommonCategoryRequest[] = [];
-  searchTerm: string = '';
-  category = '';
-  constructor(private fb: FormBuilder, private apiService: ApiService, private message: NzMessageService, private modal: NzModalService) { }
+  selectedCategory: CommonCategoryRequest | null = null; 
+  filteredCategories: CommonCategoryRequest[] = []; // Mảng dữ liệu sau khi lọc
+  searchTerm: string = ''; // Từ khóa tìm kiếm
+  category = ''; 
+  constructor(private fb: FormBuilder, private apiService: ApiService, private message: NzMessageService, private modal: NzModalService ) {}
 
   ngOnInit(): void {
     this.categoryForm = this.fb.group({
@@ -81,7 +81,7 @@ export class CommonCategoryComponent implements OnInit {
     });
   }
 
-
+  // Load tất cả categories ban đầu
   loadAllCategories(): void {
     this.apiService.getAllCategories().subscribe({
       next: (response) => {
@@ -114,15 +114,16 @@ export class CommonCategoryComponent implements OnInit {
   onSubmit(): void {
     if (this.categoryForm.valid) {
       const categoryDTO = this.categoryForm.value;
-
+  
+      // Nếu loại không phải LOAI_HINH hoặc TIEU_CHUAN, gán unit là "tấn"
       if (categoryDTO.category === 'LOAI_HINH' || categoryDTO.category === 'TIEU_CHUAN') {
-        categoryDTO.unit = null;
-        categoryDTO.conversionPrice = null;
+        categoryDTO.unit = null; // Nếu cần thiết, bạn có thể xóa unit
+        categoryDTO.conversionPrice = null; // Và cũng xóa conversionPrice nếu cần
       } else {
         // Đặt unit mặc định là "tấn"
         categoryDTO.unit = 'tấn';
       }
-
+  
       if (this.isEditing && this.selectedCategory) {
         this.apiService.updateCategory(this.selectedCategory.id, categoryDTO).subscribe({
           next: (response) => {
@@ -159,7 +160,7 @@ export class CommonCategoryComponent implements OnInit {
       this.message.warning('Please fill in all required fields.');
     }
   }
-
+  
 
 
   deleteCategory(id: string): void {

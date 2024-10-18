@@ -71,6 +71,11 @@
           <li nz-menu-item>
             <span nz-icon (click)="openTransactionHistory()">Lịch sử giao dịch</span>
           </li>
+          <!-- <li nz-menu-item>
+            <span nz-icon nz-button nz-popover nzType="primary" nzPopoverTitle="Thông tin ví"
+              [nzPopoverContent]="walletPopoverContent" nzPopoverTrigger="hover" (mouseenter)="getWalletInfo()">Thông
+              tin ví</span>
+          </li> -->
           <li nz-menu-item>
             <a routerLink="/login">
               <span nz-icon nzType="login" nzTheme="outline"></span>
@@ -89,6 +94,23 @@
               Đăng ký
             </a>
           </li>
+          <!-- <li nz-menu-item>
+            <nz-avatar nzSize="large" nzIcon="user"></nz-avatar>
+            {{username}}
+          </li> -->
+
+          <!-- <ng-template #walletPopoverContent>
+            <div *ngIf="loading">
+              <p>Đang tải thông tin ví...</p>
+            </div>
+            <div *ngIf="walletInfo">
+              <p>Địa chỉ ví: {{ walletInfo.address }}</p>
+              <p>Số dư ví: {{ walletInfo.balance }} VND</p>
+            </div>
+            <div *ngIf="!walletInfo && !loading">
+              <p>Không có thông tin ví.</p>
+            </div>
+          </ng-template> -->
         </ul>
       </div>
     </nz-header>

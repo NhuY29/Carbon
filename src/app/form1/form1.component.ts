@@ -36,7 +36,7 @@ export interface SellerInfo {
 @Component({
   selector: 'app-form1',
   standalone: true,
-  imports: [CommonModule, NzButtonModule, NzIconModule],
+  imports: [CommonModule,NzButtonModule,NzIconModule],
   templateUrl: './form1.component.html',
   styleUrls: ['./form1.component.scss']
 })
@@ -111,7 +111,7 @@ export class Form1Component implements OnInit {
   getFormattedDate(): string {
     const date = this.currentDate;
     const day = date.getDate();
-    const month = date.getMonth() + 1;
+    const month = date.getMonth() + 1; // Months are zero-based
     const year = date.getFullYear();
     const daysOfWeek = ['Chủ nhật', 'Thứ hai', 'Thứ ba', 'Thứ tư', 'Thứ năm', 'Thứ sáu', 'Thứ bảy'];
     const dayOfWeek = daysOfWeek[date.getDay()];
@@ -129,77 +129,77 @@ export class Form1Component implements OnInit {
     const DATA = this.pdfContent.nativeElement;
 
     html2canvas(DATA).then(canvas => {
-      const fileWidth = 208;
-      const fileHeight = (canvas.height * fileWidth) / canvas.width;
+        const fileWidth = 208; // Chiều rộng PDF (A4 - 210mm - padding)
+        const fileHeight = (canvas.height * fileWidth) / canvas.width; // Chiều cao tương ứng với kích thước ảnh
 
-      const imgData = canvas.toDataURL('image/png');
-      const pdf = new jsPDF('p', 'mm', 'a4');
-      let position = 0;
-      const pageHeight = 295;
+        const imgData = canvas.toDataURL('image/png');
+        const pdf = new jsPDF('p', 'mm', 'a4');
+        let position = 0;
+        const pageHeight = 295; // Chiều cao trang PDF (A4)
 
+        // Nếu chiều cao của canvas lớn hơn chiều cao trang A4, chia nó ra nhiều trang
+        if (fileHeight > pageHeight) {
+            let heightLeft = fileHeight;
 
-      if (fileHeight > pageHeight) {
-        let heightLeft = fileHeight;
+            while (heightLeft > 0) {
+                pdf.addImage(imgData, 'PNG', 0, position, fileWidth, fileHeight); // Chỉ truyền các tham số cần thiết
+                heightLeft -= pageHeight;
+                position = heightLeft - fileHeight; // Cập nhật vị trí cho trang tiếp theo
 
-        while (heightLeft > 0) {
-          pdf.addImage(imgData, 'PNG', 0, position, fileWidth, fileHeight);
-          heightLeft -= pageHeight;
-          position = heightLeft - fileHeight;
-
-
-          if (heightLeft > 0) {
-            pdf.addPage();
-          }
+                // Nếu vẫn còn nội dung, thêm trang mới
+                if (heightLeft > 0) {
+                    pdf.addPage();
+                }
+            }
+        } else {
+            // Nội dung vừa một trang, không cần thêm trang
+            pdf.addImage(imgData, 'PNG', 0, position, fileWidth, fileHeight);
         }
-      } else {
 
-        pdf.addImage(imgData, 'PNG', 0, position, fileWidth, fileHeight);
-      }
-
-      pdf.save('yeu-cau-xac-nhan.pdf');
+        pdf.save('yeu-cau-xac-nhan.pdf');
     });
-  }
+}
 
-  async SendexportToPDF() {
-    const DATA = this.pdfContent.nativeElement;
-    console.log('Bắt đầu quá trình tạo PDF từ nội dung:', DATA);
+async SendexportToPDF() {
+  const DATA = this.pdfContent.nativeElement;
+  console.log('Bắt đầu quá trình tạo PDF từ nội dung:', DATA);
 
-    try {
-      const canvas = await html2canvas(DATA);
-      console.log('Canvas đã được tạo thành công.');
+  try {
+    const canvas = await html2canvas(DATA);
+    console.log('Canvas đã được tạo thành công.');
 
-      const imgData = canvas.toDataURL('image/png');
-      const pdf = new jsPDF('p', 'mm', 'a4');
-      const imgWidth = 208;
-      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+    const imgData = canvas.toDataURL('image/png');
+    const pdf = new jsPDF('p', 'mm', 'a4');
+    const imgWidth = 208; // Chiều rộng PDF (A4 - 210mm - padding)
+    const imgHeight = (canvas.height * imgWidth) / canvas.width; // Chiều cao tương ứng với kích thước ảnh
 
-      pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
+    pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight); // Chỉ truyền các tham số cần thiết
 
-      const pdfBlob = pdf.output('blob');
-      const file = new File([pdfBlob], 'yeu-cau-xac-nhan.pdf', { type: 'application/pdf' });
-      console.log('File PDF đã được tạo:', file);
+    const pdfBlob = pdf.output('blob');
+    const file = new File([pdfBlob], 'yeu-cau-xac-nhan.pdf', { type: 'application/pdf' });
+    console.log('File PDF đã được tạo:', file);
 
-      if (this.projectId) {
-        console.log('Project ID đang được sử dụng để tải lên:', this.projectId);
-
-        this.projectService.uploadPdf(this.projectId, file).subscribe({
-          next: (response) => {
-            console.log('PDF đã được tải lên thành công:', response.message);
-            this.message.success('PDF đã được tải lên thành công!');
-          },
-          error: (error) => {
-            console.error('Lỗi khi tải lên PDF:', error);
-            this.message.error('Lỗi khi tải lên PDF. Vui lòng thử lại.');
-          }
-        });
-      } else {
-        console.error('Project ID không hợp lệ, không thể tải lên PDF.');
-        this.message.error('Project ID không hợp lệ.');
-      }
-    } catch (error) {
-      console.error('Lỗi khi tạo canvas:', error);
-      this.message.error('Lỗi khi tạo PDF. Vui lòng thử lại.');
+    if (this.projectId) {
+      console.log('Project ID đang được sử dụng để tải lên:', this.projectId); 
+      
+      this.projectService.uploadPdf(this.projectId, file).subscribe({
+        next: (response) => {
+          console.log('PDF đã được tải lên thành công:', response.message);
+          this.message.success('PDF đã được tải lên thành công!'); // Hiển thị thông báo thành công
+        },
+        error: (error) => {
+          console.error('Lỗi khi tải lên PDF:', error);
+          this.message.error('Lỗi khi tải lên PDF. Vui lòng thử lại.'); // Hiển thị thông báo lỗi
+        }
+      });
+    } else {
+      console.error('Project ID không hợp lệ, không thể tải lên PDF.');
+      this.message.error('Project ID không hợp lệ.'); // Thông báo lỗi khi Project ID không hợp lệ
     }
+  } catch (error) {
+    console.error('Lỗi khi tạo canvas:', error);
+    this.message.error('Lỗi khi tạo PDF. Vui lòng thử lại.'); // Hiển thị thông báo lỗi khi tạo PDF thất bại
   }
+}
 
 }

@@ -16,7 +16,7 @@
       <span nz-icon nzType="printer" nzTheme="outline"></span> Phản hồi yêu cầu
     </button>
   </div>
-
+  
   <div class="container" *ngIf="project" #pdfContent>
     <div class="header">
       <div class="left">
@@ -39,9 +39,8 @@
         kính và bảo vệ tầng ozon
       </p>
       <p>
-        Căn cứ đề nghị xác nhận tín chỉ carbon, hạn ngạch phát thải khí nhà kính được giao dịch của: {{
-        sellerInfo.companyName || '________________________' }} tại văn bản
-        số {{documentNumber}}
+        Căn cứ đề nghị xác nhận tín chỉ carbon, hạn ngạch phát thải khí nhà kính được giao dịch của: {{ sellerInfo.companyName || '________________________' }} tại văn bản
+        số  {{documentNumber}}
       </p>
       <p>
         Bộ Tài nguyên và Môi trường xác nhận lượng tín chỉ carbon, hạn ngạch phát thải khí nhà kính được giao dịch như

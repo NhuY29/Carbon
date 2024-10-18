@@ -41,19 +41,18 @@
             nzTheme="outline"></span></button>
         <button nz-button nzType="primary" nzDanger (click)="deleteProject(project.projectId)"><span nz-icon
             nzType="delete" nzTheme="outline"></span></button>
-
-        <button *ngIf="!joinedProjects[project.projectId]" nz-button nzType="primary"
-          (click)="joinProject(project.projectId)">
-          Tham gia
-        </button>
-        <span *ngIf="joinedProjects[project.projectId]">Bạn đã tham gia dự án này</span>
-
+            
+          <button *ngIf="!joinedProjects[project.projectId]" nz-button nzType="primary" (click)="joinProject(project.projectId)">
+            Tham gia
+          </button>
+          <span *ngIf="joinedProjects[project.projectId]">Bạn đã tham gia dự án này</span>
+        
         <button nz-button nzType="primary" (click)="viewParticipants(project.projectId)"><span nz-icon
             nzType="unordered-list" nzTheme="outline"></span>Danh sách tham gia</button>
         <button nz-button nzType="primary" (click)="navigateToMeasurementData(project.projectId)">
           <span nz-icon nzType="line-chart" nzTheme="outline"></span> Danh sách đo lường
         </button>
-
+       
       </td>
     </tr>
   </tbody>

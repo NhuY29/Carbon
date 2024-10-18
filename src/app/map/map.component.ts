@@ -7,7 +7,7 @@ import { Component, AfterViewInit, Output, EventEmitter, Input, SimpleChanges } 
   styleUrls: ['./map.component.scss']
 })
 export class MapComponent implements AfterViewInit {
-  @Output() coordinatesChanged = new EventEmitter<any[]>();
+   @Output() coordinatesChanged = new EventEmitter<any[]>();
   @Input() initialCoordinates: { lat: number, lng: number, order: number, radius?: number, type?: string }[] = [];
   private map: any;
   private markers: any[] = [];
@@ -217,8 +217,8 @@ export class MapComponent implements AfterViewInit {
 
       this.routingControl = L.Routing.control({
         waypoints: [
-          L.latLng(this.map.getCenter().lat, this.map.getCenter().lng),
-          L.latLng(destination.lat, destination.lng)
+          L.latLng(this.map.getCenter().lat, this.map.getCenter().lng), // Current location
+          L.latLng(destination.lat, destination.lng) // Destination
         ],
         routeWhileDragging: true
       }).addTo(this.map);
@@ -233,20 +233,20 @@ export class MapComponent implements AfterViewInit {
           (position) => {
             const latlng = L.latLng(position.coords.latitude, position.coords.longitude);
             const radius = position.coords.accuracy / 2;
-
+  
             L.marker(latlng).addTo(this.map)
               .bindPopup(`You are within ${radius} meters from this point`).openPopup();
-
+  
             L.circle(latlng, { radius: radius, color: 'blue', fillColor: '#30f', fillOpacity: 0.5 }).addTo(this.map);
-
+  
             this.map.setView(latlng, 16);
-            this.currentLocation = latlng;
-            resolve(latlng);
+            this.currentLocation = latlng; // Store current location
+            resolve(latlng); // Resolve with the current location
           },
           (error) => {
             console.error('Error getting current location', error);
             alert('Error getting current location');
-            reject(error);
+            reject(error); // Reject with the error
           },
           {
             enableHighAccuracy: true,

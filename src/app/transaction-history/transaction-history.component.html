@@ -24,6 +24,7 @@
           <nz-table [nzData]="[transaction.details]" nzSize="middle" [nzShowPagination]="false">
             <thead>
               <tr>
+                <!-- <th>Phí Giao Dịch</th> -->
                 <th>Nội Dung Giao Dịch</th>
                 <th>Người Gửi</th>
                 <th>Người Nhận</th>
@@ -32,6 +33,7 @@
             </thead>
   <tbody>
     <tr>
+      <!-- <td>{{ transaction.details.fee }} VND</td> -->
       <td>
         <li *ngFor="let memo of transaction.details.memo">
           {{ memo.memo }}

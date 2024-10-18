@@ -1,7 +1,6 @@
 .ant-notification {
-  z-index: 10000;
+  z-index: 10000; /* Đảm bảo z-index cao hơn overlay */
 }
-
 .container {
   position: fixed;
   top: 0;
@@ -15,7 +14,6 @@
   backdrop-filter: blur(10px);
   z-index: 10;
 }
-
 .wrapper {
   position: relative;
   width: 400px;
@@ -24,7 +22,7 @@
   border-radius: 10px;
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
   text-align: center;
-  z-index: 10000;
+  z-index: 10000; /* Đảm bảo form không bị che khuất */
 }
 
 
@@ -35,9 +33,8 @@
   font-size: 20px;
   cursor: pointer;
   color: #333;
-  z-index: 10001;
+  z-index: 10001; /* Đảm bảo nút đóng nổi bật */
 }
-
 .title {
   font-size: 24px;
   font-weight: bold;

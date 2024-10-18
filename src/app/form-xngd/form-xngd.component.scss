@@ -1,122 +1,119 @@
 body {
-  font-family: "Times New Roman", Times, serif;
-  margin: 0;
-  padding: 0;
-  color: #000;
+    font-family: "Times New Roman", Times, serif;
+    margin: 0;
+    padding: 0;
+    // background-color: #f7f7f7;
+    color: #000;
 }
 
 .container {
-  width: 70%;
-  margin: 30px auto;
-  padding: 20px;
-  background-color: #fff;
+    width: 70%;
+    margin: 30px auto;
+    padding: 20px;
+    background-color: #fff;
+    // border: 1px solid #ccc;
+    // border-radius: 8px;
+    // box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 h1 {
-  text-align: center;
-  text-transform: uppercase;
-  font-size: 20px;
-  margin-bottom: 30px;
+    text-align: center;
+    text-transform: uppercase;
+    font-size: 20px;
+    margin-bottom: 30px;
 }
 
 .header {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 40px;
-  margin-top: 40px;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 40px;
+    margin-top: 40px;
 }
 
 .header .left,
 .header .right {
-  width: 45%;
+    width: 45%;
 }
 
 .header .left p,
 .header .right p {
-  margin: 5px 0;
-  text-align: center;
+    margin: 5px 0;
+    text-align: center;
 }
-
-.header_content {
-  text-align: center;
-  font-size: 16px;
-  margin-bottom: 30px;
+.header_content{
+    text-align: center;
+    font-size: 16px;
+    margin-bottom: 30px;
 }
-
 .content {
-  text-align: justify;
-  line-height: 1.8;
-  margin-bottom: 40px;
-  margin-left: 30px;
+    text-align: justify;
+    line-height: 1.8;
+    margin-bottom: 40px;
+    margin-left: 30px;
 }
 
 h3 {
-  margin-top: 20px;
-  margin-bottom: 10px;
-  font-size: 18px;
+    margin-top: 20px;
+    margin-bottom: 10px;
+    font-size: 18px;
 }
 
 .sign-section {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 40px;
+    display: flex;
+    justify-content: space-between;
+    margin-top: 40px;
 }
 
 .sign-section .sign {
-  width: 40%;
-  text-align: center;
+    width: 40%;
+    text-align: center;
 }
-
 .sign-section .sign:first-child {
-  visibility: hidden;
+    visibility: hidden;
 }
 
 .container {
-  padding: 20px;
-}
-
-.header,
-.content,
-.sign-section {
-  margin-bottom: 20px;
-}
-
-.content p {
-  margin: 10px 0;
-}
-
-strong {
-  margin-right: 10px;
-}
-
+    padding: 20px;
+  }
+  
+  .header,
+  .content,
+  .sign-section {
+    margin-bottom: 20px; 
+  }
+  
+  .content p {
+    margin: 10px 0; 
+  }
+  
+  strong {
+    margin-right: 10px; 
+  }
 .sign-section {
   margin-top: 20px;
   text-align: center;
 }
 
 canvas {
-  border: 1px solid #000;
-  width: 100%;
-  height: auto;
+  border: 1px solid #000; 
+  width: 100%; 
+  height: auto; 
 }
-
-.upper {
-  text-transform: uppercase;
+.upper{
+    text-transform: uppercase;
 }
-
 .signature-container {
-  width: 100%;
-  max-width: 400px;
-  height: 200px;
-  border: 1px solid #ccc;
-}
-
-canvas {
-  width: 100%;
-  height: 100%;
-}
-
-.imgSignature {
-  width: 100%;
-  height: 70%;
-}
+    width: 100%; 
+    max-width: 400px;
+    height: 200px;
+    border: 1px solid #ccc;
+  }
+  
+  canvas {
+    width: 100%;
+    height: 100%;
+  }
+  .imgSignature{
+    width: 100%;
+    height: 70%;
+  }

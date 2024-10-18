@@ -1,5 +1,5 @@
 import { Component, OnInit, CUSTOM_ELEMENTS_SCHEMA, Inject, PLATFORM_ID, Output, EventEmitter } from '@angular/core';
-import { FormsModule, AbstractControl } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { NzLayoutModule } from 'ng-zorro-antd/layout';
 import { NzCardModule } from 'ng-zorro-antd/card';
 import { NzInputModule } from 'ng-zorro-antd/input';
@@ -66,7 +66,7 @@ export class GDViComponent implements OnInit {
   @Output() secretKeyChange = new EventEmitter<string>();
   secretKeyValue: string = '';
   private previousBalance: number | null = null;
-  private hasNotifiedBalanceChange: boolean = false;
+private hasNotifiedBalanceChange: boolean = false;
   constructor(
     private messageService: NzMessageService,
     private fb: FormBuilder,
@@ -76,7 +76,7 @@ export class GDViComponent implements OnInit {
     this.transactionForm = this.fb.group({
       senderSecretKey: ['', [Validators.required]],
       recipient: ['', [Validators.required]],
-      amount: ['', [Validators.required, Validators.min(1000)]],
+      amount: ['', [Validators.required, Validators.pattern('^[0-9]+$')]],
       message: ['']
     });
   }
@@ -84,45 +84,31 @@ export class GDViComponent implements OnInit {
   ngOnInit() {
     this.loadData();
     this.checkBalanceChange();
-    this.transactionForm.get('amount')?.setValidators([
-      Validators.required,
-      Validators.min(1000),
-      this.maxBalanceValidator.bind(this)
-    ]);
-  }
-  private maxBalanceValidator(control: AbstractControl): { [key: string]: any } | null {
-    const balance = this.walletInfo?.balance;
-    const value = control.value;
-
-    if (balance !== undefined && value > balance - 1000) {
-      return { 'maxBalance': true };
-    }
-    return null;
   }
   private checkBalanceChange(): void {
     setInterval(() => {
       this.apiService.getWalletInfo().subscribe(
         (response: any) => {
           const currentBalance = response.balance;
-
+  
           if (this.previousBalance !== null && currentBalance !== this.previousBalance) {
             if (!this.hasNotifiedBalanceChange) {
               this.messageService.warning(`Bạn đã có giao dịch mới số dư thay đổi từ ${this.previousBalance} đến ${currentBalance}.`);
-              this.hasNotifiedBalanceChange = true;
+              this.hasNotifiedBalanceChange = true; 
             }
           } else {
             this.hasNotifiedBalanceChange = false;
           }
-
+  
           this.previousBalance = currentBalance;
         },
         (error) => {
           console.error('Lỗi khi lấy thông tin ví:', error);
         }
       );
-    }, 5000);
+    }, 5000); 
   }
-
+  
 
   openContactList(): void {
     this.isContactListVisible = !this.isContactListVisible;
@@ -132,10 +118,9 @@ export class GDViComponent implements OnInit {
       recipient: contact.walletAddress
     });
     this.recipientName = contact.username;
-    this.transactionForm.get('recipient')?.updateValueAndValidity();
     this.closeContactList();
+    this.onSubmit();
   }
-
 
   closeContactList() {
     this.isContactListVisible = false;
@@ -230,12 +215,13 @@ export class GDViComponent implements OnInit {
   }
   onSubmit() {
     if (this.transactionForm.invalid) {
-      this.messageService.error('Vui lòng điền đầy đủ thông tin trước khi gửi.');
+      console.log('Form is invalid');
       return;
     }
 
     const { senderSecretKey, recipient, amount, message } = this.transactionForm.value;
-    this.apiService.sendTransaction(senderSecretKey, recipient, amount / 10000, message).subscribe(
+
+    this.apiService.sendTransaction(senderSecretKey, recipient, amount, message).subscribe(
       (response) => {
         console.log('Transaction successful:', response);
         this.messageService.success('Giao dịch thành công!');

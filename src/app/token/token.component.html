@@ -10,7 +10,55 @@
         <tr *ngFor="let item of listOfData">
             <td></td>
             <td>{{ item.mint }}</td>
-            <td>{{ item.amount / 1000000000 }}</td>
+            <td>{{ item.amount / 1000000000 }}</td> 
         </tr>
-    </tbody>
+        <!-- <tr *ngFor="let data of nestedTable.data">
+            <td></td>
+            <td colspan="3">
+                <nz-table [nzData]="data.childData" [nzShowPagination]="false">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Name</th>
+                            <th>Status</th>
+                            <th>Upgrade Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead> -->
+    <!-- <tbody>
+        <tr *ngFor="let childData of data.childData; trackBy: trackByFn">
+            <td>{{ childData.date }}</td>
+            <td>{{ childData.name }}</td>
+            <td>
+                <nz-badge [nzStatus]="'success'" [nzText]="'Finished'"></nz-badge>
+            </td>
+            <td>{{ childData.upgradeNum }}</td>
+            <td>
+                <span class="table-operation">
+                    <a nz-dropdown class="operation" [nzDropdownMenu]="menu">
+                        Pause
+                        <span nz-icon nzType="down"></span>
+                    </a>
+                    <nz-dropdown-menu #menu="nzDropdownMenu">
+                        <ul nz-menu>
+                            <li nz-menu-item>
+                                <a>Action 1</a>
+                            </li>
+                            <li nz-menu-item>
+                                <a>Action 2</a>
+                            </li>
+                        </ul>
+                    </nz-dropdown-menu>
+                    <nz-divider nzType="vertical"></nz-divider>
+                    <a class="operation">Stop</a>
+                    <nz-divider nzType="vertical"></nz-divider>
+                    <a>More</a>
+                </span>
+            </td>
+        </tr>
+    </tbody> -->
+<!-- </nz-table>
+</td>
+</tr> -->
+</tbody>
 </nz-table>

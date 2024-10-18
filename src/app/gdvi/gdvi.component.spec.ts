@@ -10,7 +10,7 @@ describe('GDViComponent', () => {
     await TestBed.configureTestingModule({
       imports: [GDViComponent]
     })
-      .compileComponents();
+    .compileComponents();
 
     fixture = TestBed.createComponent(GDViComponent);
     component = fixture.componentInstance;

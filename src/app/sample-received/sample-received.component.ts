@@ -25,10 +25,25 @@ export class SampleReceivedComponent {
   constructor(private sampleReceivedService: ApiService,private router: Router) {}
 
   ngOnInit(): void {
+    // this.loadProjectIds();
     this.getPendingProjects();
     this.getDoneProjects();
     this.getAllProjectsSentToday();
   }
+  
+
+//   loadProjectIds(): void {
+//     this.sampleReceivedService.getAllProjectIds().subscribe({
+//       next: (data) => {
+//         this.projectIds = data.filter(item => item.projectId !== null).map(item => item.id); // Lấy danh sách id
+//         console.log('Danh sách Project IDs:', this.projectIds);
+//       },
+//       error: (err) => {
+//         console.error('Lỗi khi tải danh sách Project IDs:', err);
+//       }
+//     });
+// }
+
 
 handleProjectId(projectId: string,id:string): void {
   console.log('ProjectId của dự án được chọn:', projectId);
@@ -40,7 +55,7 @@ handleProjectId(projectId: string,id:string): void {
     this.sampleReceivedService.getAllProjectsPending().subscribe({
       next: (data: SampleSentDTO[]) => {
         this.pendingProjects = data.map(item => ({
-          id: item.id,         
+          id: item.id,           // Lấy id
           projectId: item.projectId,
           sendDate: item.sendDate
         }));
@@ -55,7 +70,7 @@ getDoneProjects(): void {
     this.sampleReceivedService.getAllProjectsDone().subscribe({
       next: (data: SampleSentDTO[]) => {
         this.doneProjects = data.map(item => ({
-          id: item.id,        
+          id: item.id,           // Lấy id
           projectId: item.projectId,
           sendDate: item.sendDate
         }));
@@ -70,7 +85,7 @@ getAllProjectsSentToday(): void {
     this.sampleReceivedService.getAllProjectsSentToday().subscribe({
       next: (data: SampleSentDTO[]) => {
         this.projectsSentToday = data.map(item => ({
-          id: item.id,        
+          id: item.id,           // Lấy id
           projectId: item.projectId,
           sendDate: item.sendDate
         }));
@@ -94,12 +109,12 @@ getAllProjectsSentToday(): void {
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = 'yeu-cau-xac-nhan.pdf'; 
+        a.download = 'yeu-cau-xac-nhan.pdf'; // Đặt tên file tải xuống
         a.click();
-        window.URL.revokeObjectURL(url);
+        window.URL.revokeObjectURL(url); // Giải phóng URL sau khi tải
       },
       error: (err) => {
-        console.error('Lỗi khi tải PDF:', err); 
+        console.error('Lỗi khi tải PDF:', err); // Xử lý lỗi nếu có
       }
     });
   }

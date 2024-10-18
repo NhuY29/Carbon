@@ -31,13 +31,9 @@ export class AirdropComponent {
   constructor(private apiService: ApiService) { }
 
   airdrop() {
-    if (this.amount < 1000) {
-      this.responseMessage = `Số tiền tối thiểu để airdrop là 1000.`;
-      return;
-    }
-    this.apiService.airdropFunds(this.recipientPubkey, this.amount / 10000).subscribe(
+    this.apiService.airdropFunds(this.recipientPubkey, this.amount).subscribe(
       response => {
-        this.responseMessage = `Airdrop successful.`;
+        this.responseMessage = `Airdrop successful. Transaction signature: ${response}`;
       },
       error => {
         this.responseMessage = `Airdrop failed: ${error.message}`;

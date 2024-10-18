@@ -1,37 +1,34 @@
 .category-manager {
-  ul {
-    list-style-type: none;
-    padding-left: 20px;
-
-    li {
-      margin-bottom: 10px;
-
+    ul {
+      list-style-type: none;
+      padding-left: 20px;
+  
+      li {
+        margin-bottom: 10px;
+        button {
+          margin-left: 10px;
+        }
+      }
+    }
+  
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+  
+      input, textarea, select {
+        padding: 8px;
+        font-size: 14px;
+      }
+  
       button {
-        margin-left: 10px;
+        width: 100px;
+        padding: 8px;
+        font-size: 14px;
       }
     }
   }
-
-  form {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-
-    input,
-    textarea,
-    select {
-      padding: 8px;
-      font-size: 14px;
-    }
-
-    button {
-      width: 100px;
-      padding: 8px;
-      font-size: 14px;
-    }
-  }
-}
-
+  /* common-category.component.scss */
 .overlay {
   position: fixed;
   top: 0;
@@ -44,7 +41,6 @@
   align-items: center;
   z-index: 1000;
 }
-
 .form-container {
   background: #fff;
   padding: 20px;
@@ -61,7 +57,7 @@
   border-radius: 4px;
   transition: background-color 0.3s ease, color 0.3s ease;
   text-align: center;
-  line-height: 1.5;
+  line-height: 1.5; /* Adjust as needed to vertically center the text */
 
   &:hover {
     background-color: #40a9ff;
@@ -73,10 +69,11 @@
   background-color: #f5222d;
   color: #fff;
   text-align: center;
-  line-height: 1.5;
+  line-height: 1.5; /* Adjust as needed to vertically center the text */
 
   &:hover {
     background-color: #ff4d4f;
     color: #fff;
   }
 }
+  

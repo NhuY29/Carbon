@@ -1,3 +1,4 @@
+/* common-category.component.scss */
 .overlay {
   position: fixed;
   top: 0;
@@ -23,7 +24,6 @@
 .nx-table {
   margin-top: 20px;
 }
-
 [nz-button] {
   margin-right: 8px;
   margin-bottom: 12px;
@@ -43,32 +43,27 @@
   white-space: normal;
   overflow-wrap: break-word;
 }
-
 .wrap-text {
   word-wrap: break-word;
   white-space: normal;
 }
-
 .search-container {
   display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 20px;
+  align-items: center; /* Căn giữa theo chiều dọc */
+  gap: 10px; /* Khoảng cách giữa các phần tử */
+  margin-bottom: 20px; /* Khoảng cách dưới cùng */
 }
 
-input[nz-input],
-select,
-nz-select {
-  flex: 1;
-  min-width: 200px;
-  padding: 8px;
+input[nz-input], select,nz-select {
+  flex: 1; /* Đặt chiều rộng của input và select bằng nhau */
+  min-width: 200px; /* Chiều rộng tối thiểu */
+  padding: 8px; /* Padding bên trong */
 
-  border-radius: 4px;
-  transition: border-color 0.3s;
+  border-radius: 4px; /* Bo góc */
+  transition: border-color 0.3s; /* Hiệu ứng chuyển màu đường viền */
 }
 
-input[nz-input]:focus,
-select:focus {
-  border-color: #40a9ff;
-  outline: none;
+input[nz-input]:focus, select:focus {
+  border-color: #40a9ff; /* Màu đường viền khi focus */
+  outline: none; /* Bỏ viền ngoài khi focus */
 }

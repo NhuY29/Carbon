@@ -31,12 +31,12 @@ export class TokenComponent {
   getTokenData() {
     this.api.getTokenSolana().subscribe(
         (data) => {
-            console.log(data);
-            this.listOfData = data.tokens || []; 
+            console.log(data); // Kiểm tra dữ liệu trả về từ API
+            this.listOfData = data.tokens || []; // Đảm bảo listOfData là một mảng
         },
         (error) => {
             console.error('Error fetching token data', error);
-            this.listOfData = [];
+            this.listOfData = []; // Nếu có lỗi, khởi tạo thành mảng rỗng
         }
     );
 }

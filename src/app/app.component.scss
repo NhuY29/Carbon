@@ -70,17 +70,17 @@ nz-header {
 }
 
 nz-content {
-  margin: 0; 
-  overflow-y: auto; 
-  height: calc(100vh - 64px); 
+  margin: 0; /* Đặt margin của nội dung bằng 0 */
+  overflow-y: auto; /* Cho phép nội dung trượt */
+  height: calc(100vh - 64px); /* Chiều cao của nội dung bằng chiều cao viewport trừ chiều cao header */
 }
 
 .inner-content {
   padding: 24px;
   background: #fff;
-  min-height: 100%; 
-  height: auto; 
-  overflow: auto; 
+  min-height: 100%; /* Đảm bảo chiều cao tối thiểu là 100% */
+  height: auto; /* Cho phép chiều cao tự động nếu nội dung dài hơn */
+  overflow: auto; /* Đảm bảo nội dung có thể cuộn nếu vượt quá chiều cao */
 }
 
 

@@ -56,6 +56,7 @@ export class MeasurementDataAddComponent {
         this.dataService.getMeasurementDataById(this.measurementId).subscribe({
           next: (data: MeasurementDataRequest) => {
             this.measurementForm.patchValue(data);
+            // Populate measurements array if needed
             this.setMeasurements(data.measurements);
           },
           error: (error) => {
@@ -231,6 +232,7 @@ export class MeasurementDataAddComponent {
       if (this.isUpdateMode && this.measurementId) {
         this.dataService.updateMeasurementData(this.measurementId, formData).subscribe({
           next: (response) => {
+            // Kiểm tra phản hồi thành công
             if (response.success) {
               this.message.create('success', response.message);
               this.resetForm();

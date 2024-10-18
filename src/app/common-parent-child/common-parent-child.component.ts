@@ -71,7 +71,7 @@ export class CommonParentChildComponent implements OnInit {
   currentCategoryId: string | null = null;
   parentOptions: any[] = [];
   allOptions: any[] = [];
-  showForm = false;
+  showForm = false; 
   isEditing = false;
   constructor(
     private fb: FormBuilder,

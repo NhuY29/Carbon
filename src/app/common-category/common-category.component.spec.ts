@@ -10,7 +10,7 @@ describe('CommonCategoryComponent', () => {
     await TestBed.configureTestingModule({
       imports: [CommonCategoryComponent]
     })
-      .compileComponents();
+    .compileComponents();
 
     fixture = TestBed.createComponent(CommonCategoryComponent);
     component = fixture.componentInstance;

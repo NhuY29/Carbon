@@ -186,12 +186,14 @@ handleChange(info: any): void {
 
 onSubmit(): void {
   if (this.projectForm.valid) {
+    // Kiểm tra tọa độ
     const coordinates = this.projectForm.get('coordinates')?.value || [];
     if (coordinates.length === 0) {
       this.message.error('Please add at least one coordinate.');
       return;
     }
 
+    // Tạo đối tượng FormData để gửi dữ liệu
     const formData = new FormData();
     formData.append('projectName', this.projectForm.get('projectName')?.value || '');
     formData.append('projectDescription', this.projectForm.get('projectDescription')?.value || '');
@@ -203,6 +205,7 @@ onSubmit(): void {
     formData.append('standard', this.projectForm.get('standard')?.value || '');
     formData.append('field', this.projectForm.get('field')?.value || '');
 
+    // Thêm tọa độ vào FormData dưới dạng chuỗi JSON
     const coordinatesJson = JSON.stringify(coordinates);
     formData.append('coordinates', coordinatesJson);
 
@@ -249,7 +252,7 @@ resetForm(): void {
   this.projectForm.reset();
   this.selectedFiles = [];
   if (this.mapComponent) {
-    this.mapComponent.clearMap(); 
+    this.mapComponent.clearMap(); // Gọi clearMap để reset bản đồ
   }
 }
 

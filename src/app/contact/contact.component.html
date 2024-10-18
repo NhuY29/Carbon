@@ -2,11 +2,45 @@
   <h2>Danh Bạ</h2>
   <div class="scrollable-list">
     <nz-list [nzDataSource]="filteredContacts" nzBordered>
-      <nz-list-item *ngFor="let contact of filteredContacts" (mousedown)="startLongPress(contact)"
-        (mouseup)="endLongPress()" (click)="onSelectContact(contact)">
-        <nz-list-item-meta [nzTitle]="contact.username" [nzDescription]="contact.walletAddress"></nz-list-item-meta>
-      </nz-list-item>
+      <nz-list-item
+  *ngFor="let contact of filteredContacts"
+  (mousedown)="startLongPress(contact)"
+  (mouseup)="endLongPress()"
+  (click)="onSelectContact(contact)"
+>
+  <nz-list-item-meta [nzTitle]="contact.username" [nzDescription]="contact.walletAddress"></nz-list-item-meta>
+</nz-list-item>
 
     </nz-list>
   </div>
 </div>
+
+
+
+
+<!-- <nz-input-group [nzPrefix]="searchIcon">
+      <input
+        nz-input
+        placeholder="Tìm kiếm theo tên người dùng"
+        [(ngModel)]="searchTerm"
+        (input)="searchContacts(searchTerm)"
+      />
+    </nz-input-group>
+  
+    <form (ngSubmit)="addContact(newContact)" #contactForm="ngForm" class="contact-form">
+      <nz-form-item>
+        <nz-form-label [nzSpan]="6" nzRequired>Tên người dùng</nz-form-label>
+        <nz-form-control [nzSpan]="14" nzErrorTip="Tên người dùng là bắt buộc">
+          <input nz-input [(ngModel)]="newContact.username" name="username" required />
+        </nz-form-control>
+      </nz-form-item>
+  
+      <nz-form-item>
+        <nz-form-label [nzSpan]="6" nzRequired>Địa chỉ ví</nz-form-label>
+        <nz-form-control [nzSpan]="14" nzErrorTip="Địa chỉ ví là bắt buộc">
+          <input nz-input [(ngModel)]="newContact.walletAddress" name="walletAddress" required />
+        </nz-form-control>
+      </nz-form-item>
+  
+      <button nz-button nzType="primary" type="submit">Thêm Liên Hệ</button>
+    </form> -->

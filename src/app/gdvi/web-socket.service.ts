@@ -8,10 +8,10 @@ import Stomp from 'stompjs';
 export class WebSocketService {
   private stompClient: any;
 
-  constructor() { }
+  constructor() {}
 
   connect(publicKey: string) {
-    const socket = new SockJS('http://localhost:8080/ws');
+    const socket = new SockJS('http://localhost:8080/ws'); 
     this.stompClient = Stomp.over(socket);
     this.stompClient.connect({}, (frame: any) => {
       console.log('Connected: ' + frame);

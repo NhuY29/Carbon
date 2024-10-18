@@ -10,7 +10,7 @@ describe('FormXNGDComponent', () => {
     await TestBed.configureTestingModule({
       imports: [FormXNGDComponent]
     })
-      .compileComponents();
+    .compileComponents();
 
     fixture = TestBed.createComponent(FormXNGDComponent);
     component = fixture.componentInstance;

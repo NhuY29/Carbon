@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit ,Output,EventEmitter} from '@angular/core';
 import { NzTableModule } from 'ng-zorro-antd/table';
 import { ApiService } from '../../api.service';
 import { CommonCategoryDTO } from '../CommonCategory.interface';
@@ -23,12 +23,12 @@ import { HttpHeaders } from '@angular/common/http';
 })
 export class MeasurementDataComponent implements OnInit {
   @Output() totalSumChange = new EventEmitter<number>();
-  columns: { id: string, name: string, unit: string, conversionPrice: number }[] = [];
+  columns: { id: string, name: string,unit:string,conversionPrice:number }[] = [];
   rows: CategoryParentChild[] = [];
   serialNumbers: { [key: string]: string } = {};
-  idToName: { [key: string]: string } = {};
+  idToName: { [key: string]: string } = {}; 
   measurementForm: FormGroup;
-  isFormVisible = false;
+  isFormVisible = false; 
   projects: any[] = [];
   categories: any[] = [];
   categoriesPC: any[] = [];
@@ -48,7 +48,7 @@ export class MeasurementDataComponent implements OnInit {
   }
   getTotalSum(): number {
     const total = this.calculateTotalSum(this.rows);
-    this.totalSumChange.emit(total);
+    this.totalSumChange.emit(total); // Phát ra giá trị tổng
     return total;
   }
 
@@ -64,8 +64,8 @@ export class MeasurementDataComponent implements OnInit {
   ngOnInit(): void {
     this.route.queryParamMap.subscribe(params => {
       const id = params.get('id');
-
-      if (id) {
+      
+    if (id) {
         this.measurementId = id;
         console.log('Retrieved id as measurementId:', this.measurementId);
       } else {
@@ -73,14 +73,14 @@ export class MeasurementDataComponent implements OnInit {
           this.measurementId = params.get('id');
           console.log('Retrieved measurementId:', this.measurementId);
         });
-        ;
+    ;
       }
-
+  
       if (this.measurementId) {
         this.fetchAndUpdateMatrix(this.measurementId);
       }
     });
-
+  
     forkJoin({
       rows: this.loadRows(),
       columns: this.loadColumns()
@@ -96,7 +96,7 @@ export class MeasurementDataComponent implements OnInit {
       error: (err) => console.error('Error initializing data', err)
     });
   }
-
+  
 
   loadRows(): Observable<any> {
     return this.dataService.getAllParentCategories().pipe(
@@ -115,14 +115,14 @@ export class MeasurementDataComponent implements OnInit {
     );
   }
 
-  loadColumns(): Observable<{ id: string, name: string, unit: string }[]> {
+  loadColumns(): Observable<{ id: string, name: string,unit:string }[]> {
     return this.dataService.getCategoriesByCategoryChat().pipe(
       tap(response => {
         this.columns = response.map(category => ({
           id: category.id,
           name: category.name,
-          unit: category.unit,
-          conversionPrice: category.conversionPrice
+          unit:category.unit,
+          conversionPrice:category.conversionPrice
         }));
         this.initializeMatrix();
       }),
@@ -181,7 +181,20 @@ export class MeasurementDataComponent implements OnInit {
       return total + (value * column.conversionPrice);
     }, 0);
   }
+  // getTotalSum(): number {
+  //   const calculateTotal = (rows: CategoryParentChild[]): number => {
+  //     return rows.reduce((totalSum, row) => {
+  //       const rowTotal = this.getRowTotal(row.id);
+  //       const childrenTotal = row.children && row.children.length > 0
+  //         ? calculateTotal(row.children)
+  //         : 0;
+  //       return totalSum + rowTotal + childrenTotal;
+  //     }, 0);
+  //   };
+  //   return calculateTotal(this.rows);
+  // }
 
+  
   fetchChildCategoriesRecursive(category: CategoryParentChild, parentSerial: string): void {
     this.dataService.getAllChildCategories(category.id).subscribe({
       next: (children: CategoryParentChild[]) => {
@@ -299,6 +312,6 @@ export class MeasurementDataComponent implements OnInit {
       }
     });
   }
-
+  
 }
 
