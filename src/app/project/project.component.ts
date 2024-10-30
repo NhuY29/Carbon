@@ -16,9 +16,11 @@ import { NzUploadModule } from 'ng-zorro-antd/upload';
 import { ProjectDTO } from '../ProjectDTO';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ImageDTO } from '../ImageDTO';
-import { url } from 'inspector';
 import { CoordinateDTO } from '../CoordinateDTO';
 import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
+import { TranslateService, TranslateModule } from '@ngx-translate/core';
+import { AppTranslateModule } from '../translate.module';
+
 @Component({
   selector: 'app-project',
   standalone: true,
@@ -33,7 +35,8 @@ import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
     NzOptionComponent,
     CommonModule,
     NzListModule,
-    NzUploadModule
+    NzUploadModule,
+    AppTranslateModule
   ],
   templateUrl: './project.component.html',
   styleUrls: ['./project.component.scss']
@@ -49,235 +52,249 @@ export class ProjectComponent implements OnInit {
   initialCoordinates: CoordinateDTO[] = [];
   destination: { lat: number, lng: number } | null = null;
   isViewMode: boolean = false;
+  isWalletActive: boolean = true;
+
   constructor(
-  private fb: FormBuilder,
-  private message: NzMessageService,
-  private projectService: ApiService,
-  private route: ActivatedRoute,
-  private router: Router
-) {
-  this.projectForm = this.fb.group({
-    projectName: [null, [Validators.required]],
-    projectDescription: [null, [Validators.required]],
-    projectStatus: [null, [Validators.required]],
-    projectStartDate: [null, [Validators.required]],
-    projectEndDate: [null, [Validators.required]],
-    projectCode: [null, [Validators.required]],
-    type: [null, [Validators.required]],
-    standard: [null, [Validators.required]],
-    coordinates: this.fb.array([]),
-    field: [null, [Validators.required]],
-  }, { validator: this.dateRangeValidator });
-}
-dateRangeValidator(group: FormGroup) {
-  const startDate = group.get('projectStartDate')?.value;
-  const endDate = group.get('projectEndDate')?.value;
+    private fb: FormBuilder,
+    private message: NzMessageService,
+    private projectService: ApiService,
+    private route: ActivatedRoute,
+    private router: Router,
+    public translate: TranslateService,
+  ) {
+    this.projectForm = this.fb.group({
+      projectName: [null, [Validators.required]],
+      projectDescription: [null, [Validators.required]],
+      projectStatus: [null, [Validators.required]],
+      projectStartDate: [null, [Validators.required]],
+      projectEndDate: [null, [Validators.required]],
+      projectCode: [null, [Validators.required]],
+      type: [null, [Validators.required]],
+      standard: [null, [Validators.required]],
+      coordinates: this.fb.array([]),
+      field: [null, [Validators.required]],
+    }, { validator: this.dateRangeValidator });
 
-  if (startDate && endDate && new Date(startDate) >= new Date(endDate)) {
-    return { dateRangeInvalid: true };
+    translate.addLangs(['en', 'vi']);
+    translate.setDefaultLang('vi');
+    const savedState = localStorage.getItem('isWalletActive');
+    this.isWalletActive = savedState === 'true'; 
+    console.log(`Initial wallet state: ${this.isWalletActive ? 'ACTIVE' : 'INACTIVE'}`);
+    if (this.isWalletActive) {
+      this.translate.use('vi'); 
+    } else {
+      this.translate.use('en');
+    } 
   }
-  return null;
-}
 
-ngOnInit(): void {
-  this.route.paramMap.subscribe(params => {
-    this.projectId = params.get('id');
-    const mode = this.route.snapshot.queryParamMap.get('mode');
-    this.isViewMode = mode === 'view';
-    this.isUpdateMode = mode === 'edit';
+  dateRangeValidator(group: FormGroup) {
+    const startDate = group.get('projectStartDate')?.value;
+    const endDate = group.get('projectEndDate')?.value;
 
-    if (this.projectId) {
-      this.loadProjectData(this.projectId);
+    if (startDate && endDate && new Date(startDate) >= new Date(endDate)) {
+      return { dateRangeInvalid: true };
     }
-  });
-  this.loadCategoriesType();
-  this.loadCategoriesStandard();
-}
+    return null;
+  }
 
-loadProjectData(projectId: string): void {
-  this.projectService.getProjectById(projectId).subscribe({
-    next: (project: any) => {
-      this.projectForm.patchValue(project);
-      this.setCoordinates(project.coordinates);
-      this.setImages(project.images);
-      this.initialCoordinates = project.coordinates.map((coord: any) => ({
-        ...coord,
-        type: coord.type || undefined
-      }));
-      if (this.isViewMode) {
-        this.projectForm.disable();
+  ngOnInit(): void {
+    this.route.paramMap.subscribe(params => {
+      this.projectId = params.get('id');
+      const mode = this.route.snapshot.queryParamMap.get('mode');
+      this.isViewMode = mode === 'view';
+      this.isUpdateMode = mode === 'edit';
+
+      if (this.projectId) {
+        this.loadProjectData(this.projectId);
       }
-    },
-    error: (err) => {
-      console.error('Error loading project data', err);
-      this.message.error('Failed to load project data');
-    }
-  });
-}
-
-setCoordinates(coordinates: CoordinateDTO[]): void {
-  const coordinatesFormArray = this.projectForm.get('coordinates') as FormArray;
-  coordinatesFormArray.clear();
-  coordinates.forEach(coordinate => {
-    coordinatesFormArray.push(this.fb.group({
-      lat: [coordinate.lat, Validators.required],
-      lng: [coordinate.lng, Validators.required],
-      radius: [coordinate.radius],
-      order: [coordinate.order],
-      type: [coordinate.type]
-    }));
-  });
-}
-
-setImages(images: ImageDTO[]): void {
-  const baseUrl = 'http://localhost:8080/image/get-by-url?imageUrl=';
-  this.selectedFiles = images.map((image, index) => {
-    const imageUrl = `${baseUrl}${image.url}`;
-
-    return {
-      uid: `${index}`,
-      name: image.imageId || `image${index + 1}.png`,
-      status: 'done',
-      url: imageUrl
-    };
-  });
-}
-
-onCoordinatesChanged(newCoordinates: CoordinateDTO[]): void {
-  const coordinatesArray = this.projectForm.get('coordinates') as FormArray;
-  coordinatesArray.clear();
-  newCoordinates.forEach(coord => {
-    coordinatesArray.push(this.fb.group({
-      lat: [coord.lat],
-      lng: [coord.lng],
-      order: [coord.order],
-      radius: [coord.radius],
-      type: [coord.type]
-    }));
-  });
-}
-
-getDirections(): void {
-  if (this.initialCoordinates.length > 0) {
-    const destination = this.initialCoordinates[0];
-
-    this.mapComponent.locateUser().then((currentLocation) => {
-      if (currentLocation) {
-        this.mapComponent.calculateRoute(destination);
-      } else {
-        this.message.error('Unable to get current location.');
-      }
-    }).catch((error) => {
-      console.error('Error locating user:', error);
-      this.message.error('Error locating user.');
     });
-  } else {
-    this.message.warning('Please draw a point on the map first.');
+    this.loadCategoriesType();
+    this.loadCategoriesStandard();
   }
-}
 
-handleChange(info: any): void {
-  if (info.file.status === 'done' || info.file.status === 'uploading') {
-    this.selectedFiles = info.fileList.map((file: any) => file.originFileObj || file);
-  } else if (info.file.status === 'removed') {
-    this.selectedFiles = this.selectedFiles.filter(f => f.uid !== info.file.uid);
+  loadProjectData(projectId: string): void {
+    this.projectService.getProjectById(projectId).subscribe({
+      next: (project: any) => {
+        this.projectForm.patchValue(project);
+        this.setCoordinates(project.coordinates);
+        this.setImages(project.images);
+        this.initialCoordinates = project.coordinates.map((coord: any) => ({
+          ...coord,
+          type: coord.type || undefined
+        }));
+        if (this.isViewMode) {
+          this.projectForm.disable();
+        }
+      },
+      error: (err) => {
+        console.error('Error loading project data', err);
+        this.message.error('Failed to load project data');
+      }
+    });
   }
-}
 
-onSubmit(): void {
-  if (this.projectForm.valid) {
-    // Kiểm tra tọa độ
-    const coordinates = this.projectForm.get('coordinates')?.value || [];
-    if (coordinates.length === 0) {
-      this.message.error('Please add at least one coordinate.');
-      return;
-    }
+  setCoordinates(coordinates: CoordinateDTO[]): void {
+    const coordinatesFormArray = this.projectForm.get('coordinates') as FormArray;
+    coordinatesFormArray.clear();
+    coordinates.forEach(coordinate => {
+      coordinatesFormArray.push(this.fb.group({
+        lat: [coordinate.lat, Validators.required],
+        lng: [coordinate.lng, Validators.required],
+        radius: [coordinate.radius],
+        order: [coordinate.order],
+        type: [coordinate.type]
+      }));
+    });
+  }
 
-    // Tạo đối tượng FormData để gửi dữ liệu
-    const formData = new FormData();
-    formData.append('projectName', this.projectForm.get('projectName')?.value || '');
-    formData.append('projectDescription', this.projectForm.get('projectDescription')?.value || '');
-    formData.append('projectStatus', this.projectForm.get('projectStatus')?.value || '');
-    formData.append('projectStartDate', this.projectForm.get('projectStartDate')?.value || '');
-    formData.append('projectEndDate', this.projectForm.get('projectEndDate')?.value || '');
-    formData.append('projectCode', this.projectForm.get('projectCode')?.value || '');
-    formData.append('type', this.projectForm.get('type')?.value || '');
-    formData.append('standard', this.projectForm.get('standard')?.value || '');
-    formData.append('field', this.projectForm.get('field')?.value || '');
+  setImages(images: ImageDTO[]): void {
+    const baseUrl = 'http://localhost:8080/image/get-by-url?imageUrl=';
+    this.selectedFiles = images.map((image, index) => {
+      const imageUrl = `${baseUrl}${image.url}`;
 
-    // Thêm tọa độ vào FormData dưới dạng chuỗi JSON
-    const coordinatesJson = JSON.stringify(coordinates);
-    formData.append('coordinates', coordinatesJson);
+      return {
+        uid: `${index}`,
+        name: image.imageId || `image${index + 1}.png`,
+        status: 'done',
+        url: imageUrl
+      };
+    });
+  }
 
-    if (this.selectedFiles.length > 0) {
-      this.selectedFiles.forEach((file, index) => {
-        formData.append('images', file.originFileObj || file);
+  onCoordinatesChanged(newCoordinates: CoordinateDTO[]): void {
+    const coordinatesArray = this.projectForm.get('coordinates') as FormArray;
+    coordinatesArray.clear();
+    newCoordinates.forEach(coord => {
+      coordinatesArray.push(this.fb.group({
+        lat: [coord.lat],
+        lng: [coord.lng],
+        order: [coord.order],
+        radius: [coord.radius],
+        type: [coord.type]
+      }));
+    });
+  }
+
+  getDirections(): void {
+    if (this.initialCoordinates.length > 0) {
+      const destination = this.initialCoordinates[0];
+
+      this.mapComponent.locateUser().then((currentLocation) => {
+        if (currentLocation) {
+          this.mapComponent.calculateRoute(destination);
+        } else {
+          this.message.error('Unable to get current location.');
+        }
+      }).catch((error) => {
+        console.error('Error locating user:', error);
+        this.message.error('Error locating user.');
       });
     } else {
-      this.message.error('Please upload at least one image.');
-      return;
+      this.message.warning('Please draw a point on the map first.');
     }
+  }
 
-    if (this.isUpdateMode && this.projectId) {
-      this.projectService.updateProject(this.projectId, formData).subscribe(
-        response => {
-          this.message.success('Project updated successfully!');
-          this.router.navigate(['/projects']);
-        },
-        error => {
-          this.message.error('Failed to update project.');
-          console.error('Error:', error);
-           window.location.reload();
-        }
-      );
+  handleChange(info: any): void {
+    if (info.file.status === 'done' || info.file.status === 'uploading') {
+      this.selectedFiles = info.fileList.map((file: any) => file.originFileObj || file);
+    } else if (info.file.status === 'removed') {
+      this.selectedFiles = this.selectedFiles.filter(f => f.uid !== info.file.uid);
+    }
+  }
+
+  onSubmit(): void {
+    if (this.projectForm.valid) {
+      // Kiểm tra tọa độ
+      const coordinates = this.projectForm.get('coordinates')?.value || [];
+      if (coordinates.length === 0) {
+        this.message.error('Please add at least one coordinate.');
+        return;
+      }
+
+      // Tạo đối tượng FormData để gửi dữ liệu
+      const formData = new FormData();
+      formData.append('projectName', this.projectForm.get('projectName')?.value || '');
+      formData.append('projectDescription', this.projectForm.get('projectDescription')?.value || '');
+      formData.append('projectStatus', this.projectForm.get('projectStatus')?.value || '');
+      formData.append('projectStartDate', this.projectForm.get('projectStartDate')?.value || '');
+      formData.append('projectEndDate', this.projectForm.get('projectEndDate')?.value || '');
+      formData.append('projectCode', this.projectForm.get('projectCode')?.value || '');
+      formData.append('type', this.projectForm.get('type')?.value || '');
+      formData.append('standard', this.projectForm.get('standard')?.value || '');
+      formData.append('field', this.projectForm.get('field')?.value || '');
+
+      // Thêm tọa độ vào FormData dưới dạng chuỗi JSON
+      const coordinatesJson = JSON.stringify(coordinates);
+      formData.append('coordinates', coordinatesJson);
+
+      if (this.selectedFiles.length > 0) {
+        this.selectedFiles.forEach((file, index) => {
+          formData.append('images', file.originFileObj || file);
+        });
+      } else {
+        this.message.error('Please upload at least one image.');
+        return;
+      }
+
+      if (this.isUpdateMode && this.projectId) {
+        this.projectService.updateProject(this.projectId, formData).subscribe(
+          response => {
+            this.message.success('Project updated successfully!');
+            this.router.navigate(['/projects']);
+          },
+          error => {
+            this.message.error('Failed to update project.');
+            console.error('Error:', error);
+            window.location.reload();
+          }
+        );
+      } else {
+        this.projectService.createProject(formData).subscribe(
+          response => {
+            this.message.success('Project created successfully!');
+            this.resetForm();
+          },
+          error => {
+            this.message.error('Failed to create project.');
+            console.error('Error:', error);
+            window.location.reload();
+          }
+        );
+      }
     } else {
-      this.projectService.createProject(formData).subscribe(
-        response => {
-          this.message.success('Project created successfully!');
-          this.resetForm();
-        },
-        error => {
-          this.message.error('Failed to create project.');
-          console.error('Error:', error);
-           window.location.reload();
-        }
-      );
+      this.message.error('Please fill out the form correctly.');
     }
-  } else {
-    this.message.error('Please fill out the form correctly.');
   }
-}
 
-resetForm(): void {
-  this.projectForm.reset();
-  this.selectedFiles = [];
-  if (this.mapComponent) {
-    this.mapComponent.clearMap(); // Gọi clearMap để reset bản đồ
+  resetForm(): void {
+    this.projectForm.reset();
+    this.selectedFiles = [];
+    if (this.mapComponent) {
+      this.mapComponent.clearMap(); // Gọi clearMap để reset bản đồ
+    }
   }
-}
 
-loadCategoriesType(): void {
-  this.projectService.getCategoriesByCategoryLoaiHinh().subscribe(
-    (data: CommonCategoryDTO[]) => {
-      this.categoriesType = data;
-    },
-    error => {
-      this.message.error('Failed to load type categories.');
-      console.error('Error:', error);
-    }
-  );
-}
+  loadCategoriesType(): void {
+    this.projectService.getCategoriesByCategoryLoaiHinh().subscribe(
+      (data: CommonCategoryDTO[]) => {
+        this.categoriesType = data;
+      },
+      error => {
+        this.message.error('Failed to load type categories.');
+        console.error('Error:', error);
+      }
+    );
+  }
 
-loadCategoriesStandard(): void {
-  this.projectService.getCategoriesByCategoryTieuChuan().subscribe(
-    (data: CommonCategoryDTO[]) => {
-      this.categoriesStandard = data;
-    },
-    error => {
-      this.message.error('Failed to load standard categories.');
-      console.error('Error:', error);
-    }
-  );
-}
-  
+  loadCategoriesStandard(): void {
+    this.projectService.getCategoriesByCategoryTieuChuan().subscribe(
+      (data: CommonCategoryDTO[]) => {
+        this.categoriesStandard = data;
+      },
+      error => {
+        this.message.error('Failed to load standard categories.');
+        console.error('Error:', error);
+      }
+    );
+  }
 }

@@ -20,6 +20,9 @@ import { NzButtonSize } from 'ng-zorro-antd/button';
 import { Router } from '@angular/router';
 import { RegisterRequest } from '../../register.interface';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { TranslateService, TranslateModule } from '@ngx-translate/core';
+import { AppTranslateModule } from '../translate.module';
+import { SharedService } from '../shared-service.service';
 @Component({
   selector: 'app-user',
   standalone: true,
@@ -35,7 +38,8 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
     NzBadgeModule,
     NzPaginationModule,
     NzInputModule,
-    NzButtonModule
+    NzButtonModule,
+    AppTranslateModule
   ],
   templateUrl: './user.component.html',
   styleUrls: ['./user.component.scss'],
@@ -54,7 +58,7 @@ export class UserComponent implements OnInit {
   searchQuery = '';
   size: NzButtonSize = 'large';
   showAddForm: boolean = false;
-
+  isWalletActive: boolean = true;
   newUser = {
     username: '',
     firstname: '',
@@ -70,6 +74,7 @@ export class UserComponent implements OnInit {
     private modalService: NzModalService,
     private router: Router,
     private apiService: ApiService,
+    public translate: TranslateService
   ) {
     this.validateForm = this.fb.group({
       username: ['', [Validators.required]],
@@ -79,12 +84,26 @@ export class UserComponent implements OnInit {
       lastname: ['', [Validators.required]],
       roles: ['', [Validators.required]]
     });
-  }
+    translate.addLangs(['en', 'vi']);
+    translate.setDefaultLang('vi');
 
+    // Lấy giá trị từ localStorage khi khởi tạo
+    const savedState = localStorage.getItem('isWalletActive');
+    this.isWalletActive = savedState === 'true'; 
+    console.log(`Initial wallet state: ${this.isWalletActive ? 'ACTIVE' : 'INACTIVE'}`);
+    if (this.isWalletActive) {
+      this.translate.use('vi'); 
+    } else {
+      this.translate.use('en');
+    }
+  }
   ngOnInit(): void {
     this.loadData1();
     this.loadData2();
     this.loadData(this.pageIndex,this.pageSize);
+  }
+  switchLanguage(language: string) {
+    this.translate.use(language);
   }
   loadData1(): void {
     this.userService.getAllTrue().subscribe((data: UserDTO[]) => {

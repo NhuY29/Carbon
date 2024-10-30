@@ -25,7 +25,8 @@ import { NzTreeNodeOptions } from 'ng-zorro-antd/tree';
 import { NzTreeModule } from 'ng-zorro-antd/tree';
 import { NzDrawerModule } from 'ng-zorro-antd/drawer';
 import { NzTagModule } from 'ng-zorro-antd/tag';
-
+import { TranslateService, TranslateModule } from '@ngx-translate/core';
+import { AppTranslateModule } from '../translate.module';
 
 @Component({
   selector: 'app-common-parent-child',
@@ -50,7 +51,8 @@ import { NzTagModule } from 'ng-zorro-antd/tag';
     NzTreeViewModule,
     NzTreeModule,
     NzDrawerModule,
-    NzTagModule
+    NzTagModule,
+    AppTranslateModule
   ],
   templateUrl: './common-parent-child.component.html',
   styleUrls: ['./common-parent-child.component.scss'],
@@ -73,16 +75,28 @@ export class CommonParentChildComponent implements OnInit {
   allOptions: any[] = [];
   showForm = false; 
   isEditing = false;
+  isWalletActive: boolean = true;
   constructor(
     private fb: FormBuilder,
     private categoryService: ApiService,
-    private message: NzMessageService
+    private message: NzMessageService,
+    public translate: TranslateService,
   ) {
     this.categoryForm = this.fb.group({
       name: ['', Validators.required],
       description: ['', Validators.required],
       parentId: [null, Validators.required]
     });
+    translate.addLangs(['en', 'vi']);
+    translate.setDefaultLang('vi');
+    const savedState = localStorage.getItem('isWalletActive');
+    this.isWalletActive = savedState === 'true'; 
+    console.log(`Initial wallet state: ${this.isWalletActive ? 'ACTIVE' : 'INACTIVE'}`);
+    if (this.isWalletActive) {
+      this.translate.use('vi'); 
+    } else {
+      this.translate.use('en');
+    }
   }
 
   ngOnInit(): void {

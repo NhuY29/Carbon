@@ -1,23 +1,23 @@
 <div style="padding: 20px;">
-  <h2>Airdrop Funds</h2>
+  <h2>{{ 'AIRDROP.TITLE' | translate }}</h2>
   <form (ngSubmit)="airdrop()">
     <nz-form-item>
-      <nz-form-label [nzSm]="8" [nzXs]="24" for="recipientPubkey">Recipient Public Key:</nz-form-label>
+      <nz-form-label [nzSm]="8" [nzXs]="24" for="recipientPubkey">{{ 'AIRDROP.RECIPIENT_PUBLIC_KEY' | translate }}</nz-form-label>
       <nz-form-control [nzSm]="16" [nzXs]="24">
-        <input id="recipientPubkey" nz-input [(ngModel)]="recipientPubkey" name="recipientPubkey" required />
+        <input id="recipientPubkey" nz-input [(ngModel)]="recipientPubkey" name="recipientPubkey" [placeholder]="'AIRDROP.ENTER_PUBLIC_KEY' | translate" required />
       </nz-form-control>
     </nz-form-item>
     <nz-form-item>
-      <nz-form-label [nzSm]="8" [nzXs]="24" for="amount">Amount (SOL):</nz-form-label>
+      <nz-form-label [nzSm]="8" [nzXs]="24" for="amount">{{ 'AIRDROP.AMOUNT_SOL' | translate }}</nz-form-label>
       <nz-form-control [nzSm]="16" [nzXs]="24">
-        <input id="amount" nz-input type="number" [(ngModel)]="amount" name="amount" required />
+        <input id="amount" nz-input type="number" [(ngModel)]="amount" name="amount" [placeholder]="'AIRDROP.ENTER_AMOUNT' | translate" required min="1000" />
       </nz-form-control>
     </nz-form-item>
+    
     <nz-form-item>
       <nz-form-control [nzSm]="16" [nzXs]="24">
-        <button nz-button nzType="primary" type="submit">Airdrop</button>
+        <button nz-button nzType="primary" type="submit">{{ 'AIRDROP.BUTTON' | translate }}</button>
       </nz-form-control>
     </nz-form-item>
   </form>
-  <nz-alert *ngIf="responseMessage" [nzMessage]="responseMessage" [nzType]="'info'" [nzShowIcon]="true"></nz-alert>
 </div>

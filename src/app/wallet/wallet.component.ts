@@ -9,7 +9,8 @@ import { SolanaService } from '../../solanaApi.service';
 import { NzCardModule } from 'ng-zorro-antd/card';
 import { NzModalModule } from 'ng-zorro-antd/modal';
 import { NzModalService } from 'ng-zorro-antd/modal';
-
+import { TranslateService, TranslateModule } from '@ngx-translate/core';
+import { AppTranslateModule } from '../translate.module';
 @Component({
   selector: 'app-wallet',
   standalone: true,
@@ -20,7 +21,8 @@ import { NzModalService } from 'ng-zorro-antd/modal';
     NzInputModule,
     NzButtonModule,
     NzCardModule,
-    NzModalModule
+    NzModalModule,
+    AppTranslateModule
   ],
   templateUrl: './wallet.component.html',
   styleUrls: ['./wallet.component.scss']
@@ -31,13 +33,24 @@ export class WalletComponent {
   transactionHistory: any[] = [];
   isModalVisible = false;
   selectedTransaction: any = null;
-
-
+  isWalletActive: boolean = true;
   constructor(
     private solanaService: SolanaService,
     private message: NzMessageService,
-    private modal: NzModalService
-  ) { }
+    private modal: NzModalService,
+    public translate: TranslateService,
+  ) {
+    translate.addLangs(['en', 'vi']);
+    translate.setDefaultLang('vi');
+    const savedState = localStorage.getItem('isWalletActive');
+    this.isWalletActive = savedState === 'true'; 
+    console.log(`Initial wallet state: ${this.isWalletActive ? 'ACTIVE' : 'INACTIVE'}`);
+    if (this.isWalletActive) {
+      this.translate.use('vi'); 
+    } else {
+      this.translate.use('en');
+    }
+  }
 
   onPublicKeyChange(): void {
     if (this.publickey) {

@@ -2,24 +2,24 @@
   <div class="container">
     <div class="wrapper">
       <div class="close-btn" (click)="closeForm()">&#10005;</div>
-      <div class="title"><span>Login Form</span></div>
+      <div class="title"><span>{{ 'LOGIN.TITLE' | translate }}</span></div>
       <div nz-form-item class="row">
         <i class="fas fa-user"></i>
-        <nz-form-control nzErrorTip="Please input your username!">
-          <input type="text" nz-input placeholder="Username" formControlName="username"/>
+        <nz-form-control nzErrorTip="{{ 'LOGIN.USERNAME' | translate }} không hợp lệ!">
+          <input type="text" nz-input placeholder="{{ 'LOGIN.USERNAME' | translate }}" formControlName="username"/>
         </nz-form-control>
       </div>
       <div nz-form-item class="row">
         <i class="fas fa-lock"></i>
-        <nz-form-control nzErrorTip="Please input your password!">
-          <input type="password" nz-input placeholder="Password" formControlName="password"/>
+        <nz-form-control nzErrorTip="{{ 'LOGIN.PASSWORD' | translate }} không hợp lệ!">
+          <input type="password" nz-input placeholder="{{ 'LOGIN.PASSWORD' | translate }}" formControlName="password"/>
         </nz-form-control>
       </div>
-      <div class="pass"><a class="login-form-forgot">Forgot password?</a></div>
+      <div class="pass"><a class="login-form-forgot">{{ 'LOGIN.FORGOT_PASSWORD' | translate }}</a></div>
       <div class="row button">
-        <button nz-button class="login-form-button" [nzType]="'primary'" type="submit">Log in</button>
+        <button nz-button class="login-form-button" [nzType]="'primary'" type="submit">{{ 'LOGIN.LOGIN_BUTTON' | translate }}</button>
       </div>
-      <div class="signup-link">Not a member? <a routerLink="/">Signup now!</a></div>
+      <div class="signup-link">{{ 'LOGIN.SIGNUP_LINK' | translate }}</div>
     </div>
   </div>
 </form>

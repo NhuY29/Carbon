@@ -10,29 +10,41 @@ import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { Location } from '@angular/common';
-
+import { TranslateService, TranslateModule } from '@ngx-translate/core';
+import { AppTranslateModule } from '../translate.module';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [NzTransButtonModule, NzFormModule, NzInputModule, ReactiveFormsModule, NzButtonModule],
+  imports: [AppTranslateModule,NzTransButtonModule, NzFormModule, NzInputModule, ReactiveFormsModule, NzButtonModule],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent {
   validateForm: FormGroup;
-
+  isWalletActive: boolean = true;
   constructor(
     private fb: FormBuilder,
     private notification: NzNotificationService,
     private router: Router,
     private location: Location,
-    private authService: AuthService
+    private authService: AuthService,
+    public translate: TranslateService,
   ) {
     this.validateForm = this.fb.group({
       username: ['', [Validators.required]],
       password: ['', [Validators.required, Validators.minLength(6)]]
     });
+    translate.addLangs(['en', 'vi']);
+    translate.setDefaultLang('vi');
+    const savedState = localStorage.getItem('isWalletActive');
+    this.isWalletActive = savedState === 'true'; 
+    console.log(`Initial wallet state: ${this.isWalletActive ? 'ACTIVE' : 'INACTIVE'}`);
+    if (this.isWalletActive) {
+      this.translate.use('vi'); 
+    } else {
+      this.translate.use('en');
+    }
   }
 
   submitForm(): void {

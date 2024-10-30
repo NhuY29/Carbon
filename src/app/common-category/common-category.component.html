@@ -1,8 +1,8 @@
-<button nz-button nzType="primary" (click)="showForm = true; isEditing = false">Thêm danh mục</button>
+<button nz-button nzType="primary" (click)="showForm = true; isEditing = false">{{ 'FORM.ADD_CATEGORY' | translate }}</button>
 
 <div class="search-container">
-  <input nz-input placeholder="Tìm kiếm..." [(ngModel)]="searchTerm" (ngModelChange)="searchCategories()" />
-  <nz-select [(ngModel)]="category" nzAllowClear nzPlaceHolder="Choose" nzShowSearch (ngModelChange)="searchCategories()">
+  <input nz-input placeholder="{{ 'FORM.SEARCH' | translate }}" [(ngModel)]="searchTerm" (ngModelChange)="searchCategories()" />
+  <nz-select [(ngModel)]="category" nzAllowClear nzPlaceHolder="{{ 'FORM.CHOOSE' | translate }}" nzShowSearch (ngModelChange)="searchCategories()">
     <nz-option nzValue="TIEU_CHUAN" nzLabel="Tiêu chuẩn"></nz-option>
     <nz-option nzValue="LOAI_HINH" nzLabel="Loại hình"></nz-option>
     <nz-option nzValue="CHAT" nzLabel="Chất"></nz-option>
@@ -12,28 +12,28 @@
   <div class="form-container">
     <form [formGroup]="categoryForm" (ngSubmit)="onSubmit()">
       <nz-form-item>
-        <nz-form-label [nzSpan]="6" nzRequired>Mã</nz-form-label>
+        <nz-form-label [nzSpan]="6" nzRequired>{{ 'FORM.CODE' | translate }}</nz-form-label>
         <nz-form-control [nzSpan]="14" nzErrorTip="Please input the code!">
           <input nz-input formControlName="code" />
         </nz-form-control>
       </nz-form-item>
 
       <nz-form-item>
-        <nz-form-label [nzSpan]="6" nzRequired>Tên</nz-form-label>
+        <nz-form-label [nzSpan]="6" nzRequired>{{ 'FORM.NAME' | translate }}</nz-form-label>
         <nz-form-control [nzSpan]="14" nzErrorTip="Please input the name!">
           <input nz-input formControlName="name" />
         </nz-form-control>
       </nz-form-item>
 
       <nz-form-item>
-        <nz-form-label [nzSpan]="6">Mô tả</nz-form-label>
+        <nz-form-label [nzSpan]="6">{{ 'FORM.DESCRIPTION' | translate }}</nz-form-label>
         <nz-form-control [nzSpan]="14">
           <input nz-input formControlName="description" />
         </nz-form-control>
       </nz-form-item>
 
       <nz-form-item>
-        <nz-form-label [nzSpan]="6" nzRequired>Loại</nz-form-label>
+        <nz-form-label [nzSpan]="6" nzRequired>{{ 'FORM.CATEGORY' | translate }}</nz-form-label>
         <nz-form-control [nzSpan]="14" nzErrorTip="Please select a category!">
           <nz-select formControlName="category" (ngModelChange)="onCategoryChange($event)">
             <nz-option *ngFor="let cat of categories" [nzValue]="cat" [nzLabel]="cat"></nz-option>
@@ -42,14 +42,14 @@
       </nz-form-item>
 
       <nz-form-item *ngIf="isSubstancesCategory()">
-        <nz-form-label [nzSpan]="6">Đơn vị đo</nz-form-label>
+        <nz-form-label [nzSpan]="6">{{ 'FORM.UNIT' | translate }}</nz-form-label>
         <nz-form-control [nzSpan]="14">
           <input nz-input formControlName="unit" placeholder="tấn" />
         </nz-form-control>
       </nz-form-item>
 
       <nz-form-item *ngIf="isSubstancesCategory()">
-        <nz-form-label [nzSpan]="6">Đơn giá quy đổi</nz-form-label>
+        <nz-form-label [nzSpan]="6">{{ 'FORM.CONVERSION_PRICE' | translate }}</nz-form-label>
         <nz-form-control [nzSpan]="14">
           <input nz-input formControlName="conversionPrice" type="number" />
         </nz-form-control>
@@ -58,9 +58,9 @@
       <nz-form-item>
         <nz-form-control [nzSpan]="14" [nzOffset]="6">
           <button nz-button nzType="primary" type="submit">
-            {{ isEditing ? 'Cập nhật danh mục' : 'Tạo danh mục' }}
+            {{ isEditing ? ('FORM.UPDATE_CATEGORY' | translate) : ('FORM.CREATE_CATEGORY' | translate) }}
           </button>
-          <button nz-button nzType="default" (click)="showForm = false">Hủy</button>
+          <button nz-button nzType="default" (click)="showForm = false">{{ 'FORM.CANCEL' | translate }}</button>
         </nz-form-control>
       </nz-form-item>
     </form>
@@ -71,13 +71,13 @@
   [nzPageSize]="5" [nzShowPagination]="true" ngSkipHydration>
   <thead>
     <tr>
-      <th nzWidth="10%">Mã</th>
-      <th nzWidth="20%">Tên</th>
-      <th nzWidth="30%">Mô tả</th>
-      <th nzWidth="10%">Loại</th>
-      <th nzWidth="10%">Đơn vị đo</th>
-      <th nzWidth="10%">Đơn giá quy đổi</th>
-      <th nzWidth="10%">Thao tác</th>
+      <th nzWidth="10%">{{ 'TABLE.CODE' | translate }}</th>
+      <th nzWidth="20%">{{ 'TABLE.NAME' | translate }}</th>
+      <th nzWidth="30%">{{ 'TABLE.DESCRIPTION' | translate }}</th>
+      <th nzWidth="10%">{{ 'TABLE.CATEGORY' | translate }}</th>
+      <th nzWidth="10%">{{ 'TABLE.UNIT' | translate }}</th>
+      <th nzWidth="10%">{{ 'TABLE.CONVERSION_PRICE' | translate }}</th>
+      <th nzWidth="10%">{{ 'TABLE.ACTIONS' | translate }}</th>
     </tr>
   </thead>
   <tbody>

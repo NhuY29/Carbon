@@ -1,45 +1,45 @@
 <nz-input-group nzSearch nzSize="large" [nzAddOnAfter]="suffixButton">
-  <input type="text" nz-input placeholder="Nhập văn bản tìm Kiếm" [(ngModel)]="searchQuery" />
+  <input type="text" nz-input placeholder="{{ 'USER.SEARCH_PLACEHOLDER' | translate }}" [(ngModel)]="searchQuery" />
 </nz-input-group>
 <button nz-button nzType="primary" [nzSize]="size" nzShape="round" (click)="createUser()">
-  <span>+ Thêm</span>
+  <span>{{ 'USER.+ADD' | translate }}</span>
 </button>
 <ng-template #suffixButton>
-  <button nz-button nzType="primary" nzSize="large" nzSearch (click)="onSearch(searchQuery)">Tìm Kiếm</button>
+  <button nz-button nzType="primary" nzSize="large" nzSearch (click)="onSearch(searchQuery)">{{ 'USER.SEARCH' | translate }}</button>
 </ng-template>
 <div *ngIf="showAddForm" class="add-user-form">
   <nz-input-group nzSize="large">
-    <input type="text" nz-input placeholder="Tên người dùng" [(ngModel)]="newUser.username" />
+    <input type="text" nz-input placeholder="{{ 'USER.USERNAME' | translate }}" [(ngModel)]="newUser.username" />
   </nz-input-group>
   <nz-input-group nzSize="large">
-    <input type="text" nz-input placeholder="Tên" [(ngModel)]="newUser.firstname" />
+    <input type="text" nz-input placeholder="{{ 'USER.FIRST_NAME' | translate }}" [(ngModel)]="newUser.firstname" />
   </nz-input-group>
   <nz-input-group nzSize="large">
-    <input type="text" nz-input placeholder="Họ" [(ngModel)]="newUser.lastname" />
+    <input type="text" nz-input placeholder="{{ 'USER.LAST_NAME' | translate }}" [(ngModel)]="newUser.lastname" />
   </nz-input-group>
   <nz-input-group nzSize="large">
-    <input type="password" nz-input placeholder="Mật khẩu" [(ngModel)]="newUser.password" />
+    <input type="password" nz-input placeholder="{{ 'USER.PASSWORD' | translate }}" [(ngModel)]="newUser.password" />
   </nz-input-group>
   <nz-input-group nzSize="large">
-    <input type="password" nz-input placeholder="Xác nhận mật khẩu" [(ngModel)]="newUser.confirmPassword" />
+    <input type="password" nz-input placeholder="{{ 'USER.CONFIRM_PASSWORD' | translate }}" [(ngModel)]="newUser.confirmPassword" />
   </nz-input-group>
   <nz-input-group nzSize="large">
-    <input type="text" nz-input placeholder="Vai trò" [(ngModel)]="newUser.role" readonly />
+    <input type="text" nz-input placeholder="{{ 'USER.ROLE' | translate }}" [(ngModel)]="newUser.role" readonly />
   </nz-input-group>
-  <button nz-button nzType="default" (click)="cancelAddUser()">Hủy</button>
-  <button nz-button nzType="primary" (click)="saveUser()">Lưu</button>
+  <button nz-button nzType="default" (click)="cancelAddUser()">{{ 'USER.CANCEL' | translate }}</button>
+  <button nz-button nzType="primary" (click)="saveUser()">{{ 'USER.SAVE' | translate }}</button>
 </div>
 
 <nz-tabset [(nzSelectedIndex)]="selectedIndex">
-  <nz-tab nzTitle="Đang hoạt động">
+  <nz-tab nzTitle="{{ 'USER.ACTIVE' | translate }}">
     <nz-table #basicTable1 [nzData]="listOfData1" [nzPageSize]="5" ngSkipHydration>
       <thead>
         <tr>
-          <th nzCellControl="username">Tên người dùng</th>
-          <th nzCellControl="firstname">Tên</th>
-          <th nzCellControl="lastname">Họ</th>
-          <th nzCellControl="roles">Vai trò</th>
-          <th nzCellControl="action">Thao tác</th>
+          <th nzCellControl="username">{{ 'USER.USERNAME' | translate }}</th>
+          <th nzCellControl="firstname">{{ 'USER.FIRST_NAME' | translate }}</th>
+          <th nzCellControl="lastname">{{ 'USER.LAST_NAME' | translate }}</th>
+          <th nzCellControl="roles">{{ 'USER.ROLE' | translate }}</th>
+          <th nzCellControl="action">{{ 'USER.ACTION' | translate }}</th>
         </tr>
       </thead>
       <tbody>
@@ -61,18 +61,18 @@
   </nz-tab>
   <nz-tab [nzTitle]="pendingTabTemplate">
     <ng-template #pendingTabTemplate>
-      Chờ phê duyệt
+      {{ 'USER.PENDING_APPROVAL' | translate }}
       <nz-badge [nzCount]="listOfData2.length"></nz-badge>
     </ng-template>
     <nz-table #basicTable2 [nzData]="listOfData2" [nzPageSize]="5" ngSkipHydration>
       <thead>
         <tr>
-          <th nzCellControl="username">Tên người dùng</th>
-          <th nzCellControl="firstname">Tên</th>
-          <th nzCellControl="lastname">Họ</th>
-          <th nzCellControl="roles">Vai trò</th>
-          <th nzCellControl="status">Trạng thái</th>
-          <th nzCellControl="action">Thao tác</th>
+          <th nzCellControl="username">{{ 'USER.USERNAME' | translate }}</th>
+          <th nzCellControl="firstname">{{ 'USER.FIRST_NAME' | translate }}</th>
+          <th nzCellControl="lastname">{{ 'USER.LAST_NAME' | translate }}</th>
+          <th nzCellControl="roles">{{ 'USER.ROLE' | translate }}</th>
+          <th nzCellControl="status">{{ 'USER.STATUS' | translate }}</th>
+          <th nzCellControl="action">{{ 'USER.ACTION' | translate }}</th>
         </tr>
       </thead>
       <tbody>

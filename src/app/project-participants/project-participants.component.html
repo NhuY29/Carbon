@@ -1,11 +1,11 @@
-<h3>Danh sách người tham gia vào dự án</h3>
+<h3>{{ 'participantsList.title' | translate }}</h3>
 <div class="participants-container">
   <nz-card *ngFor="let participant of participants" [nzBordered]="true" class="participant-card">
-    <nz-card-meta [nzAvatar]="nzAvatarTemplate" [nzTitle]="participant.username">
-    </nz-card-meta>
+    <nz-card-meta [nzAvatar]="nzAvatarTemplate" [nzTitle]="participant.username"></nz-card-meta>
     <ng-template #nzAvatarTemplate>
       <nz-avatar [nzText]="getAvatarText(participant.username)"></nz-avatar>
     </ng-template>
     <div [innerHTML]="getDescription(participant)"></div>
   </nz-card>
+  <div *ngIf="participants.length === 0">{{ 'participantsList.noParticipants' | translate }}</div>
 </div>

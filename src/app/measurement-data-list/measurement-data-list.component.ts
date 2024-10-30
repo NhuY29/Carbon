@@ -9,7 +9,8 @@ import { NzMessageService } from 'ng-zorro-antd/message';
 import { forkJoin } from 'rxjs';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzIconModule } from 'ng-zorro-antd/icon';
-
+import { TranslateService, TranslateModule } from '@ngx-translate/core';
+import { AppTranslateModule } from '../translate.module';
 export interface MeasurementDataDTO {
   id: string;
   measurer: string;
@@ -23,7 +24,7 @@ export interface MeasurementDataDTO {
 @Component({
   selector: 'app-measurement-data-list',
   standalone: true,
-  imports: [NzTableModule, CommonModule, NzButtonModule, NzIconModule],
+  imports: [AppTranslateModule,NzTableModule, CommonModule, NzButtonModule, NzIconModule],
   templateUrl: './measurement-data-list.component.html',
   styleUrls: ['./measurement-data-list.component.scss']
 })
@@ -31,13 +32,26 @@ export class MeasurementDataListComponent implements OnInit {
   measurement: MeasurementDataDTO[] = [];
   projectId: string | null = null;
   idFromRoute: string | null = null;
+  isWalletActive: boolean = true;
   constructor(
     private apiService: ApiService,
     private modal: NzModalService,
     private message: NzMessageService,
     private router: Router,
-    private route: ActivatedRoute
-  ) { }
+    private route: ActivatedRoute,
+    public translate: TranslateService,
+  ) { 
+    translate.addLangs(['en', 'vi']);
+    translate.setDefaultLang('vi');
+    const savedState = localStorage.getItem('isWalletActive');
+    this.isWalletActive = savedState === 'true'; 
+    console.log(`Initial wallet state: ${this.isWalletActive ? 'ACTIVE' : 'INACTIVE'}`);
+    if (this.isWalletActive) {
+      this.translate.use('vi'); 
+    } else {
+      this.translate.use('en');
+    }
+  }
   navigateToMeasurement(measurementId: string): void {
     this.router.navigate([`/measurementData/${measurementId}`]);
   }

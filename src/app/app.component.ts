@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit, Inject, PLATFORM_ID } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { RouterLink, RouterOutlet, RouterLinkActive } from '@angular/router';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzLayoutModule } from 'ng-zorro-antd/layout';
@@ -9,20 +9,37 @@ import { LoginComponent } from './login/login.component';
 import { AuthService } from './services/auth.service';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { UserComponent } from './user/user.component';
-import { NzButtonSize } from 'ng-zorro-antd/button';
-import { ApiService } from '../api.service';
 import { NzPopoverModule } from 'ng-zorro-antd/popover';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { TransactionFormComponent } from './transaction-form/transaction-form.component';
 import { TransactionHistoryComponent } from './transaction-history/transaction-history.component';
 import { NzAvatarModule } from 'ng-zorro-antd/avatar';
-import { Inject, PLATFORM_ID } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
+import { TranslateService, TranslateModule } from '@ngx-translate/core';
+import { AppTranslateModule } from './translate.module';
+import { ApiService } from '../api.service';
+import { SharedService } from './shared-service.service';
+
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [NzAvatarModule, NzButtonModule, NzPopoverModule, CommonModule, RouterLink, RouterOutlet, NzIconModule, NzLayoutModule, NzMenuModule, RegisterComponent, RouterLinkActive, RegisterComponent, LoginComponent, UserComponent,],
+  imports: [
+    CommonModule,
+    RouterLink,
+    RouterOutlet,
+    RouterLinkActive,
+    NzIconModule,
+    NzLayoutModule,
+    NzMenuModule,
+    NzPopoverModule,
+    NzButtonModule,
+    NzAvatarModule,
+    RegisterComponent,
+    LoginComponent,
+    UserComponent,
+    AppTranslateModule,
+  ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
@@ -31,23 +48,49 @@ export class AppComponent implements OnInit {
   isCollapsed = false;
   username: string = '';
   avatarUrl: string = '';
+  loading = false;
+  isWalletActive: boolean = true;
+
   constructor(
     @Inject(PLATFORM_ID) private platformId: Object,
     private modal: NzModalService,
     private authService: AuthService,
     private notification: NzNotificationService,
-    private apiService: ApiService
-  ) { }
+    private apiService: ApiService,
+    public translate: TranslateService,
+    private sharedService: SharedService
+  ) {
+    translate.addLangs(['en', 'vi']);
+    translate.setDefaultLang('en');
+  }
+
+  ngOnInit(): void {
+    this.getUsername();
+    const savedState = localStorage.getItem('isWalletActive');
+    this.isWalletActive = savedState === 'true'; 
+    console.log(`Initial wallet state: ${this.isWalletActive ? 'ACTIVE' : 'INACTIVE'}`);
+    if (this.isWalletActive) {
+      this.translate.use('vi'); 
+    } else {
+      this.translate.use('en');
+    }
+    this.sharedService.currentLanguage.subscribe(language => {
+      this.translate.use(language);
+    });
+  }
+
+  switchLanguage(language: string) {
+    this.translate.use(language);
+    this.sharedService.changeLanguage(language);
+  }
+
   logout() {
     this.authService.logout();
     localStorage.removeItem('token');
     window.location.replace('/login');
     this.notification.success('Success', 'Logout successful!');
   }
-  loading = false;
-  ngOnInit(): void {
-    this.getUsername();
-  }
+
   getWalletInfo() {
     if (this.walletInfo || this.loading) {
       return;
@@ -71,6 +114,7 @@ export class AppComponent implements OnInit {
       }
     );
   }
+
   openTransactionForm(): void {
     this.modal.create({
       nzTitle: 'Thực hiện giao dịch',
@@ -78,6 +122,7 @@ export class AppComponent implements OnInit {
       nzFooter: null,
     });
   }
+
   openTransactionHistory(): void {
     this.modal.create({
       nzContent: TransactionHistoryComponent,
@@ -85,6 +130,7 @@ export class AppComponent implements OnInit {
       nzStyle: { width: '1700px' }
     });
   }
+
   getUsername(): void {
     if (isPlatformBrowser(this.platformId)) {
       const token = localStorage.getItem('token') || '';
@@ -106,5 +152,4 @@ export class AppComponent implements OnInit {
       console.warn('This code is running on the server-side.');
     }
   }
-
 }

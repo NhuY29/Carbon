@@ -10,6 +10,8 @@ import { forkJoin } from 'rxjs';
 import { Router } from '@angular/router';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzIconModule } from 'ng-zorro-antd/icon';
+import { TranslateService, TranslateModule } from '@ngx-translate/core';
+import { AppTranslateModule } from '../translate.module';
 export interface ImageDTO {
   imageId: string;
   url: string;
@@ -30,7 +32,7 @@ export interface ProjectDTO {
 @Component({
   selector: 'app-myproject',
   standalone: true,
-  imports: [NzTableModule,CommonModule,NzButtonModule,NzIconModule],
+  imports: [AppTranslateModule,NzTableModule,CommonModule,NzButtonModule,NzIconModule],
   templateUrl: './myproject.component.html',
   styleUrl: './myproject.component.scss',
   host: { 'ngSkipHydration': '' } 
@@ -38,7 +40,19 @@ export interface ProjectDTO {
 export class MyprojectComponent {
   projects: ProjectDTO[] = [];
   imageUrls: { [key: string]: string[] } = {};
-  constructor(private projectService: ApiService,private message: NzMessageService, private router: Router,private modal: NzModalService,  ) {}
+  isWalletActive: boolean = true;
+  constructor(public translate: TranslateService,private projectService: ApiService,private message: NzMessageService, private router: Router,private modal: NzModalService,  ) {
+    translate.addLangs(['en', 'vi']);
+    translate.setDefaultLang('vi');
+    const savedState = localStorage.getItem('isWalletActive');
+    this.isWalletActive = savedState === 'true'; 
+    console.log(`Initial wallet state: ${this.isWalletActive ? 'ACTIVE' : 'INACTIVE'}`);
+    if (this.isWalletActive) {
+      this.translate.use('vi'); 
+    } else {
+      this.translate.use('en');
+    }
+  }
 
   ngOnInit(): void {
     this.loadProjects();

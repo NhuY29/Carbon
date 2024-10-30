@@ -15,6 +15,7 @@ import { SampleSentDTO } from './app/SampleSentDTO';
 import { MeasurementDataRequest } from './app/MeasurementDataRequest';
 import { catchError } from 'rxjs/operators';
 import { Contact } from './app/contact/contact.modal';
+import { TradeDTO } from './app/sample-sent/tradeDTO';
 @Injectable({
   providedIn: 'root'
 })
@@ -727,23 +728,22 @@ export class ApiService {
 
     return this.http.get<MeasurementDataRequest>(`${this.apiUrl}/measurementData/measurementDataRequest/${id}`, { headers });
   }
-  supplyToken(projectId: string, quantity: number): Observable<any> {
+  supplyToken(projectId: string, quantity: number, price: string): Observable<any> {
     const token = localStorage.getItem('token');
     if (!token) {
       throw new Error('Token không tồn tại.');
     }
-
+  
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`,
       'Content-Type': 'application/json'
     });
-
-    // Truyền cả projectId và quantity trong params
+  
     const params = new HttpParams()
       .set('projectId', projectId)
-      .set('quantity', quantity.toString());
-
-    // Thực hiện POST request với params và headers
+      .set('quantity', quantity.toString())
+      .set('price', price);
+  
     return this.http.post<any>(`${this.apiUrl}/sampleSent/TokenSupply`, null, { headers, params })
       .pipe(
         catchError((error) => {
@@ -752,6 +752,7 @@ export class ApiService {
         })
       );
   }
+  
 
 
   sendTransaction(senderSecretKeyBase58: string, receiverPublicKey: string, amount: number, content?: string): Observable<string> {
@@ -873,6 +874,66 @@ addContact(publicKey: string, contact: Contact): Observable<any> {
     });
     return this.http.get<Contact[]>(`${this.apiUrl}/contacts/search?username=${username}`, { headers });
   }
+  getPaymentResult(
+    vnp_Amount: string, 
+    vnp_TxnRef: string, 
+    vnp_PayDate: string, 
+    vnp_ResponseCode: string, 
+    vnp_SecureHash: string,
+    vnp_OrderInfo: string,
+    vnp_BankCode: string,
+    vnp_BankTranNo: string,
+    vnp_CardType: string,
+    vnp_TmnCode: string,
+    responseCode: string,
+): Observable<any> {
+    const token = localStorage.getItem('token');
+  
+    if (!token) {
+        return throwError(new Error('Token không tồn tại.'));
+    }
+  
+    const headers = new HttpHeaders({
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+    });
+  
+    return this.http.get(`${this.apiUrl}/payment_infor?vnp_Amount=${vnp_Amount}&vnp_TxnRef=${vnp_TxnRef}&vnp_PayDate=${vnp_PayDate}&vnp_ResponseCode=${vnp_ResponseCode}&vnp_SecureHash=${vnp_SecureHash}&vnp_OrderInfo=${vnp_OrderInfo}&vnp_BankCode=${vnp_BankCode}&vnp_BankTranNo=${vnp_BankTranNo}&vnp_CardType=${vnp_CardType}&vnp_TmnCode=${vnp_TmnCode}&responseCode=${responseCode}`, { headers });
+}
 
+  startPayment(amount: number, username: string): Observable<string> {
+    const token = localStorage.getItem('token');
+
+    if (!token) {
+      return throwError(new Error('Token không tồn tại.'));
+    }
+
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+    
+    const params = { amount,username };
+    return this.http.get<string>(`${this.apiUrl}/pay` , { headers, params, responseType: 'text' as 'json' });
+  }
+  getAllTrades(): Observable<TradeDTO[]> {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      return throwError(() => new Error('Token không tồn tại.'));
+    }
+
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+
+    return this.http.get<TradeDTO[]>(`${this.apiUrl}/trade`, { headers })
+      .pipe(
+        catchError(error => {
+          console.error('Có lỗi xảy ra khi lấy danh sách giao dịch:', error);
+          return throwError(() => new Error('Lỗi khi lấy danh sách giao dịch.')); // Thông báo lỗi cho người dùng
+        })
+      );
+  }
 }
 

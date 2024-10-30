@@ -1,13 +1,16 @@
 import { Component, AfterViewInit, Output, EventEmitter, Input, SimpleChanges } from '@angular/core';
-
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common'; 
+import '@fortawesome/fontawesome-free/css/all.css';
 @Component({
   selector: 'app-map',
   standalone: true,
+  imports: [ReactiveFormsModule, CommonModule], 
   templateUrl: './map.component.html',
   styleUrls: ['./map.component.scss']
 })
 export class MapComponent implements AfterViewInit {
-   @Output() coordinatesChanged = new EventEmitter<any[]>();
+  @Output() coordinatesChanged = new EventEmitter<any[]>();
   @Input() initialCoordinates: { lat: number, lng: number, order: number, radius?: number, type?: string }[] = [];
   private map: any;
   private markers: any[] = [];
@@ -18,15 +21,23 @@ export class MapComponent implements AfterViewInit {
   private drawnPolygon: any;
   private routingControl: any;
   private currentLocation: L.LatLng | null = null;
-  constructor() { }
+  private tileLayers: any = {};
+  private currentTileLayer: any;
+  public destination: { lat: number, lng: number } | null = null; 
+  public showDirectionsForm: boolean = false;
+  public directionsForm: FormGroup;
+
+  constructor(private fb: FormBuilder) {
+    this.directionsForm = this.fb.group({
+      destination: ['', Validators.required],
+      transportMode: ['driving', Validators.required]
+    });
+  }
 
   ngAfterViewInit(): void {
-    console.log('ngAfterViewInit được gọi');
     if (typeof window !== 'undefined') {
-      console.log('ngAfterViewInit được gọi load');
       this.loadLeaflet();
-      console.log('ngAfterViewInit được gọi load xong');
-    }
+    } 
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -50,10 +61,30 @@ export class MapComponent implements AfterViewInit {
   private initMap(L: any): void {
     this.map = L.map('map').setView([16.6769728, 105.4758068], 6.33);
 
-    L.tileLayer('https://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
-      maxZoom: 20,
-      subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
-    }).addTo(this.map);
+    this.tileLayers = {
+      'Bản đồ đường phố <img src="https://maps.gstatic.com/tactile/layerswitcher/ic_transit_colors2-2x.png" width="50" height="50">': L.tileLayer('https://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
+        maxZoom: 20,
+        subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
+      }),
+      'Bản đồ vệ tinh <img src="https://maps.gstatic.com/tactile/layerswitcher/ic_satellite-1x.png">': L.tileLayer('https://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
+        maxZoom: 20,
+        subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
+      }),
+      'Bản đồ kết hợp <img src="https://maps.gstatic.com/tactile/layerswitcher/ic_bicycling_colors2-2x.png" width="50" height="50">': L.tileLayer('https://{s}.google.com/vt/lyrs=y&x={x}&y={y}&z={z}', {
+        maxZoom: 20,
+        subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
+      }),
+      'Bản đồ địa hình <img src="https://maps.gstatic.com/tactile/layerswitcher/ic_terrain-1x.png">': L.tileLayer('https://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}', {
+        maxZoom: 20,
+        subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
+      })
+    };
+
+  
+    this.currentTileLayer = this.tileLayers['Bản đồ đường phố <img src="https://maps.gstatic.com/tactile/layerswitcher/ic_transit_colors2-2x.png" width="50" height="50">'];
+    this.currentTileLayer.addTo(this.map);
+
+    L.control.layers(this.tileLayers).addTo(this.map);
 
     L.Icon.Default.mergeOptions({
       iconRetinaUrl: 'marker-icon-2x.png',
@@ -78,7 +109,76 @@ export class MapComponent implements AfterViewInit {
       }
     });
     this.map.addControl(drawControl);
-
+    const customControlDirections = L.Control.extend({
+      options: {
+        position: 'topright'
+      },
+      onAdd: (map: any) => {
+        const container = L.DomUtil.create('div', 'leaflet-bar leaflet-control leaflet-control-custom');
+        container.innerHTML = '<i class="fa-solid fa-diamond-turn-right"style="font-size: 20px;"></i>';
+        container.title = " Chỉ đường";  
+      
+        container.style.backgroundColor = 'white';
+        container.style.width = '50px'; 
+        container.style.height = '50px';
+        container.style.cursor = 'pointer';
+        container.style.display = 'flex'; 
+        container.style.alignItems = 'center'; 
+        container.style.justifyContent = 'center'; 
+        container.style.borderRadius = '5px'; 
+    
+        container.onclick = () => {
+          this.showDirectionsForm = !this.showDirectionsForm; 
+        };
+    
+        return container;
+      }
+    });
+    
+    this.map.addControl(new customControlDirections());
+    
+    const customControl = L.Control.extend({
+      options: {
+        position: 'topright'
+      },
+      onAdd: (map: any) => {
+        const container = L.DomUtil.create('div', 'leaflet-bar leaflet-control leaflet-control-custom');
+        
+        container.innerHTML = '<i class="fa-solid fa-crosshairs" style="font-size: 20px;"></i>';
+        container.title = "Hiển thị vị trí của bạn";  
+        
+        container.style.backgroundColor = 'white';
+        container.style.width = '50px'; 
+        container.style.height = '50px'; 
+        container.style.lineHeight = '50px';
+        container.style.textAlign = 'center'; 
+        container.style.cursor = 'pointer';
+        container.style.transition = 'background-color 0.3s';  
+        container.style.borderRadius = '5px'; 
+    
+        container.onmouseenter = () => {
+          container.style.backgroundColor = '#f0f0f0'; 
+        };
+        container.onmouseleave = () => {
+          container.style.backgroundColor = 'white'; 
+        };
+    
+        container.onclick = () => {
+          this.locateUser()
+            .then(latlng => {
+              console.log("Current location:", latlng); 
+            })
+            .catch(error => {
+              console.error("Error locating user:", error); 
+            });
+        };
+    
+        return container;
+      }
+    });
+    
+    this.map.addControl(new customControl());
+    
     this.map.on(L.Draw.Event.CREATED, (event: any) => {
       const layer = event.layer;
 
@@ -156,6 +256,10 @@ export class MapComponent implements AfterViewInit {
       this.drawnItems.addLayer(polygon);
       this.drawnPolygonPoints = this.initialCoordinates;
       this.coordinatesChanged.emit(this.initialCoordinates);
+
+      // Zoom to the bounds of the polygon
+      const bounds = L.latLngBounds(latLngs);
+      this.map.fitBounds(bounds);
     }
   }
 
@@ -249,7 +353,7 @@ export class MapComponent implements AfterViewInit {
             reject(error); // Reject with the error
           },
           {
-            enableHighAccuracy: true,
+            enableHighAccuracy: true, 
             timeout: 5000,
             maximumAge: 0
           }
@@ -261,4 +365,55 @@ export class MapComponent implements AfterViewInit {
     });
   }
 
+  public async changeMapType(event: any): Promise<void> {
+    const L = (await import('leaflet')).default;
+    const mapType = event.target.value;
+
+    // Xóa lớp bản đồ cũ nếu có
+    if (this.currentTileLayer) {
+      this.map.removeLayer(this.currentTileLayer);
+    }
+
+    // Khởi tạo lớp bản đồ mới
+    switch (mapType) {
+      case 'roadmap':
+        this.currentTileLayer = L.tileLayer('https://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
+          maxZoom: 20,
+          subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
+        });
+        break;
+      case 'satellite':
+        this.currentTileLayer = L.tileLayer('https://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
+          maxZoom: 20,
+          subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
+        });
+        break;
+      case 'hybrid':
+        this.currentTileLayer = L.tileLayer('https://{s}.google.com/vt/lyrs=y&x={x}&y={y}&z={z}', {
+          maxZoom: 20,
+          subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
+        });
+        break;
+      case 'terrain':
+        this.currentTileLayer = L.tileLayer('https://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}', {
+          maxZoom: 20,
+          subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
+        });
+        break;
+    }
+
+    if (this.currentTileLayer) {
+      this.currentTileLayer.addTo(this.map);
+    }
+  }
+
+  public onSubmitDirections(): void {
+    const destination = this.directionsForm.get('destination')?.value;
+    const transportMode = this.directionsForm.get('transportMode')?.value;
+
+    if (destination && transportMode) {
+      // Xử lý logic tìm đường ở đây
+      console.log(`Tìm đường đến ${destination} bằng ${transportMode}`);
+    }
+  }
 }

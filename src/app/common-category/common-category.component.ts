@@ -20,7 +20,8 @@ import { NzModalService } from 'ng-zorro-antd/modal';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { FormsModule } from '@angular/forms';
-
+import { TranslateService, TranslateModule } from '@ngx-translate/core';
+import { AppTranslateModule } from '../translate.module';
 @Component({
   selector: 'app-common-category',
   standalone: true,
@@ -41,7 +42,8 @@ import { FormsModule } from '@angular/forms';
     NzModalModule,
     NzIconModule,
     NzButtonModule,
-    FormsModule
+    FormsModule,
+    AppTranslateModule
   ],
   templateUrl: './common-category.component.html',
   styleUrls: ['./common-category.component.scss']
@@ -56,7 +58,19 @@ export class CommonCategoryComponent implements OnInit {
   filteredCategories: CommonCategoryRequest[] = []; // Mảng dữ liệu sau khi lọc
   searchTerm: string = ''; // Từ khóa tìm kiếm
   category = ''; 
-  constructor(private fb: FormBuilder, private apiService: ApiService, private message: NzMessageService, private modal: NzModalService ) {}
+  isWalletActive: boolean = true;
+  constructor( public translate: TranslateService,private fb: FormBuilder, private apiService: ApiService, private message: NzMessageService, private modal: NzModalService ) {
+    translate.addLangs(['en', 'vi']);
+    translate.setDefaultLang('vi');
+    const savedState = localStorage.getItem('isWalletActive');
+    this.isWalletActive = savedState === 'true'; 
+    console.log(`Initial wallet state: ${this.isWalletActive ? 'ACTIVE' : 'INACTIVE'}`);
+    if (this.isWalletActive) {
+      this.translate.use('vi'); 
+    } else {
+      this.translate.use('en');
+    }
+  }
 
   ngOnInit(): void {
     this.categoryForm = this.fb.group({

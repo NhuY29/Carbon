@@ -11,18 +11,30 @@ import { ApiService } from '../../api.service';
 import { SolanaService } from '../../solanaApi.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal';
-
+import { TranslateService, TranslateModule } from '@ngx-translate/core';
+import { AppTranslateModule } from '../translate.module'
 @Component({
   selector: 'app-token',
   standalone: true,
-  imports: [NzModalModule, CommonModule, NzCardModule, NzTableModule, NzBadgeModule, NzDividerModule, NzDropDownModule],
+  imports: [AppTranslateModule,NzModalModule, CommonModule, NzCardModule, NzTableModule, NzBadgeModule, NzDividerModule, NzDropDownModule],
   templateUrl: './token.component.html',
   styleUrl: './token.component.scss'
 })
 export class TokenComponent {
   listOfData: any[] = []; 
-
-  constructor(private message: NzMessageService, private api: ApiService) { }
+  isWalletActive: boolean = true;
+  constructor( public translate: TranslateService,private message: NzMessageService, private api: ApiService) { 
+    translate.addLangs(['en', 'vi']);
+    translate.setDefaultLang('vi');
+    const savedState = localStorage.getItem('isWalletActive');
+    this.isWalletActive = savedState === 'true'; 
+    console.log(`Initial wallet state: ${this.isWalletActive ? 'ACTIVE' : 'INACTIVE'}`);
+    if (this.isWalletActive) {
+      this.translate.use('vi'); 
+    } else {
+      this.translate.use('en');
+    }
+  }
 
   ngOnInit(): void {
     this.getTokenData();

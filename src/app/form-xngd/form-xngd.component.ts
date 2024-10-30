@@ -12,6 +12,8 @@ import jsPDF from 'jspdf';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzMessageService } from 'ng-zorro-antd/message';
+import { NzModalModule } from 'ng-zorro-antd/modal';
+import { FormsModule } from '@angular/forms'; 
 export interface ImageDTO {
   imageId: string;
   url: string;
@@ -38,12 +40,13 @@ export interface SellerInfo {
 @Component({
   selector: 'app-form-xngd',
   standalone: true,
-  imports: [CommonModule,MeasurementDataComponent,NzButtonModule,NzIconModule],
+  imports: [FormsModule,NzModalModule,CommonModule,MeasurementDataComponent,NzButtonModule,NzIconModule],
   templateUrl: './form-xngd.component.html',
   styleUrl: './form-xngd.component.scss',
   
 })
 export class FormXNGDComponent {
+  price: string = ''; 
   idFromRoute: string | null = null; 
   projectId: string | null = null; 
   id: string | null = null; 
@@ -177,7 +180,7 @@ exportToPDF() {
     pdf.save('da-xac-nhan.pdf');
   });
 }
-async SendexportToPDF() {
+async SendexportToPDF() { 
   const DATA = this.pdfContent.nativeElement;
   console.log('Bắt đầu quá trình tạo PDF từ nội dung:', DATA);
 
@@ -198,44 +201,41 @@ async SendexportToPDF() {
 
     const quantity = this.totalSum; 
 
-
     if (this.projectId && this.id && this.idFromRoute) {
       console.log('Project ID, ID và ID From Route đang được sử dụng để tải lên:', this.projectId, this.id, this.idFromRoute);
 
-
       this.projectService.uploadReplyPdf(this.projectId, this.idFromRoute, file, quantity).subscribe({
         next: (response) => {
-          this.message.success('PDF đã được tải lên thành công!'); 
+          this.message.success('PDF đã được tải lên thành công!');
           console.log('PDF đã được tải lên thành công:', response.message);
 
-          
-          if (this.projectId) { 
-            this.projectService.supplyToken(this.projectId as string, quantity).subscribe({ 
+          if (this.projectId && this.price) { 
+            this.projectService.supplyToken(this.projectId as string, quantity, this.price).subscribe({
               next: (tokenResponse) => {
-                this.message.success('Token đã được cấp thành công!'); 
+                this.message.success('Token đã được cấp thành công!');
                 console.log('Token đã được cấp:', tokenResponse);
               },
               error: (tokenError) => {
-                this.message.error('Lỗi khi cấp token!'); 
+                this.message.error('Lỗi khi cấp token!');
                 console.error('Lỗi khi cấp token:', tokenError);
               }
             });
           } else {
-            this.message.warning('Project ID không hợp lệ để cấp token!'); 
-            console.error('Project ID không hợp lệ để cấp token.');
+            this.message.warning('Dữ liệu không hợp lệ để cấp token!');
+            console.error('Dữ liệu không hợp lệ để cấp token.');
           }
         },
         error: (error) => {
-          this.message.error('Lỗi khi tải lên PDF!'); 
+          this.message.error('Lỗi khi tải lên PDF!');
           console.error('Lỗi khi tải lên PDF:', error);
         }
       });
     } else {
-      this.message.warning('Project ID, ID hoặc ID From Route không hợp lệ!'); 
+      this.message.warning('Project ID, ID hoặc ID From Route không hợp lệ!');
       console.error('Project ID, ID hoặc ID From Route không hợp lệ, không thể tải lên PDF.');
     }
   } catch (error) {
-    this.message.error('Lỗi khi tạo canvas!'); 
+    this.message.error('Lỗi khi tạo canvas!');
     console.error('Lỗi khi tạo canvas:', error);
   }
 }

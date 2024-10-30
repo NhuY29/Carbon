@@ -15,10 +15,12 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzMessageService, NzMessageModule } from 'ng-zorro-antd/message';
 import { MeasurementDataRequest } from '../MeasurementDataRequest';
+import { TranslateService, TranslateModule } from '@ngx-translate/core';
+import { AppTranslateModule } from '../translate.module';
 @Component({
   selector: 'app-measurement-data-add',
   standalone: true,
-  imports: [NzInputModule,NzTableModule,CommonModule,ReactiveFormsModule,NzFormModule,NzButtonModule,NzModalModule,NzSelectModule],
+  imports: [AppTranslateModule,NzInputModule,NzTableModule,CommonModule,ReactiveFormsModule,NzFormModule,NzButtonModule,NzModalModule,NzSelectModule],
   templateUrl: './measurement-data-add.component.html',
   styleUrl: './measurement-data-add.component.scss'
 })
@@ -34,7 +36,8 @@ export class MeasurementDataAddComponent {
   matrix: { [rowId: string]: { [colId: string]: number } } = {};
   measurementId: string | null = null;
   isUpdateMode = false;
-  constructor(private dataService: ApiService, private fb: FormBuilder, private router: Router, private route: ActivatedRoute,private message: NzMessageService ) {
+  isWalletActive: boolean = true;
+  constructor( public translate: TranslateService,private dataService: ApiService, private fb: FormBuilder, private router: Router, private route: ActivatedRoute,private message: NzMessageService ) {
     this.measurementForm = this.fb.group({
       measurements: this.fb.array([]),
       measurer: ['', Validators.required],
@@ -45,6 +48,16 @@ export class MeasurementDataAddComponent {
       projectId: ['', Validators.required],
       
     });
+    translate.addLangs(['en', 'vi']);
+    translate.setDefaultLang('vi');
+    const savedState = localStorage.getItem('isWalletActive');
+    this.isWalletActive = savedState === 'true'; 
+    console.log(`Initial wallet state: ${this.isWalletActive ? 'ACTIVE' : 'INACTIVE'}`);
+    if (this.isWalletActive) {
+      this.translate.use('vi'); 
+    } else {
+      this.translate.use('en');
+    }
   }
 
   ngOnInit(): void {

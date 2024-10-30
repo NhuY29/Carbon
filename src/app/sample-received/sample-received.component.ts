@@ -8,10 +8,12 @@ import { NzBadgeModule } from 'ng-zorro-antd/badge';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { SampleSentDTO } from '../SampleSentDTO';
+import { TranslateService, TranslateModule } from '@ngx-translate/core';
+import { AppTranslateModule } from '../translate.module';
 @Component({
   selector: 'app-sample-received',
   standalone: true,
-  imports: [NzTableModule,CommonModule,NzTabsModule,NzBadgeModule,NzButtonModule,NzIconModule],
+  imports: [AppTranslateModule,NzTableModule,CommonModule,NzTabsModule,NzBadgeModule,NzButtonModule,NzIconModule],
   templateUrl: './sample-received.component.html',
   styleUrl: './sample-received.component.scss',
   host: { 'ngSkipHydration': '' } 
@@ -21,8 +23,19 @@ export class SampleReceivedComponent {
   pendingProjects: SampleSentDTO[] = [];
   doneProjects: SampleSentDTO[] = [];
   projectsSentToday: SampleSentDTO[] = [];
-
-  constructor(private sampleReceivedService: ApiService,private router: Router) {}
+  isWalletActive: boolean = true;
+  constructor(private sampleReceivedService: ApiService,private router: Router, public translate: TranslateService) {
+    translate.addLangs(['en', 'vi']);
+    translate.setDefaultLang('vi');
+    const savedState = localStorage.getItem('isWalletActive');
+    this.isWalletActive = savedState === 'true'; 
+    console.log(`Initial wallet state: ${this.isWalletActive ? 'ACTIVE' : 'INACTIVE'}`);
+    if (this.isWalletActive) {
+      this.translate.use('vi'); 
+    } else {
+      this.translate.use('en');
+    }
+  }
 
   ngOnInit(): void {
     // this.loadProjectIds();

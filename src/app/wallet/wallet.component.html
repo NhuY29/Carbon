@@ -1,21 +1,24 @@
-<nz-card nzTitle="Account Overview" style="margin-bottom: 20px;">
+
+<nz-card [nzTitle]="'WALLET.ACCOUNT_OVERVIEW' | translate" style="margin-bottom: 20px;">
   <nz-form-item>
-    <nz-form-label>Public Key</nz-form-label>
+    <nz-form-label>{{ 'WALLET.PUBLIC_KEY' | translate }}</nz-form-label>
     <nz-form-control>
-      <input nz-input [(ngModel)]="publickey" placeholder="Enter public key" (ngModelChange)="onPublicKeyChange()" />
+      <input nz-input [(ngModel)]="publickey" [placeholder]="'WALLET.ENTER_PUBLIC_KEY' | translate"
+        (ngModelChange)="onPublicKeyChange()" />
     </nz-form-control>
   </nz-form-item>
 </nz-card>
 
-<nz-card nzTitle="Balance Information" *ngIf="balance !== null" style="margin-bottom: 20px;">
-  <h2>Balance: {{ balance }} VND</h2>
+<nz-card [nzTitle]="'WALLET.BALANCE_INFORMATION' | translate" *ngIf="balance !== null" style="margin-bottom: 20px;">
+  <h2>{{ 'WALLET.BALANCE' | translate }}: {{ balance }} VND</h2>
 </nz-card>
 
-<nz-card nzTitle="Transaction History" *ngIf="transactionHistory.length > 0">
+<nz-card [nzTitle]="'WALLET.TRANSACTION_HISTORY' | translate" *ngIf="transactionHistory.length > 0">
   <ul>
     <li *ngFor="let tx of transactionHistory">
       {{ tx.signature }} - {{ tx.blockTime | date:'short' }}
-      <button nz-button nzType="link" (click)="viewTransactionDetails(tx.signature)">Xem Chi Tiết</button>
+      <button nz-button nzType="link" (click)="viewTransactionDetails(tx.signature)">{{ 'WALLET.VIEW_DETAILS' |
+        translate }}</button>
     </li>
   </ul>
 </nz-card>

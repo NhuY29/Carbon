@@ -13,11 +13,12 @@ import { Observable, EMPTY, forkJoin } from 'rxjs';
 import { tap, catchError } from 'rxjs/operators';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpHeaders } from '@angular/common/http';
-
+import { TranslateService, TranslateModule } from '@ngx-translate/core';
+import { AppTranslateModule } from '../translate.module'
 @Component({
   selector: 'app-measurement-data',
   standalone: true,
-  imports: [NzTableModule, ReactiveFormsModule, CommonModule, NzFormModule, NzButtonModule, NzModalModule, NzSelectModule],
+  imports: [AppTranslateModule,NzTableModule, ReactiveFormsModule, CommonModule, NzFormModule, NzButtonModule, NzModalModule, NzSelectModule],
   templateUrl: './measurement-data.component.html',
   styleUrls: ['./measurement-data.component.scss']
 })
@@ -34,8 +35,8 @@ export class MeasurementDataComponent implements OnInit {
   categoriesPC: any[] = [];
   matrix: { [rowId: string]: { [colId: string]: number } } = {};
   measurementId: string | null = null;
-
-  constructor(private dataService: ApiService, private fb: FormBuilder, private router: Router, private route: ActivatedRoute) {
+  isWalletActive: boolean = true;
+  constructor( public translate: TranslateService,private dataService: ApiService, private fb: FormBuilder, private router: Router, private route: ActivatedRoute) {
     this.measurementForm = this.fb.group({
       measurements: this.fb.array([]),
       measurer: ['', Validators.required],
@@ -45,6 +46,16 @@ export class MeasurementDataComponent implements OnInit {
       namelandowner: ['', Validators.required],
       projectId: ['', Validators.required]
     });
+    translate.addLangs(['en', 'vi']);
+    translate.setDefaultLang('vi');
+    const savedState = localStorage.getItem('isWalletActive');
+    this.isWalletActive = savedState === 'true'; 
+    console.log(`Initial wallet state: ${this.isWalletActive ? 'ACTIVE' : 'INACTIVE'}`);
+    if (this.isWalletActive) {
+      this.translate.use('vi'); 
+    } else {
+      this.translate.use('en');
+    }
   }
   getTotalSum(): number {
     const total = this.calculateTotalSum(this.rows);

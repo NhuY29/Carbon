@@ -34,6 +34,11 @@
                 "glob": "**/*",
                 "input": "src/app/images",
                 "output": "images"
+              },
+              {
+                "glob": "**/*",
+                "input": "src/assets/i18n",
+                "output": "/assets/i18n"
               }
             ],
             "styles": [
@@ -43,7 +48,7 @@
               "node_modules/leaflet-draw/dist/leaflet.draw.css"
             ],
             "scripts": [
-               "node_modules/leaflet/dist/leaflet.js",
+              "node_modules/leaflet/dist/leaflet.js",
               "node_modules/leaflet-draw/dist/leaflet.draw.js"
             ],
             "server": "src/main.server.ts",

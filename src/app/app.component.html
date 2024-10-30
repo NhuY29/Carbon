@@ -7,49 +7,52 @@
       </a>
     </div>
     <ul nz-menu nzTheme="dark" nzMode="inline" [nzInlineCollapsed]="isCollapsed">
-      <li nz-submenu nzOpen nzTitle="Quản lý về người dùng" nzIcon="dashboard">
+      <li nz-submenu nzOpen nzTitle="{{ 'MENU.USER_MANAGEMENT' | translate }}" nzIcon="dashboard">
         <ul>
           <li nz-menu-item nzMatchRouter>
             <span nz-icon nzType="ordered-list" nzTheme="outline"></span>
-            <a routerLink="/user">Danh sách người dùng</a>
+            <a routerLink="/user">{{ 'MENU.USER_LIST' | translate }}</a>
           </li>
           <li nz-menu-item nzMatchRouter>
             <span nz-icon nzType="global" nzTheme="outline"></span>
-            <a routerLink="/ggmap">Bản đồ</a>
+            <a routerLink="/ggmap">{{ 'MENU.MAP' | translate }}</a>
           </li>
           <li nz-menu-item nzMatchRouter>
-            <a routerLink="/wallet">Tra Thông Tin Ví</a>
+            <a routerLink="/wallet">{{ 'MENU.WALLET_INFO' | translate }}</a>
           </li>
           <li nz-menu-item nzMatchRouter>
-            <a routerLink="/airdrop">Nạp tiền</a>
+            <a routerLink="/airdrop">{{ 'MENU.AIR_DROP' | translate }}</a>
           </li>
           <li nz-menu-item nzMatchRouter>
-            <a routerLink="/gdvi">My Wallet</a>
+            <a routerLink="/gdvi">{{ 'MENU.MY_WALLET' | translate }}</a>
           </li>
         </ul>
       </li>
-      <li nz-submenu nzOpen nzTitle="Quản lý dự án" nzIcon="dashboard">
+      <li nz-submenu nzOpen nzTitle="{{ 'MENU.PROJECT_MANAGEMENT' | translate }}" nzIcon="dashboard">
         <ul>
           <li nz-menu-item nzMatchRouter>
-            <a routerLink="/list-project">Danh sách dự án</a>
+            <a routerLink="/list-project">{{ 'MENU.PROJECT_LIST' | translate }}</a>
           </li>
           <li nz-menu-item nzMatchRouter>
-            <a routerLink="/sampleReceived">Duyệt yêu cầu xác nhận</a>
+            <a routerLink="/sampleReceived">{{ 'MENU.APPROVE_REQUEST' | translate }}</a>
           </li>
           <li nz-menu-item nzMatchRouter>
-            <a routerLink="/commomCategoryParentChild">Danh mục nguồn phát thải</a>
+            <a routerLink="/commomCategoryParentChild">{{ 'MENU.EMISSION_SOURCE' | translate }}</a>
           </li>
           <li nz-menu-item nzMatchRouter>
-            <a routerLink="/commomCategory">Danh mục chung</a>
+            <a routerLink="/commomCategory">{{ 'MENU.COMMON_CATEGORY' | translate }}</a>
           </li>
           <li nz-menu-item nzMatchRouter>
-            <a routerLink="/measurementDataListAdd">Nhập liệu đo đạc</a>
+            <a routerLink="/measurementDataListAdd">{{ 'MENU.MEASUREMENT_DATA' | translate }}</a>
           </li>
           <li nz-menu-item nzMatchRouter>
-            <a routerLink="/myproject">Dự án của tôi</a>
+            <a routerLink="/myproject">{{ 'MENU.MY_PROJECT' | translate }}</a>
           </li>
           <li nz-menu-item nzMatchRouter>
-            <a routerLink="/sampleSent">Mẫu đã gửi</a>
+            <a routerLink="/sampleSent">{{ 'MENU.SENT_SAMPLE' | translate }}</a>
+          </li>
+          <li nz-menu-item nzMatchRouter>
+            <a routerLink="/setting">{{ 'MENU.SETTING' | translate }}</a>
           </li>
         </ul>
       </li>
@@ -66,51 +69,29 @@
             </span>
           </li>
           <li nz-menu-item>
-            <span nz-icon (click)="openTransactionForm()">Giao dịch</span>
+            <span nz-icon (click)="openTransactionForm()">{{ 'HEADER.TRANSACTION' | translate }}</span>
           </li>
           <li nz-menu-item>
-            <span nz-icon (click)="openTransactionHistory()">Lịch sử giao dịch</span>
+            <span nz-icon (click)="openTransactionHistory()">{{ 'HEADER.TRANSACTION_HISTORY' | translate }}</span>
           </li>
-          <!-- <li nz-menu-item>
-            <span nz-icon nz-button nz-popover nzType="primary" nzPopoverTitle="Thông tin ví"
-              [nzPopoverContent]="walletPopoverContent" nzPopoverTrigger="hover" (mouseenter)="getWalletInfo()">Thông
-              tin ví</span>
-          </li> -->
           <li nz-menu-item>
             <a routerLink="/login">
               <span nz-icon nzType="login" nzTheme="outline"></span>
-              Đăng nhập
+              {{ 'HEADER.LOGIN' | translate }}
             </a>
           </li>
           <li nz-menu-item>
             <a (click)="logout()">
               <span nz-icon nzType="logout" nzTheme="outline"></span>
-              Đăng xuất
+              {{ 'HEADER.LOGOUT' | translate }}
             </a>
           </li>
           <li nz-menu-item>
             <a routerLink="/register">
               <span nz-icon nzType="delete" nzTheme="outline"></span>
-              Đăng ký
+              {{ 'HEADER.REGISTER' | translate }}
             </a>
           </li>
-          <!-- <li nz-menu-item>
-            <nz-avatar nzSize="large" nzIcon="user"></nz-avatar>
-            {{username}}
-          </li> -->
-
-          <!-- <ng-template #walletPopoverContent>
-            <div *ngIf="loading">
-              <p>Đang tải thông tin ví...</p>
-            </div>
-            <div *ngIf="walletInfo">
-              <p>Địa chỉ ví: {{ walletInfo.address }}</p>
-              <p>Số dư ví: {{ walletInfo.balance }} VND</p>
-            </div>
-            <div *ngIf="!walletInfo && !loading">
-              <p>Không có thông tin ví.</p>
-            </div>
-          </ng-template> -->
         </ul>
       </div>
     </nz-header>

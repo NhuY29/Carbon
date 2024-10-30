@@ -1,0 +1,22 @@
+<h1>{{ 'PAYMENT_STATUS.TITLE' | translate }}</h1>
+<p *ngIf="message">{{ message }}</p>
+<div *ngIf="result">
+  <nz-table *ngIf="result === 'success'; else errorTemplate" [nzData]="paymentDetails" [nzBordered]="true">
+    <thead>
+      <tr>
+        <th nzWidth="30%">{{ 'PAYMENT_STATUS.TABLE.NAME' | translate }}</th>
+        <th nzWidth="70%">{{ 'PAYMENT_STATUS.TABLE.VALUE' | translate }}</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let detail of paymentDetails">
+        <td>{{ detail.name }}</td>
+        <td>{{ detail.value }}</td>
+      </tr>
+    </tbody>
+  </nz-table>
+  <ng-template #errorTemplate>
+    <p>{{ 'PAYMENT_STATUS.ERROR_CODE' | translate }} {{ errorCode }}</p>
+  </ng-template>
+</div>
+<p *ngIf="!result">{{ 'PAYMENT_STATUS.LOADING' | translate }}</p>

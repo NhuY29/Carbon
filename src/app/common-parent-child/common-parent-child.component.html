@@ -1,14 +1,13 @@
 <div class="category-manager">
-  <h2>Quản lý Danh mục nguồn phát thải</h2>
-  <button nz-button nzType="primary" (click)="openCategoryForm()">Thêm danh mục</button>
+  <h2>{{ 'CATEGORY_MANAGER.TITLE' | translate }}</h2>
+  <button nz-button nzType="primary" (click)="openCategoryForm()">{{ 'CATEGORY_MANAGER.ADD_CATEGORY' | translate }}</button>
 
-  <nz-table #categoryTable [nzData]="categories" [nzBordered]="true" [nzPageSize]="5" [nzShowPagination]="true"
-    ngSkipHydration>
+  <nz-table #categoryTable [nzData]="categories" [nzBordered]="true" [nzPageSize]="5" [nzShowPagination]="true" ngSkipHydration>
     <thead>
       <tr>
-        <th nzWidth="30%">Tên</th>
-        <th nzWidth="40%">Mô tả</th>
-        <th nzWidth="30%">Thao tác</th>
+        <th nzWidth="30%">{{ 'CATEGORY_MANAGER.NAME' | translate }}</th>
+        <th nzWidth="40%">{{ 'CATEGORY_MANAGER.DESCRIPTION' | translate }}</th>
+        <th nzWidth="30%">{{ 'CATEGORY_MANAGER.ACTIONS' | translate }}</th>
       </tr>
     </thead>
     <tbody>
@@ -17,15 +16,14 @@
           <td>{{ category.name }}</td>
           <td>{{ category.description }}</td>
           <td>
-            <button nz-button nzType="link" (click)="editCategory(category)">Sửa</button>
-            <button nz-button nzType="link" nzDanger (click)="deleteCategory(category.id)">Xóa</button>
-            <button nz-button nzType="link" (click)="toggleChildCategories(category)">Xem danh mục con</button>
-            <button nz-button nzType="link" (click)="addChildCategory(category.id)">Thêm con</button>
+            <button nz-button nzType="link" (click)="editCategory(category)">{{ 'CATEGORY_MANAGER.EDIT' | translate }}</button>
+            <button nz-button nzType="link" nzDanger (click)="deleteCategory(category.id)">{{ 'CATEGORY_MANAGER.DELETE' | translate }}</button>
+            <button nz-button nzType="link" (click)="toggleChildCategories(category)">{{ 'CATEGORY_MANAGER.VIEW_CHILD_CATEGORIES' | translate }}</button>
+            <button nz-button nzType="link" (click)="addChildCategory(category.id)">{{ 'CATEGORY_MANAGER.ADD_CHILD' | translate }}</button>
           </td>
         </tr>
         <ng-container *ngIf="category.showChildren">
-          <ng-container
-            *ngTemplateOutlet="recursiveTable; context: { $implicit: category.children, level: 1 }"></ng-container>
+          <ng-container *ngTemplateOutlet="recursiveTable; context: { $implicit: category.children, level: 1 }"></ng-container>
         </ng-container>
       </ng-container>
     </tbody>
@@ -37,14 +35,13 @@
         <td [style.padding-left.px]="level * 20">{{ child.name }}</td>
         <td>{{ child.description }}</td>
         <td>
-          <button nz-button nzType="link" (click)="editCategory(child)">Sửa</button>
-          <button nz-button nzType="link" nzDanger (click)="deleteCategory(child.id)">Xóa</button>
-          <button nz-button nzType="link" (click)="addChildCategory(child.id)">Thêm con</button>
+          <button nz-button nzType="link" (click)="editCategory(child)">{{ 'CATEGORY_MANAGER.EDIT' | translate }}</button>
+          <button nz-button nzType="link" nzDanger (click)="deleteCategory(child.id)">{{ 'CATEGORY_MANAGER.DELETE' | translate }}</button>
+          <button nz-button nzType="link" (click)="addChildCategory(child.id)">{{ 'CATEGORY_MANAGER.ADD_CHILD' | translate }}</button>
         </td>
       </tr>
       <ng-container *ngIf="child.showChildren">
-        <ng-container
-          *ngTemplateOutlet="recursiveTable; context: { $implicit: child.children, level: level + 1 }"></ng-container>
+        <ng-container *ngTemplateOutlet="recursiveTable; context: { $implicit: child.children, level: level + 1 }"></ng-container>
       </ng-container>
     </ng-container>
   </ng-template>
@@ -53,36 +50,35 @@
     <div class="form-container">
       <form [formGroup]="categoryForm" (ngSubmit)="onSubmit()">
         <nz-form-item>
-          <nz-form-label [nzSpan]="5">Tên</nz-form-label>
-          <nz-form-control nzHasFeedback [nzSpan]="12" nzErrorTip="Tên danh mục không để trống">
+          <nz-form-label [nzSpan]="5">{{ 'CATEGORY_MANAGER.NAME' | translate }}</nz-form-label>
+          <nz-form-control nzHasFeedback [nzSpan]="12" nzErrorTip="{{ 'CATEGORY_MANAGER.NAME_REQUIRED' | translate }}">
             <input nz-input formControlName="name" />
           </nz-form-control>
         </nz-form-item>
 
         <nz-form-item>
-          <nz-form-label [nzSpan]="5">Mô tả</nz-form-label>
-          <nz-form-control nzHasFeedback [nzSpan]="12" nzErrorTip="Mô tả không để trống">
+          <nz-form-label [nzSpan]="5">{{ 'CATEGORY_MANAGER.DESCRIPTION' | translate }}</nz-form-label>
+          <nz-form-control nzHasFeedback [nzSpan]="12" nzErrorTip="{{ 'CATEGORY_MANAGER.DESCRIPTION_REQUIRED' | translate }}">
             <input nz-input formControlName="description" />
           </nz-form-control>
         </nz-form-item>
 
         <nz-form-item>
-          <nz-form-label [nzSpan]="5">Danh mục cha</nz-form-label>
-          <nz-form-control nzHasFeedback [nzSpan]="12" nzErrorTip="Danh mục cha không để trống">
+          <nz-form-label [nzSpan]="5">{{ 'CATEGORY_MANAGER.PARENT_CATEGORY' | translate }}</nz-form-label>
+          <nz-form-control nzHasFeedback [nzSpan]="12" nzErrorTip="{{ 'CATEGORY_MANAGER.PARENT_CATEGORY_REQUIRED' | translate }}">
             <nz-select formControlName="parentId" [nzOptions]="allOptions">
-              <nz-option *ngFor="let option of allOptions" [nzValue]="option.value" [nzLabel]="option.label">
-              </nz-option>
+              <nz-option *ngFor="let option of allOptions" [nzValue]="option.value" [nzLabel]="option.label"></nz-option>
             </nz-select>
           </nz-form-control>
         </nz-form-item>
 
         <nz-form-item>
           <nz-form-control [nzSpan]="12" [nzOffset]="5">
-            <button nz-button nzType="primary" type="submit" class="custom-button">Lưu</button>
-            <button nz-button type="button" (click)="cancel()" class="custom-button cancel-button">Hủy</button>
+            <button nz-button nzType="primary" type="submit" class="custom-button">{{ 'CATEGORY_MANAGER.SAVE' | translate }}</button>
+            <button nz-button type="button" (click)="cancel()" class="custom-button cancel-button">{{ 'CATEGORY_MANAGER.CANCEL' | translate }}</button>
           </nz-form-control>
         </nz-form-item>
       </form>
     </div>
-
   </div>
+</div>

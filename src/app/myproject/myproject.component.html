@@ -1,53 +1,46 @@
 <div class="add-project-button">
-    <button nz-button nzType="primary" (click)="navigateToAddProject()">
-      <span nz-icon nzType="plus" nzTheme="outline"></span> Thêm dự án
-    </button>
-  </div>
-  
-  <nz-table #basicTable [nzData]="projects" [nzScroll]="{ x: '1600px', y: '550px' }" [nzBordered]="true" [nzPageSize]="5" [nzShowPagination]="true">
-    <thead>
-      <tr>
-        <th nzWidth="200px">Tên dự án</th>
-        <th nzWidth="400px">Mô tả dự án</th>
-        <th nzWidth="200px">Lĩnh vực hoạt động</th>
-        <th nzWidth="120px">Trạng thái</th>
-        <th nzWidth="160px">Ngày bắt đầu</th>
-        <th nzWidth="160px">Ngày kết thúc</th>
-        <th nzWidth="300px">Hình ảnh</th>
-        <th nzWidth="250px">Thao Tác</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let project of basicTable.data">
-        <td>{{ project.projectName }}</td>
-        <td>{{ project.projectDescription }}</td>
-        <td>{{ project.field }}</td>
-        <td>{{ project.projectStatus }}</td>
-        <td>{{ project.projectStartDate | date: 'short' }}</td>
-        <td>{{ project.projectEndDate | date: 'short' }}</td>
-        <td>
-          <div *ngIf="imageUrls[project.projectId]; else noImage">
-            <img *ngFor="let imageUrl of imageUrls[project.projectId]" [src]="imageUrl" loading="lazy" style="max-width: 100px; max-height: 100px; margin: 5px;" />
-          </div>
-          <ng-template #noImage>
-            <img src="assets/default-image.png" alt="No Image Available" loading="lazy" />
-          </ng-template>
-        </td>
-        <td>
-          <button nz-button nzType="primary" (click)="downloadFile(project.projectId)"><span nz-icon nzType="download" nzTheme="outline"></span>Tải hình ảnh</button>
-          <button nz-button nzType="primary" (click)="updateProject(project.projectId)"><span nz-icon nzType="edit" nzTheme="outline"></span></button>
-          <button nz-button nzType="primary" nzDanger (click)="deleteProject(project.projectId)"><span nz-icon nzType="delete" nzTheme="outline"></span></button>
-          <button nz-button nzType="default" (click)="navigateToRequest2(project.projectId)">
-            <span nz-icon nzType="file-add" nzTheme="outline"></span> Yêu cầu xác nhận
-          </button>
-          <button nz-button nzType="primary" (click)="navigateToMeasurementData(project.projectId)">
-            <span nz-icon nzType="line-chart" nzTheme="outline"></span> Danh sách đo lường
-          </button>
-          <button nz-button nzType="default" (click)="viewProjectDetails(project.projectId)">
-            <span nz-icon nzType="eye" nzTheme="outline"></span> Xem
-          </button>
-        </td>
-      </tr>
-    </tbody>
-  </nz-table>
-  
+  <button nz-button nzType="primary" (click)="navigateToAddProject()">
+    <span nz-icon nzType="plus" nzTheme="outline"></span> {{ 'TABLE_MP.ADD_PROJECT' | translate }}
+  </button>
+</div>
+
+<nz-table #basicTable [nzData]="projects" [nzScroll]="{ x: '1600px', y: '550px' }" [nzBordered]="true" [nzPageSize]="5" [nzShowPagination]="true">
+  <thead>
+    <tr>
+      <th nzWidth="200px">{{ 'TABLE_MP.PROJECT_NAME' | translate }}</th>
+      <th nzWidth="400px">{{ 'TABLE_MP.PROJECT_DESCRIPTION' | translate }}</th>
+      <th nzWidth="200px">{{ 'TABLE_MP.FIELD' | translate }}</th>
+      <th nzWidth="120px">{{ 'TABLE_MP.STATUS' | translate }}</th>
+      <th nzWidth="160px">{{ 'TABLE_MP.START_DATE' | translate }}</th>
+      <th nzWidth="160px">{{ 'TABLE_MP.END_DATE' | translate }}</th>
+      <th nzWidth="300px">{{ 'TABLE_MP.IMAGE' | translate }}</th>
+      <th nzWidth="250px">{{ 'TABLE_MP.ACTIONS' | translate }}</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let project of basicTable.data">
+      <td>{{ project.projectName }}</td>
+      <td>{{ project.projectDescription }}</td>
+      <td>{{ project.field }}</td>
+      <td>{{ project.projectStatus }}</td>
+      <td>{{ project.projectStartDate | date: 'short' }}</td>
+      <td>{{ project.projectEndDate | date: 'short' }}</td>
+      <td>
+        <div *ngIf="imageUrls[project.projectId]; else noImage">
+          <img *ngFor="let imageUrl of imageUrls[project.projectId]" [src]="imageUrl" loading="lazy" style="max-width: 100px; max-height: 100px; margin: 5px;" />
+        </div>
+        <ng-template #noImage>
+          <img src="assets/default-image.png" alt="No Image Available" loading="lazy" />
+        </ng-template>
+      </td>
+      <td>
+        <button nz-button nzType="primary" (click)="downloadFile(project.projectId)"><span nz-icon nzType="download" nzTheme="outline"></span>{{ 'TABLE_MP.DOWNLOAD_IMAGES' | translate }}</button>
+        <button nz-button nzType="primary" (click)="updateProject(project.projectId)"><span nz-icon nzType="edit" nzTheme="outline"></span>{{ 'TABLE_MP.UPDATE' | translate }}</button>
+        <button nz-button nzType="primary" nzDanger (click)="deleteProject(project.projectId)"><span nz-icon nzType="delete" nzTheme="outline"></span>{{ 'TABLE_MP.DELETE' | translate }}</button>
+        <button nz-button nzType="default" (click)="navigateToRequest2(project.projectId)"><span nz-icon nzType="file-add" nzTheme="outline"></span>{{ 'TABLE_MP.CONFIRM_REQUEST' | translate }}</button>
+        <button nz-button nzType="primary" (click)="navigateToMeasurementData(project.projectId)"><span nz-icon nzType="line-chart" nzTheme="outline"></span>{{ 'TABLE_MP.MEASUREMENT_LIST' | translate }}</button>
+        <button nz-button nzType="default" (click)="viewProjectDetails(project.projectId)"><span nz-icon nzType="eye" nzTheme="outline"></span>{{ 'TABLE_MP.VIEW' | translate }}</button>
+      </td>
+    </tr>
+  </tbody>
+</nz-table>

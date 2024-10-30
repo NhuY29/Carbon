@@ -11,7 +11,8 @@ import { ApiService } from '../../api.service';
 import { SolanaService } from '../../solanaApi.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal';
-
+import { TranslateService } from '@ngx-translate/core';
+import { AppTranslateModule } from '../translate.module';
 interface TransactionDetail {
   sender: string;
   recipient: string;
@@ -36,20 +37,27 @@ interface Transaction {
 @Component({
   selector: 'app-transaction-history',
   standalone: true,
-  imports: [NzModalModule, CommonModule, NzCardModule, NzTableModule, NzBadgeModule, NzDividerModule, NzDropDownModule],
+  imports: [AppTranslateModule,NzModalModule, CommonModule, NzCardModule, NzTableModule, NzBadgeModule, NzDividerModule, NzDropDownModule],
   templateUrl: './transaction-history.component.html',
   styleUrls: ['./transaction-history.component.scss']
 })
 export class TransactionHistoryComponent implements OnInit {
   transactions: Transaction[] = [];
   selectedTransaction: any = null;
-
+  isWalletActive: boolean;
   constructor(
     private message: NzMessageService,
     private modal: NzModalService,
     private api: ApiService,
-    private solanaService: SolanaService
-  ) { }
+    private solanaService: SolanaService,
+    public translate: TranslateService
+  ) { 
+    translate.addLangs(['en', 'vi']);
+    translate.setDefaultLang('vi');
+    const savedState = localStorage.getItem('isWalletActive');
+    this.isWalletActive = savedState === 'false'; 
+    console.log(`Initial airdrop state: ${this.isWalletActive ? 'ACTIVE' : 'INACTIVE'}`);
+  }
   loadTransactions(): void {
     this.api.getTransactionHistory().subscribe(
       data => {

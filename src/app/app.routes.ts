@@ -23,6 +23,9 @@ import { SampleReceivedComponent } from './sample-received/sample-received.compo
 import { GDViComponent } from './gdvi/gdvi.component';
 import { TokenComponent } from './token/token.component';
 import { ContactComponent } from './contact/contact.component';
+import { PaymentResultComponent } from './payment-result/payment-result.component';
+import { SettingComponent } from './setting/setting.component';
+import { CartComponent } from './cart/cart.component';
 export const routes: Routes = [
   {
     path: '',
@@ -56,6 +59,10 @@ export const routes: Routes = [
 {
   path: 'project',
   component:ProjectComponent
+},
+{
+  path: 'setting',
+  component:SettingComponent
 },
 {
   path: 'list-project',
@@ -96,6 +103,14 @@ export const routes: Routes = [
   component: ContactComponent
 },
 
+{
+  path: 'test',
+  component: PaymentResultComponent
+},
+{
+  path: 'cart',
+  component: CartComponent
+},
 
 { path: 'measurementDataList/:id/:projectId', component: MeasurementDataListComponent },
   // { path: 'login', loadChildren: () => import('.//login/login.component').then(m => m.LoginComponent) }

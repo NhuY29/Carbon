@@ -6,10 +6,12 @@ import SignaturePad from 'signature_pad';
 import { FormsModule } from '@angular/forms';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { Router } from '@angular/router';
+import { TranslateService, TranslateModule } from '@ngx-translate/core';
+import { AppTranslateModule } from '../translate.module';
 @Component({
   selector: 'app-signature',
   standalone: true,
-  imports: [CommonModule,FormsModule],
+  imports: [AppTranslateModule,CommonModule,FormsModule],
   templateUrl: './signature.component.html',
   styleUrl: './signature.component.scss'
 })
@@ -18,13 +20,26 @@ export class SignatureComponent implements OnInit {
   signaturePad: SignaturePad | undefined;
   signatureDataUrl: string | null = null;
   numberOfProposals: number | null = null; 
+  isWalletActive: boolean = true;
   @ViewChild('signaturePad', { static: true }) signaturePadElement!: ElementRef;
   constructor(
     private route: ActivatedRoute,
     private projectService: ApiService,
     private message: NzMessageService ,
-    private router: Router
-  ) {}
+    private router: Router,
+    public translate: TranslateService,
+  ) {
+    translate.addLangs(['en', 'vi']);
+    translate.setDefaultLang('vi');
+    const savedState = localStorage.getItem('isWalletActive');
+    this.isWalletActive = savedState === 'true'; 
+    console.log(`Initial wallet state: ${this.isWalletActive ? 'ACTIVE' : 'INACTIVE'}`);
+    if (this.isWalletActive) {
+      this.translate.use('vi'); 
+    } else {
+      this.translate.use('en');
+    }
+  }
   ngOnInit() {
     this.projectId = this.route.snapshot.paramMap.get('id');
     setTimeout(() => {

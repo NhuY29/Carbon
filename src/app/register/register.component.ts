@@ -10,11 +10,12 @@ import { NzSelectModule } from 'ng-zorro-antd/select';
 import { Location } from '@angular/common';
 import { RegisterRequest } from '../../register.interface';
 import { CommonModule } from '@angular/common';
-
+import { TranslateService, TranslateModule } from '@ngx-translate/core';
+import { AppTranslateModule } from '../translate.module';
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [ReactiveFormsModule, NzFormModule, NzButtonModule, NzSelectModule, CommonModule],
+  imports: [AppTranslateModule,ReactiveFormsModule, NzFormModule, NzButtonModule, NzSelectModule, CommonModule],
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.scss']
 })
@@ -22,13 +23,14 @@ export class RegisterComponent implements OnInit {
   validateForm: FormGroup;
   showBuyerFields = false;
   showSellerFields = false;
-
+  isWalletActive: boolean = true; 
   constructor(
     private fb: FormBuilder,
     private apiService: ApiService,
     private router: Router,
     private notification: NzNotificationService,
     private location: Location,
+    public translate: TranslateService,
   ) {
     this.validateForm = this.fb.group({
       username: ['', [Validators.required, Validators.email]],
@@ -48,6 +50,16 @@ export class RegisterComponent implements OnInit {
       contactEmail: [''],
       contactPhone: ['']
     });
+    translate.addLangs(['en', 'vi']);
+    translate.setDefaultLang('vi');
+    const savedState = localStorage.getItem('isWalletActive');
+    this.isWalletActive = savedState === 'true'; 
+    console.log(`Initial wallet state: ${this.isWalletActive ? 'ACTIVE' : 'INACTIVE'}`);
+    if (this.isWalletActive) {
+      this.translate.use('vi'); 
+    } else {
+      this.translate.use('en');
+    }
   }
 
   ngOnInit(): void {

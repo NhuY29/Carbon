@@ -3,24 +3,24 @@
 </div>
 
 <div style="text-align: center; margin-top: 10px;">
-  <label for="numberOfProposals">Số lượng đề xuất:</label>
+  <label for="numberOfProposals">{{ 'numberOfProposals' | translate }}</label>
   <input 
     type="number" 
     id="numberOfProposals" 
     [(ngModel)]="numberOfProposals" 
     min="1" 
     required 
-    placeholder="Nhập số lượng đề xuất"
+    placeholder="{{ 'enterNumber' | translate }}"
     style="padding: 5px; border: 1px solid #ccc; width: 200px;"
   />
 </div>
 
 <div style="text-align: center; margin-top: 20px;">
   <button (click)="clearSignature()" style="margin: 10px; padding: 10px 20px; background-color: red; color: white; border: none; cursor: pointer;">
-    Xóa chữ ký
+    {{ 'clearSignature' | translate }}
   </button>
 
   <button (click)="saveSignature()" style="margin: 10px; padding: 10px 20px; background-color: green; color: white; border: none; cursor: pointer;">
-    Lưu chữ ký
+    {{ 'saveSignature' | translate }}
   </button>
 </div>

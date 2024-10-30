@@ -20,6 +20,8 @@ import { NzMessageService } from 'ng-zorro-antd/message';
 import { ZXingScannerModule } from '@zxing/ngx-scanner';
 import { ContactComponent } from '../contact/contact.component';
 import { Contact } from '../contact/contact.modal';
+import { TranslateService, TranslateModule } from '@ngx-translate/core';
+import { AppTranslateModule } from '../translate.module';
 import jsQR from 'jsqr';
 @Component({
   selector: 'app-gdvi',
@@ -40,7 +42,8 @@ import jsQR from 'jsqr';
     TokenComponent,
     ReactiveFormsModule,
     ZXingScannerModule,
-    ContactComponent
+    ContactComponent,
+    AppTranslateModule
   ],
   templateUrl: './gdvi.component.html',
   styleUrl: './gdvi.component.scss',
@@ -63,15 +66,20 @@ export class GDViComponent implements OnInit {
   scannedResult = '';
   selectedDevice: MediaDeviceInfo | null = null;
   isContactListVisible = false;
+  isDepositFormVisible = false;
+  amount: string = '';
+  errorMessage: string | null = null;
+  isWalletActive: boolean = true;
   @Output() secretKeyChange = new EventEmitter<string>();
   secretKeyValue: string = '';
   private previousBalance: number | null = null;
-private hasNotifiedBalanceChange: boolean = false;
+  private hasNotifiedBalanceChange: boolean = false;
   constructor(
     private messageService: NzMessageService,
     private fb: FormBuilder,
     private apiService: ApiService,
-    @Inject(PLATFORM_ID) private platformId: Object
+    @Inject(PLATFORM_ID) private platformId: Object,
+    public translate: TranslateService
   ) {
     this.transactionForm = this.fb.group({
       senderSecretKey: ['', [Validators.required]],
@@ -79,36 +87,91 @@ private hasNotifiedBalanceChange: boolean = false;
       amount: ['', [Validators.required, Validators.pattern('^[0-9]+$')]],
       message: ['']
     });
+    translate.addLangs(['en', 'vi']);
+    translate.setDefaultLang('vi');
+    const savedState = localStorage.getItem('isWalletActive');
+    this.isWalletActive = savedState === 'true'; 
+    console.log(`Initial wallet state: ${this.isWalletActive ? 'ACTIVE' : 'INACTIVE'}`);
+    if (this.isWalletActive) {
+      this.translate.use('vi'); 
+    } else {
+      this.translate.use('en');
+    }
   }
-
+  switchLanguage(language: string) {
+    this.translate.use(language);
+  }
   ngOnInit() {
     this.loadData();
     this.checkBalanceChange();
   }
+  showDepositForm() {
+    this.isDepositFormVisible = true;
+  }
+  onPay() {
+    this.errorMessage = '';
+    const numericAmount = parseInt(this.amount.replace(/[^\d]/g, ''), 10);
+
+    if (!numericAmount || !this.username) {
+      this.errorMessage = 'Số tiền không được để trống và username phải có giá trị.';
+      return;
+    }
+
+    this.apiService.startPayment(numericAmount, this.username).subscribe(
+      (paymentUrl) => {
+        window.location.href = paymentUrl;
+      },
+      (error) => {
+        console.error('Lỗi khi khởi tạo thanh toán', error);
+        this.errorMessage = 'Có lỗi xảy ra khi khởi tạo thanh toán. Vui lòng thử lại.';
+      }
+    );
+  }
+  formatAmount() {
+    this.amount = this.amount.replace(/[^0-9]/g, '');
+    if (this.amount) {
+      const numericAmount = parseInt(this.amount, 10);
+      this.amount = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' })
+        .format(numericAmount)
+        .replace('₫', '');
+    }
+  }
+  restrictNonNumeric(event: KeyboardEvent) {
+    const key = event.key;
+    if (!/^[0-9]$/.test(key) &&
+      key !== 'Backspace' &&
+      key !== 'Tab' &&
+      key !== 'Enter' &&
+      key !== 'ArrowLeft' &&
+      key !== 'ArrowRight') {
+      event.preventDefault();
+    }
+  }
+
   private checkBalanceChange(): void {
     setInterval(() => {
       this.apiService.getWalletInfo().subscribe(
         (response: any) => {
           const currentBalance = response.balance;
-  
+
           if (this.previousBalance !== null && currentBalance !== this.previousBalance) {
             if (!this.hasNotifiedBalanceChange) {
               this.messageService.warning(`Bạn đã có giao dịch mới số dư thay đổi từ ${this.previousBalance} đến ${currentBalance}.`);
-              this.hasNotifiedBalanceChange = true; 
+              this.hasNotifiedBalanceChange = true;
             }
           } else {
             this.hasNotifiedBalanceChange = false;
           }
-  
+
           this.previousBalance = currentBalance;
         },
         (error) => {
           console.error('Lỗi khi lấy thông tin ví:', error);
         }
       );
-    }, 5000); 
+    }, 5000);
   }
-  
+
 
   openContactList(): void {
     this.isContactListVisible = !this.isContactListVisible;
@@ -220,8 +283,8 @@ private hasNotifiedBalanceChange: boolean = false;
     }
 
     const { senderSecretKey, recipient, amount, message } = this.transactionForm.value;
-
-    this.apiService.sendTransaction(senderSecretKey, recipient, amount, message).subscribe(
+    const adjustedAmount = amount/10000;
+    this.apiService.sendTransaction(senderSecretKey, recipient, adjustedAmount, message).subscribe(
       (response) => {
         console.log('Transaction successful:', response);
         this.messageService.success('Giao dịch thành công!');

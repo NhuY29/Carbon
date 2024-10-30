@@ -12,10 +12,12 @@ import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { Component, EventEmitter, Output } from '@angular/core';
 import { NzModalService } from 'ng-zorro-antd/modal';
+import { TranslateService, TranslateModule } from '@ngx-translate/core';
+import { AppTranslateModule } from '../translate.module';
 @Component({
   selector: 'app-contact',
   standalone: true,
-  imports: [CommonModule, FormsModule, NzInputModule, NzFormModule, NzButtonModule, NzListModule, NzIconModule],
+  imports: [AppTranslateModule,CommonModule, FormsModule, NzInputModule, NzFormModule, NzButtonModule, NzListModule, NzIconModule],
   templateUrl: './contact.component.html',
   styleUrls: ['./contact.component.scss']
 })
@@ -26,8 +28,20 @@ export class ContactComponent {
   newContact: Contact = { contactId: '', username: '', walletAddress: '' };
   searchTerm: string = '';
   searchIcon = 'search';
+  isWalletActive: boolean = true;
   @Input() senderSecretKey: string = '';
-  constructor(private contactService: ApiService, private messageService: NzMessageService, private modalService: NzModalService) { }
+  constructor(public translate: TranslateService,private contactService: ApiService, private messageService: NzMessageService, private modalService: NzModalService) { 
+    translate.addLangs(['en', 'vi']);
+    translate.setDefaultLang('vi');
+    const savedState = localStorage.getItem('isWalletActive');
+    this.isWalletActive = savedState === 'true'; 
+    console.log(`Initial wallet state: ${this.isWalletActive ? 'ACTIVE' : 'INACTIVE'}`);
+    if (this.isWalletActive) {
+      this.translate.use('vi'); 
+    } else {
+      this.translate.use('en');
+    }
+  }
   ngOnInit(): void {
     this.loadContacts(this.senderSecretKey);
   }
