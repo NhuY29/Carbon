@@ -14,7 +14,10 @@ export class TradeDTO {
   projectDescription: string;
   typeName: string;
   standardName: string;
-  imageUrls: string[]; 
+  imageUrls: string[];
+  userId: string;
+  tokenAddress: string;
+  status: boolean;
 
   constructor(
     projectId: string,
@@ -28,11 +31,14 @@ export class TradeDTO {
     mintToken: string,
     typeName: string,
     standardName: string,
-    imageUrls: string[] = [], 
+    imageUrls: string[] = [],
     tradeId?: string,
     standardId?: string,
     typeId?: string,
-    projectDescription?: string
+    projectDescription?: string,
+    userId?: string,
+    tokenAddress?: string,
+    status?: boolean
   ) {
     this.projectId = projectId;
     this.projectName = projectName;
@@ -45,10 +51,13 @@ export class TradeDTO {
     this.mintToken = mintToken;
     this.typeName = typeName;
     this.standardName = standardName;
-    this.imageUrls = imageUrls; 
+    this.imageUrls = imageUrls;
     this.tradeId = tradeId || '';
     this.standardId = standardId || '';
     this.typeId = typeId || '';
     this.projectDescription = projectDescription || '';
+    this.userId = userId || '';
+    this.tokenAddress = tokenAddress || '';
+    this.status = status || false;
   }
 }

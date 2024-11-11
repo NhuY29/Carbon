@@ -25,7 +25,8 @@ import { AppTranslateModule } from '../translate.module';
     AppTranslateModule
   ],
   templateUrl: './wallet.component.html',
-  styleUrls: ['./wallet.component.scss']
+  styleUrls: ['./wallet.component.scss'],
+  host: { 'ngSkipHydration': '' }
 })
 export class WalletComponent {
   publickey: string = '';
@@ -138,6 +139,7 @@ export class WalletComponent {
       })
       : 'Không xác định';
     const fee = this.selectedTransaction.meta?.fee || 'N/A';
+    const dividedFee = fee / 10000;
     const computeUnits = this.selectedTransaction.meta?.computeUnitsConsumed || 'N/A';
 
     const logMessages: string[] = this.selectedTransaction.meta?.logMessages || [];
@@ -160,7 +162,7 @@ export class WalletComponent {
     return `
       <div>
         <p><strong>Thời Gian Giao Dịch:</strong> ${blockTime}</p>
-        <p><strong>Phí Giao Dịch:</strong> ${fee} VND</p>
+        <p><strong>Phí Giao Dịch:</strong> ${dividedFee} VND</p>
         <p><strong>Số Đơn Vị Tính Toán Tiêu Tốn:</strong> ${computeUnits}</p>
         <p><strong>Người Gửi:</strong> ${senderAccount}</p>
         <p><strong>Người Nhận:</strong> ${recipientAccount}</p>

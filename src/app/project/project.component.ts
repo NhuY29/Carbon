@@ -175,24 +175,24 @@ export class ProjectComponent implements OnInit {
     });
   }
 
-  getDirections(): void {
-    if (this.initialCoordinates.length > 0) {
-      const destination = this.initialCoordinates[0];
+  // getDirections(): void {
+  //   if (this.initialCoordinates.length > 0) {
+  //     const destination = this.initialCoordinates[0];
 
-      this.mapComponent.locateUser().then((currentLocation) => {
-        if (currentLocation) {
-          this.mapComponent.calculateRoute(destination);
-        } else {
-          this.message.error('Unable to get current location.');
-        }
-      }).catch((error) => {
-        console.error('Error locating user:', error);
-        this.message.error('Error locating user.');
-      });
-    } else {
-      this.message.warning('Please draw a point on the map first.');
-    }
-  }
+  //     this.mapComponent.locateUser().then((currentLocation) => {
+  //       if (currentLocation) {
+  //         this.mapComponent.calculateRoute(destination);
+  //       } else {
+  //         this.message.error('Unable to get current location.');
+  //       }
+  //     }).catch((error) => {
+  //       console.error('Error locating user:', error);
+  //       this.message.error('Error locating user.');
+  //     });
+  //   } else {
+  //     this.message.warning('Please draw a point on the map first.');
+  //   }
+  // }
 
   handleChange(info: any): void {
     if (info.file.status === 'done' || info.file.status === 'uploading') {

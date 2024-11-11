@@ -116,15 +116,15 @@ export class TransactionHistoryComponent implements OnInit {
 
   getTransactionDetailsFromResponse(response: any): TransactionDetail {
     const blockTime = response.blockTime
-      ? new Date(response.blockTime * 1000).toLocaleString('vi-VN', {
-        day: '2-digit',
-        month: '2-digit',
-        year: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit',
-      })
-      : 'Không xác định';
+        ? new Date(response.blockTime * 1000).toLocaleString('vi-VN', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+        })
+        : 'Không xác định';
 
     const fee = response.meta?.fee?.toString() || 'N/A';
     const computeUnits = response.meta?.computeUnitsConsumed?.toString() || 'N/A';
@@ -139,24 +139,37 @@ export class TransactionHistoryComponent implements OnInit {
     const postBalance = response.meta?.postBalances?.[0] || 0;
     const transactionAmount = ((preBalance - postBalance - (parseInt(fee) || 0)) / 100000).toString();
 
-    const memoLogs = logMessages
-      .filter(msg => msg.includes('Program log: Memo'))
-      .map(msg => {
-        const match = msg.match(/"([^"]+)"/);
-        return { memo: match ? match[1] : 'Không có memo' };
-      });
+    // Xác định `memo` dựa trên mẫu `logMessages`
+    let memo: { memo: string; }[] = [];
+
+    if (logMessages.some(msg => msg.includes('Program log: Transaction Content:'))) {
+        const contentLog = logMessages.find(msg => msg.includes('Program log: Transaction Content:'));
+        memo = [{ memo: contentLog?.replace('Program log: Transaction Content:', '').trim() || 'Không có memo' }];
+    } else if (logMessages.some(msg => msg.includes('Program log: Instruction: MintTo'))) {
+        memo = [{ memo: 'chuyen nhan tin chi' }];
+    } else if (logMessages.some(msg => msg.includes('Program log: Instruction: InitializeMint2'))) {
+        memo = [{ memo: 'tao mint token' }];
+    } else if (logMessages.some(msg => msg.includes('Program log: Initialize the associated token account'))) {
+        memo = [{ memo: 'tao token address' }];
+    } else if (
+        logMessages.some(msg => msg === "Program 11111111111111111111111111111111 invoke [1]") &&
+        logMessages.some(msg => msg === "Program 11111111111111111111111111111111 success")
+    ) {
+        memo = [{ memo: 'mua tin chi' }];
+    } else {
+        memo = [{ memo: 'Không xác định' }];
+    }
 
     return {
-      blockTime,
-      fee,
-      computeUnits,
-      sender: senderAccount,
-      recipient: recipientAccount,
-      transactionAmount,
-      memo: memoLogs
+        blockTime,
+        fee,
+        computeUnits,
+        sender: senderAccount,
+        recipient: recipientAccount,
+        transactionAmount,
+        memo
     };
-  }
-
+}
 
 
 }

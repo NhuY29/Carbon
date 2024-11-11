@@ -26,6 +26,7 @@ import { ContactComponent } from './contact/contact.component';
 import { PaymentResultComponent } from './payment-result/payment-result.component';
 import { SettingComponent } from './setting/setting.component';
 import { CartComponent } from './cart/cart.component';
+import { WithdrawMoneyComponent } from './withdraw-money/withdraw-money.component';
 export const routes: Routes = [
   {
     path: '',
@@ -111,7 +112,11 @@ export const routes: Routes = [
   path: 'cart',
   component: CartComponent
 },
-
+{
+  path: 'withdrawMoney',
+  component: WithdrawMoneyComponent
+},
+ { path: 'ggmap/:projectId', component: MapComponent },
 { path: 'measurementDataList/:id/:projectId', component: MeasurementDataListComponent },
   // { path: 'login', loadChildren: () => import('.//login/login.component').then(m => m.LoginComponent) }
 ];

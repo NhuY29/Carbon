@@ -43,6 +43,7 @@ export interface SellerInfo {
   imports: [FormsModule,NzModalModule,CommonModule,MeasurementDataComponent,NzButtonModule,NzIconModule],
   templateUrl: './form-xngd.component.html',
   styleUrl: './form-xngd.component.scss',
+  host: { 'ngSkipHydration': '' }
   
 })
 export class FormXNGDComponent {

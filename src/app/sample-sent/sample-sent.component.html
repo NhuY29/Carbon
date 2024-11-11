@@ -111,19 +111,18 @@
                                 <div class="carthd">
                                     <div class="mini-cart text-xs-center">
                                         <div class="icon_cart heading-cart cart_header">
-                                            <a class="img_hover_cart" title="Giỏ hàng"
-                                                onclick="window.location.href='/cart'">
+                                            <a class="img_hover_cart" title="Giỏ hàng" onclick="window.location.href='/cart'">
                                                 <div class="icon_hotline">
                                                     <i class="fas fa-shopping-basket iconcart"></i>
                                                     <div class="border_count">
-                                                        <span class="count_item count_item_pr">0</span>
+                                                        <span class="count_item count_item_pr">{{ cartItemCount }}</span>
                                                     </div>
                                                     <span class="text_gh hidden-xs">Giỏ hàng</span>
                                                 </div>
                                             </a>
                                         </div>
                                     </div>
-                                </div>
+                                </div>                                
 
                             </div>
                         </div>
@@ -160,10 +159,12 @@
             <section class="awe-section-3">
                 <section class="section_product_hot">
                     <div class="container">
-                        <div class="titlemodule a-center section">
-                            <h2>
-                                <a href="san-pham-noi-bat" title="Sản phẩm hot">MỚI NHẤT</a>
-                            </h2>
+                        <div class="tab-link item has-content current" data-tab="tab-1">
+                            <div class="titlemodule a-center section">
+                                <h2>
+                                   MỚI NHẤT
+                                </h2>
+                            </div>
                         </div>
                     </div>
                 </section>
@@ -200,16 +201,15 @@
                 </div>
             </section>
 
-
-
-
             <section class="awe-section-5">
                 <section class="section_all_pro clearfix">
                     <div class="container">
-                        <div class="titlemodule a-center section">
-                            <h2>
-                                <span class="large">Danh sách sản phẩm</span>
-                            </h2>
+                        <div class="tab-link item has-content current" data-tab="tab-1">
+                            <div class="titlemodule a-center section">
+                                <h2>
+                                   DANH SÁCH CÁC SẢN PHẨM
+                                </h2>
+                            </div>
                         </div>
                         <div class="tab-block-more section tabwrap not-dqtab e-tabs ajax-tab-1"
                             data-section="ajax-tab-1">
@@ -279,11 +279,6 @@
                                     '3.0-0' }}</span>
                             </div>
                         </div>
-                        <div class="price-box clearfix">
-                            <div class="special-price">
-                                <span class="price product-price">Số lượng {{ trade.quantity }}</span>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -336,6 +331,9 @@
                     <div class="head-qv group-status">
                         <p class="qwp-name title-product">Số lượng: {{ selectedTrade.quantity }}</p>
                     </div>
+                    <div class="special-price">
+                        <span class="price product-price">Số lượng còn lại: {{ remainingQuantity }}</span>
+                    </div>
 
                     <div class="product-description product-summary">
                         <div class="rte">
@@ -353,28 +351,6 @@
                             </span>
                         </div>
                     </form>
-                    <div class="button_actions clearfix">
-                        <div class="button_actions clearfix">
-                            <div class="input-group quantity-input-group">
-                                <div class="count_btn_style quantity_wanted_p">
-                                    <div class="custom input_number_product soluong1">
-                                        <a class="btn_num num_1 button button_qty" (click)="decreaseQuantity()">
-                                            <i class="fas fa-minus-circle"></i>
-                                        </a>
-                                        <input type="number" id="quantity-detail" name="quantity" [(ngModel)]="quantity"
-                                            min="1" max="1000" class="form-control prd_quantity" />
-                                        <a class="btn_num num_2 button button_qty" (click)="increaseQuantity()">
-                                            <i class="fas fa-plus-circle"></i>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                            <button type="submit"
-                                class="btn_cool btn btn_base fix_add_to_cart ajax_addtocart btn_add_cart btn-cart add_to_cart add_to_cart_detail">
-                                <span class="btn-content"><i class="fas fa-shopping-basket"></i>Mua ngay</span>
-                            </button>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
@@ -401,6 +377,9 @@
                                 <h4 class="product-new-price">
                                     <span>Giá: {{ selectedTrade?.price | currency: 'VND' : 'symbol' : '3.0-0' }}</span>
                                 </h4>
+                                <h4 class="product-remaining-quantity">
+                                    <span>Số lượng còn lại: {{ remainingQuantity | number: '1.0-0' }} </span>
+                                </h4>
                                 <div class="variant_title"><span></span></div>
                                 <div class="input-group quantity-input-group">
                                     <div class="count_btn_style quantity_wanted_p">
@@ -409,15 +388,17 @@
                                                 <i class="fas fa-minus-circle"></i>
                                             </a>
                                             <input type="number" id="quantity-detail" name="quantity"
-                                                [(ngModel)]="quantity" min="1" max="1000"
+                                                [(ngModel)]="quantity" min="0" [max]="remainingQuantity"
                                                 class="form-control prd_quantity" (change)="calculateTotalPrice()" />
+
+
                                             <a class="btn_num num_2 button button_qty" (click)="increaseQuantity()">
                                                 <i class="fas fa-plus-circle"></i>
                                             </a>
                                         </div>
                                     </div>
                                 </div>
-                                <h4 class="product-new-price" *ngIf="quantity > 1">
+                                <h4 class="product-new-price" *ngIf="quantity >= 1">
                                     <span>Tổng: {{ totalPrice | currency: 'VND' : 'symbol' : '3.0-0' }}</span>
                                 </h4>
                             </div>
@@ -427,11 +408,12 @@
                 </div>
                 <div class="d-flex justify-content-between margin-top-10 col-sm-12 col-lg-12 col-md-12">
                     <a style="background-color: #FFD700;" class="btn btn-gold btn-main checkout_button"
-                        title="Thêm vào giỏ hàng">Thêm vào giỏ
-                        hàng <i class="fas fa-shopping-basket iconcart"></i>
+                        title="Thêm vào giỏ hàng" (click)="addToCart()">
+                        Thêm vào giỏ hàng <i class="fas fa-shopping-basket iconcart"></i>
                     </a>
-                    <a class="btn btn-primary btn-main checkout_button" title="Tiến hành thanh toán">Tiến hành
-                        thanh toán <i class="fa fa-arrow-right"></i>
+                    <a class="btn btn-primary btn-main checkout_button" title="Tiến hành thanh toán"
+                        (click)="processPayment(selectedTrade)">
+                        Tiến hành thanh toán <i class="fa fa-arrow-right"></i>
                     </a>
                 </div>
 

@@ -1,11 +1,14 @@
 import { Component, AfterViewInit, Output, EventEmitter, Input, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common'; 
+import { CommonModule } from '@angular/common';
+import { ActivatedRoute } from '@angular/router';
+import { ApiService } from '../../api.service';
+import { CoordinateDTO } from '../CoordinateDTO';
 import '@fortawesome/fontawesome-free/css/all.css';
 @Component({
   selector: 'app-map',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule], 
+  imports: [ReactiveFormsModule, CommonModule],
   templateUrl: './map.component.html',
   styleUrls: ['./map.component.scss']
 })
@@ -23,21 +26,85 @@ export class MapComponent implements AfterViewInit {
   private currentLocation: L.LatLng | null = null;
   private tileLayers: any = {};
   private currentTileLayer: any;
-  public destination: { lat: number, lng: number } | null = null; 
+  public destination: { lat: number, lng: number } | null = null;
   public showDirectionsForm: boolean = false;
   public directionsForm: FormGroup;
-
-  constructor(private fb: FormBuilder) {
+  projectId: string | null = null;
+  constructor(private api: ApiService, private route: ActivatedRoute, private fb: FormBuilder) {
     this.directionsForm = this.fb.group({
       destination: ['', Validators.required],
       transportMode: ['driving', Validators.required]
     });
   }
+  ngOnInit(): void {
+    this.route.paramMap.subscribe(params => {
+      this.projectId = params.get('projectId');
+      console.log('Project ID:', this.projectId);
+
+      if (this.projectId) {
+        this.api.getCoordinatesByProjectId(this.projectId).subscribe(
+          (data: CoordinateDTO[]) => {
+            this.coordinates = data;
+            console.log('Coordinates:', this.coordinates);
+            this.drawCoordinatesOnMap();
+            const firstCoordinate = this.getFirstCoordinate();
+            if (firstCoordinate) {
+              console.log('Tọa độ đầu tiên:', firstCoordinate);
+            } else {
+              console.log('Không có tọa độ nào');
+            }
+          },
+          error => {
+            console.error('Error fetching coordinates:', error);
+          }
+        );
+      }
+    });
+  }
+
+
+  public getFirstCoordinate(): CoordinateDTO | null {
+    if (this.coordinates.length > 0) {
+      return this.coordinates[0];
+    }
+    return null;
+  }
+
+  private async drawCoordinatesOnMap(): Promise<void> {
+    try {
+      const L = (await import('leaflet')).default;
+      await import('leaflet-draw');
+      await import('leaflet-routing-machine');
+      this.drawnItems = new L.FeatureGroup();
+      this.map.addLayer(this.drawnItems);
+      const latLngs: L.LatLngExpression[] = this.coordinates.map(coordinate => [coordinate.lat, coordinate.lng] as L.LatLngExpression);
+      const polygon = L.polygon(latLngs, { color: 'blue' }).addTo(this.map);
+      this.drawnItems.addLayer(polygon);
+      if (latLngs.length > 0) {
+        const bounds = L.latLngBounds(latLngs);
+        this.map.fitBounds(bounds);
+      }
+
+    } catch (err) {
+      console.error('Không tải được Leaflet hoặc Leaflet-draw', err);
+    }
+  }
+
 
   ngAfterViewInit(): void {
     if (typeof window !== 'undefined') {
       this.loadLeaflet();
-    } 
+    }
+  }
+  public async showCurrentLocation(): Promise<void> {
+    try {
+      const latlng = await this.locateUser();
+      if (latlng) {
+        console.log(`Vị trí hiện tại của bạn là: ${latlng.lat}, ${latlng.lng}`);
+      }
+    } catch (error) {
+      console.error('Không thể xác định vị trí hiện tại:', error);
+    }
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -80,7 +147,7 @@ export class MapComponent implements AfterViewInit {
       })
     };
 
-  
+
     this.currentTileLayer = this.tileLayers['Bản đồ đường phố <img src="https://maps.gstatic.com/tactile/layerswitcher/ic_transit_colors2-2x.png" width="50" height="50">'];
     this.currentTileLayer.addTo(this.map);
 
@@ -115,70 +182,72 @@ export class MapComponent implements AfterViewInit {
       },
       onAdd: (map: any) => {
         const container = L.DomUtil.create('div', 'leaflet-bar leaflet-control leaflet-control-custom');
-        container.innerHTML = '<i class="fa-solid fa-diamond-turn-right"style="font-size: 20px;"></i>';
-        container.title = " Chỉ đường";  
-      
+        container.innerHTML = '<i class="fa-solid fa-diamond-turn-right" style="font-size: 20px;"></i>';
+        container.title = "Chỉ đường";
+
         container.style.backgroundColor = 'white';
-        container.style.width = '50px'; 
+        container.style.width = '50px';
         container.style.height = '50px';
         container.style.cursor = 'pointer';
-        container.style.display = 'flex'; 
-        container.style.alignItems = 'center'; 
-        container.style.justifyContent = 'center'; 
-        container.style.borderRadius = '5px'; 
-    
-        container.onclick = () => {
-          this.showDirectionsForm = !this.showDirectionsForm; 
+        container.style.display = 'flex';
+        container.style.alignItems = 'center';
+        container.style.justifyContent = 'center';
+        container.style.borderRadius = '5px';
+
+        container.onclick = async () => {
+          try {
+            await this.navigateToFirstCoordinate();
+          } catch (error) {
+            console.error('Lỗi khi chỉ đường:', error);
+          }
         };
-    
+
         return container;
       }
     });
-    
     this.map.addControl(new customControlDirections());
-    
     const customControl = L.Control.extend({
       options: {
         position: 'topright'
       },
       onAdd: (map: any) => {
         const container = L.DomUtil.create('div', 'leaflet-bar leaflet-control leaflet-control-custom');
-        
+
         container.innerHTML = '<i class="fa-solid fa-crosshairs" style="font-size: 20px;"></i>';
-        container.title = "Hiển thị vị trí của bạn";  
-        
+        container.title = "Hiển thị vị trí của bạn";
+
         container.style.backgroundColor = 'white';
-        container.style.width = '50px'; 
-        container.style.height = '50px'; 
+        container.style.width = '50px';
+        container.style.height = '50px';
         container.style.lineHeight = '50px';
-        container.style.textAlign = 'center'; 
+        container.style.textAlign = 'center';
         container.style.cursor = 'pointer';
-        container.style.transition = 'background-color 0.3s';  
-        container.style.borderRadius = '5px'; 
-    
+        container.style.transition = 'background-color 0.3s';
+        container.style.borderRadius = '5px';
+
         container.onmouseenter = () => {
-          container.style.backgroundColor = '#f0f0f0'; 
+          container.style.backgroundColor = '#f0f0f0';
         };
         container.onmouseleave = () => {
-          container.style.backgroundColor = 'white'; 
+          container.style.backgroundColor = 'white';
         };
-    
+
         container.onclick = () => {
           this.locateUser()
             .then(latlng => {
-              console.log("Current location:", latlng); 
+              console.log("Current location:", latlng);
             })
             .catch(error => {
-              console.error("Error locating user:", error); 
+              console.error("Error locating user:", error);
             });
         };
-    
+
         return container;
       }
     });
-    
+
     this.map.addControl(new customControl());
-    
+
     this.map.on(L.Draw.Event.CREATED, (event: any) => {
       const layer = event.layer;
 
@@ -256,8 +325,6 @@ export class MapComponent implements AfterViewInit {
       this.drawnItems.addLayer(polygon);
       this.drawnPolygonPoints = this.initialCoordinates;
       this.coordinatesChanged.emit(this.initialCoordinates);
-
-      // Zoom to the bounds of the polygon
       const bounds = L.latLngBounds(latLngs);
       this.map.fitBounds(bounds);
     }
@@ -309,6 +376,26 @@ export class MapComponent implements AfterViewInit {
       console.log('Bản đồ đã được làm sạch.');
     }
   }
+  public async navigateToFirstCoordinate(): Promise<void> {
+    try {
+
+      const latlng = await this.locateUser();
+      if (latlng) {
+        console.log(`Vị trí hiện tại của bạn là: ${latlng.lat}, ${latlng.lng}`);
+
+
+        const firstCoordinate = this.getFirstCoordinate();
+        if (firstCoordinate) {
+
+          await this.calculateRoute({ lat: firstCoordinate.lat, lng: firstCoordinate.lng });
+        } else {
+          console.log('Không có tọa độ nào để chỉ đường.');
+        }
+      }
+    } catch (error) {
+      console.error('Không thể xác định vị trí hiện tại hoặc chỉ đường:', error);
+    }
+  }
 
   public async calculateRoute(destination: { lat: number, lng: number }): Promise<void> {
     if (typeof window !== 'undefined') {
@@ -321,8 +408,8 @@ export class MapComponent implements AfterViewInit {
 
       this.routingControl = L.Routing.control({
         waypoints: [
-          L.latLng(this.map.getCenter().lat, this.map.getCenter().lng), // Current location
-          L.latLng(destination.lat, destination.lng) // Destination
+          L.latLng(this.map.getCenter().lat, this.map.getCenter().lng),
+          L.latLng(destination.lat, destination.lng)
         ],
         routeWhileDragging: true
       }).addTo(this.map);
@@ -337,23 +424,23 @@ export class MapComponent implements AfterViewInit {
           (position) => {
             const latlng = L.latLng(position.coords.latitude, position.coords.longitude);
             const radius = position.coords.accuracy / 2;
-  
+
             L.marker(latlng).addTo(this.map)
               .bindPopup(`You are within ${radius} meters from this point`).openPopup();
-  
+
             L.circle(latlng, { radius: radius, color: 'blue', fillColor: '#30f', fillOpacity: 0.5 }).addTo(this.map);
-  
+
             this.map.setView(latlng, 16);
-            this.currentLocation = latlng; // Store current location
-            resolve(latlng); // Resolve with the current location
+            this.currentLocation = latlng;
+            resolve(latlng);
           },
           (error) => {
             console.error('Error getting current location', error);
             alert('Error getting current location');
-            reject(error); // Reject with the error
+            reject(error);
           },
           {
-            enableHighAccuracy: true, 
+            enableHighAccuracy: true,
             timeout: 5000,
             maximumAge: 0
           }
@@ -369,12 +456,12 @@ export class MapComponent implements AfterViewInit {
     const L = (await import('leaflet')).default;
     const mapType = event.target.value;
 
-    // Xóa lớp bản đồ cũ nếu có
+
     if (this.currentTileLayer) {
       this.map.removeLayer(this.currentTileLayer);
     }
 
-    // Khởi tạo lớp bản đồ mới
+
     switch (mapType) {
       case 'roadmap':
         this.currentTileLayer = L.tileLayer('https://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
@@ -412,7 +499,7 @@ export class MapComponent implements AfterViewInit {
     const transportMode = this.directionsForm.get('transportMode')?.value;
 
     if (destination && transportMode) {
-      // Xử lý logic tìm đường ở đây
+
       console.log(`Tìm đường đến ${destination} bằng ${transportMode}`);
     }
   }

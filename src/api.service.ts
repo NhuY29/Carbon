@@ -16,6 +16,14 @@ import { MeasurementDataRequest } from './app/MeasurementDataRequest';
 import { catchError } from 'rxjs/operators';
 import { Contact } from './app/contact/contact.modal';
 import { TradeDTO } from './app/sample-sent/tradeDTO';
+import { WalletResponse } from './app/wallet/WalletResponse';
+import { HttpErrorResponse } from '@angular/common/http';
+import { CartDTO } from './app/cart/cart.dto';
+import { CoordinateDTO } from './app/CoordinateDTO';
+interface WithdrawalResponse{
+  message: string;
+  status:string;
+}
 @Injectable({
   providedIn: 'root'
 })
@@ -339,6 +347,19 @@ export class ApiService {
 
     return this.http.put<CommonCategoryRequest>(`${this.apiUrl}/common-categories/${id}`, category, { headers });
   }
+  getCategoryById2(id: string): Observable<CommonCategoryDTO> {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      throw new Error('Token không tồn tại.');
+    }
+
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+
+    return this.http.get<CommonCategoryDTO>(`${this.apiUrl}/common-categories/${id}`, { headers });
+  }
 
   getAllParentCategories(): Observable<CategoryParentChild[]> {
     const token = localStorage.getItem('token');
@@ -554,7 +575,7 @@ export class ApiService {
     const payload = new URLSearchParams();
     payload.set('projectId', projectId);
     payload.set('signatureDataUrl', signatureDataUrl);
-    payload.set('numberOfProposals', numberOfProposals.toString()); // Thêm số lượng đề xuất
+    payload.set('numberOfProposals', numberOfProposals.toString());
 
     return this.http.post(`${this.apiUrl}/signature/save`, payload.toString(), { headers });
   }
@@ -605,7 +626,7 @@ export class ApiService {
   getPdfByProjectIdAndId(projectId: string, id: string): Observable<Blob> {
     const token = localStorage.getItem('token');
 
-    // Kiểm tra nếu token không tồn tại
+
     if (!token) {
       throw new Error('Token không tồn tại.');
     }
@@ -614,11 +635,11 @@ export class ApiService {
       'Authorization': `Bearer ${token}`
     });
 
-    // Gọi API với cả projectId và id
+
     return this.http.get(`${this.apiUrl}/sampleSent/getPdf`, {
       headers,
-      params: { projectId, id },  // Sử dụng params để truyền cả projectId và id
-      responseType: 'blob'  // Đặt kiểu phản hồi là 'blob' để xử lý file PDF
+      params: { projectId, id },
+      responseType: 'blob'
     });
   }
 
@@ -634,9 +655,9 @@ export class ApiService {
 
     const formData = new FormData();
     formData.append('projectId', projectId);
-    formData.append('id', id); // Thêm ID vào FormData
+    formData.append('id', id);
     formData.append('file', file);
-    formData.append('quantity', quantity.toString()); // Thêm quantity vào FormData
+    formData.append('quantity', quantity.toString());
 
     return this.http.post(`${this.apiUrl}/sampleSent/uploadReceived`, formData, { headers });
   }
@@ -733,17 +754,17 @@ export class ApiService {
     if (!token) {
       throw new Error('Token không tồn tại.');
     }
-  
+
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`,
       'Content-Type': 'application/json'
     });
-  
+
     const params = new HttpParams()
       .set('projectId', projectId)
       .set('quantity', quantity.toString())
       .set('price', price);
-  
+
     return this.http.post<any>(`${this.apiUrl}/sampleSent/TokenSupply`, null, { headers, params })
       .pipe(
         catchError((error) => {
@@ -752,7 +773,7 @@ export class ApiService {
         })
       );
   }
-  
+
 
 
   sendTransaction(senderSecretKeyBase58: string, receiverPublicKey: string, amount: number, content?: string): Observable<string> {
@@ -815,21 +836,21 @@ export class ApiService {
     });
 
     return this.http.get<Contact[]>(`${this.apiUrl}/contacts/wallet/secret/${secretKey}`, { headers });
-}
-
-addContact(publicKey: string, contact: Contact): Observable<any> {
-  const token = localStorage.getItem('token');
-
-  if (!token) {
-      return throwError(new Error('Token không tồn tại.'));
   }
 
-  const headers = new HttpHeaders({
+  addContact(publicKey: string, contact: Contact): Observable<any> {
+    const token = localStorage.getItem('token');
+
+    if (!token) {
+      return throwError(new Error('Token không tồn tại.'));
+    }
+
+    const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`,
       'Content-Type': 'application/json'
-  });
-  return this.http.post<any>(`${this.apiUrl}/contacts/${publicKey}`, contact, { headers });
-}
+    });
+    return this.http.post<any>(`${this.apiUrl}/contacts/${publicKey}`, contact, { headers });
+  }
 
 
   updateContact(id: string, contact: Contact): Observable<Contact> {
@@ -849,17 +870,16 @@ addContact(publicKey: string, contact: Contact): Observable<any> {
     const token = localStorage.getItem('token');
 
     if (!token) {
-        return throwError(new Error('Token không tồn tại.'));
+      return throwError(new Error('Token không tồn tại.'));
     }
 
     const headers = new HttpHeaders({
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json'
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
     });
 
-    // Thay đổi để trả về thông báo từ server
     return this.http.delete<{ message: string }>(`${this.apiUrl}/contacts/${id}`, { headers });
-}
+  }
 
   searchContacts(username: string): Observable<Contact[]> {
     const token = localStorage.getItem('token');
@@ -875,10 +895,10 @@ addContact(publicKey: string, contact: Contact): Observable<any> {
     return this.http.get<Contact[]>(`${this.apiUrl}/contacts/search?username=${username}`, { headers });
   }
   getPaymentResult(
-    vnp_Amount: string, 
-    vnp_TxnRef: string, 
-    vnp_PayDate: string, 
-    vnp_ResponseCode: string, 
+    vnp_Amount: string,
+    vnp_TxnRef: string,
+    vnp_PayDate: string,
+    vnp_ResponseCode: string,
     vnp_SecureHash: string,
     vnp_OrderInfo: string,
     vnp_BankCode: string,
@@ -886,20 +906,20 @@ addContact(publicKey: string, contact: Contact): Observable<any> {
     vnp_CardType: string,
     vnp_TmnCode: string,
     responseCode: string,
-): Observable<any> {
+  ): Observable<any> {
     const token = localStorage.getItem('token');
-  
+
     if (!token) {
-        return throwError(new Error('Token không tồn tại.'));
+      return throwError(new Error('Token không tồn tại.'));
     }
-  
+
     const headers = new HttpHeaders({
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json'
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
     });
-  
+
     return this.http.get(`${this.apiUrl}/payment_infor?vnp_Amount=${vnp_Amount}&vnp_TxnRef=${vnp_TxnRef}&vnp_PayDate=${vnp_PayDate}&vnp_ResponseCode=${vnp_ResponseCode}&vnp_SecureHash=${vnp_SecureHash}&vnp_OrderInfo=${vnp_OrderInfo}&vnp_BankCode=${vnp_BankCode}&vnp_BankTranNo=${vnp_BankTranNo}&vnp_CardType=${vnp_CardType}&vnp_TmnCode=${vnp_TmnCode}&responseCode=${responseCode}`, { headers });
-}
+  }
 
   startPayment(amount: number, username: string): Observable<string> {
     const token = localStorage.getItem('token');
@@ -912,9 +932,9 @@ addContact(publicKey: string, contact: Contact): Observable<any> {
       'Authorization': `Bearer ${token}`,
       'Content-Type': 'application/json'
     });
-    
-    const params = { amount,username };
-    return this.http.get<string>(`${this.apiUrl}/pay` , { headers, params, responseType: 'text' as 'json' });
+
+    const params = { amount, username };
+    return this.http.get<string>(`${this.apiUrl}/pay`, { headers, params, responseType: 'text' as 'json' });
   }
   getAllTrades(): Observable<TradeDTO[]> {
     const token = localStorage.getItem('token');
@@ -931,9 +951,175 @@ addContact(publicKey: string, contact: Contact): Observable<any> {
       .pipe(
         catchError(error => {
           console.error('Có lỗi xảy ra khi lấy danh sách giao dịch:', error);
-          return throwError(() => new Error('Lỗi khi lấy danh sách giao dịch.')); // Thông báo lỗi cho người dùng
+          return throwError(() => new Error('Lỗi khi lấy danh sách giao dịch.'));
         })
       );
   }
+  transferToken(
+    senderSecretKeyBase58: string,
+    toAddressBase58: string,
+    mintAddressBase58: string,
+    amount: number,
+    solAmount: number,
+    receiverSecretKeyBase58: string
+  ): Observable<any> {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      return throwError(() => new Error('Token không tồn tại.'));
+    }
+
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+
+    const params = new HttpParams()
+      .set('senderSecretKeyBase58', senderSecretKeyBase58)
+      .set('toAddressBase58', toAddressBase58)
+      .set('mintAddressBase58', mintAddressBase58)
+      .set('amount', amount.toString())
+      .set('solAmount', solAmount.toString())
+      .set('receiverSecretKeyBase58', receiverSecretKeyBase58);
+
+    return this.http.post(`${this.apiUrl}/wallet/transferToken`, null, { params, headers });
+  }
+
+  getWalletByUserId(userId: string): Observable<WalletResponse> {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      return throwError(() => new Error('Token không tồn tại.'));
+    }
+
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+
+    return this.http.get<WalletResponse>(`${this.apiUrl}/wallet/${userId}`, { headers });
+  }
+  getTokenBalance(mintAddress: string, tokenAccountAddress: string): Observable<{ balance: string; message: string }> {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      return throwError(() => new Error('Token không tồn tại.'));
+    }
+
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+
+
+    return this.http.get<{ balance: string; message: string }>(
+      `${this.apiUrl}/wallet/balance?mintAddress=${mintAddress}&tokenAccountAddress=${tokenAccountAddress}`,
+      { headers }
+    );
+  }
+  addToCart(userId: string, tradeId: string, amount: number): Observable<string> {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      return throwError(() => new Error('Token không tồn tại.'));
+    }
+
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+
+
+    return this.http.post<string>(`${this.apiUrl}/cart/add`, null, {
+      params: {
+        userId,
+        tradeId,
+        amount: amount.toString()
+      },
+      headers
+    });
+  }
+
+  getAllCartItemsByUserId(userId: string): Observable<CartDTO[]> {
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+    return this.http.get<CartDTO[]>(`${this.apiUrl}/cart/user/${userId}`, {
+      headers
+    });
+  }
+  getUserIdFromToken(): Observable<string> {
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+    return this.http.get<string>(`${this.apiUrl}/user/getuserid`, { headers });
+  }
+  deleteCartItem(cartId: string): Observable<string> {
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+    return this.http.delete<string>(`${this.apiUrl}/cart/delete/${cartId}`, { headers });
+  }
+  deactivateTrade(tradeId: string): Observable<string> {
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+
+    return this.http.put<string>(`${this.apiUrl}/trade/${tradeId}`, null, { headers, responseType: 'text' as 'json' });
+  }
+  getCoordinatesByProjectId(projectId: string): Observable<CoordinateDTO[]> {
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+    return this.http.get<CoordinateDTO[]>(`${this.apiUrl}/project/${projectId}/coordinates`, { headers });
+  }
+  requestWithdrawal(
+    amount: number,
+    bankName: string,
+    bankAccountNumber: string,
+    accountHolderName: string
+  ): Observable<WithdrawalResponse> {
+    // Retrieve the token from localStorage
+    const token = localStorage.getItem('token');
+  
+    // Set up headers with token and Content-Type
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token ?? ''}`, // Fallback to an empty string if token is null
+      'Content-Type': 'application/json'
+    });
+  
+    // Prepare parameters
+    const params = {
+      amount: amount.toString(),
+      bankName,
+      bankAccountNumber,
+      accountHolderName
+    };
+  
+    // Send the POST request
+    return this.http.post<WithdrawalResponse>(`${this.apiUrl}/withdrawal/request`, null, { headers, params });
+  }
+  getTransactionHistoryAddressToken(tokenAddress: string): Observable<any> {
+    const token = localStorage.getItem('token'); 
+    if (!token) {
+      return throwError(() => new Error('Token not found'));
+    }
+
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+
+    const params = new HttpParams().set('tokenAddress', tokenAddress);
+  
+    return this.http.get<any>(`${this.apiUrl}/wallet/transaction-historyAdressToken`, { headers, params });
+  }
+  
 }
 

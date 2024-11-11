@@ -1,18 +1,3 @@
-<div id="map" style="height: 1000px;"></div>
 
-<div *ngIf="showDirectionsForm" class="directions-form">
-  <form [formGroup]="directionsForm" (ngSubmit)="onSubmitDirections()">
-    <label for="destination">Địa điểm muốn đến:</label>
-    <input id="destination" formControlName="destination" type="text" required>
-    
-    <label for="transportMode">Loại phương tiện di chuyển:</label>
-    <select id="transportMode" formControlName="transportMode" required>
-      <option value="driving">Ô tô</option>
-      <option value="walking">Đi bộ</option>
-      <option value="bicycling">Xe đạp</option>
-      <option value="transit">Phương tiện công cộng</option>
-    </select>
-    
-    <button type="submit">Tìm đường</button>
-  </form>
-</div>
+  <div id="map" style="height: 1000px;"></div> 
+

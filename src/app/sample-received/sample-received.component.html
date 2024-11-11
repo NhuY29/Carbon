@@ -1,113 +1,113 @@
 <div class="statistics-container">
-
     <div class="statistics-container">
-        <div class="stat-box" id="active-contracts">
-            <i class="icon calendar"></i>
-            <h4>{{ 'statistics.totalRequestsToday' | translate }}</h4>
-            <p class="stat-number">{{ projectsSentToday?.length ||0 }}</p>
-        </div>
-    
         <div class="stat-box" id="expired-contracts">
             <i class="icon expired"></i>
             <h4>{{ 'statistics.pendingRequests' | translate }}</h4>
             <p class="stat-number">{{ pendingProjects?.length ||0 }}</p>
         </div>
-    
         <div class="stat-box" id="expiring-contracts">
             <i class="icon clock"></i>
             <h4>{{ 'statistics.resolvedRequests' | translate }}</h4>
             <p class="stat-number">{{ doneProjects?.length ||0 }}</p>
         </div>
     </div>
-    
-
 </div>
-
 <nz-tabset>
-    <nz-tab nzTitle="{{ 'tabs.todayRequests' | translate }}">
-        <nz-table #basicTable4 [nzData]="projectsSentToday" [nzBordered]="true">
-            <thead>
-                <tr>
-                    <th>{{ 'table.project' | translate }}</th>
-                    <th>{{ 'table.sendDate' | translate }}</th>
-                    <th>{{ 'table.viewProject' | translate }}</th>
-                    <th>{{ 'table.requestForm' | translate }}</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let item of basicTable4.data">
-                    <td>{{ item.projectId }}</td> 
-                    <td>{{ item.sendDate | date:'short' }}</td> 
-                    
-                    <td>
-                        <button nz-button (click)="navigateToProject(item.projectId)">{{ 'buttons.view' | translate }}</button>
-                    </td>
-                    <td>
-                        <button nz-button (click)="downloadPdf(item.projectId,item.id)">{{ 'buttons.downloadRequest' | translate }}<</button>
-                    </td>
-                </tr>
-            </tbody>
-        </nz-table>
-    </nz-tab>
     <nz-tab [nzTitle]="pendingTabTemplate">
         <ng-template #pendingTabTemplate>
             {{ 'tabs.pendingRequests' | translate }}
             <nz-badge [nzCount]="pendingProjects?.length || 0"></nz-badge>
         </ng-template>
-        <nz-table #basicTable2 [nzData]="pendingProjects" [nzBordered]="true">
+        <nz-table #basicTable2 [nzData]="pendingProjects" [nzBordered]="true" [nzPageSize]="5" [nzShowPagination]="true"
+            nzPaginationPosition="bottom" [nzFrontPagination]="true">
+
             <thead>
                 <tr>
-                    <th>{{ 'table.project' | translate }}</th>
-                    <th>{{ 'table.sendDate' | translate }}</th>
-                    <th>{{ 'table.id' | translate }}</th>
-                    <th>{{ 'table.viewProject' | translate }}</th>
-                    <th>{{ 'table.requestForm' | translate }}</th>
-                    <th>{{ 'table.measurementData' | translate }}</th>
+                    <th style="width: 10%; text-align: center;">Tên Dự Án</th>
+                    <th style="width: 20%; text-align: center;">Mô tả</th>
+                    <th style="width: 7%; text-align: center;">Lĩnh vực hoạt động</th>
+                    <th style="width: 7%; text-align: center;">Loại Hình</th>
+                    <th style="width: 7%; text-align: center;">Tiêu Chuẩn</th>
+                    <th style="width: 5%; text-align: center;">Ngày Gửi</th>
+                    <th style="width: 5%; text-align: center;">Liên Hệ</th>
+                    <th style="width: 7%; text-align: center;">Chủ sở hữu</th>
+                    <th style="width: 10%; text-align: center;">Thao tác</th>
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let item of basicTable2.data">
-                    <td>{{ item.projectId }}</td> 
+                <tr *ngFor="let item of basicTable2.data" (click)="getProjectDetails(item.projectId)">
+                    <td>{{ item.details?.projectName }}</td>
+                    <td>{{ item.details?.projectDescription }}</td>
+                    <td>{{ item.details?.field }}</td>
+                    <td>{{ item.details?.type }}</td>
+                    <td>{{ item.details?.standard }}</td>
                     <td>{{ item.sendDate | date:'short' }}</td>
-                    <td>{{ item.id }}</td> 
-                    
+                    <td>{{ item.details?.owner?.username }}</td>
+                    <td>{{ item.details?.owner?.lastname }} {{ item.details?.owner?.firstname }}</td>
                     <td>
-                        <button nz-button (click)="navigateToProject(item.projectId)">{{ 'buttons.view' | translate }}</button>
-                    </td>
-                    <td>
-                        <button nz-button (click)="downloadPdf(item.projectId,item.id)">{{ 'buttons.downloadRequest' | translate }}</button>
-                    </td>
-                    <td>
-                        <button nz-button (click)="handleProjectId(item.projectId,item.id)">{{ 'buttons.measurementData' | translate }}</button>
+                        <div class="action-buttons">
+                            <span nz-icon nzType="eye" nzTheme="outline" (click)="goToMap(item.projectId)"
+                                style="cursor: pointer; color: #1E90FF;">
+                            </span>
+                            <span nz-icon nzType="snippets" nzTheme="outline"
+                                (click)="downloadPdf(item.projectId, item.id)" style="cursor: pointer; color: #4CAF50;">
+                            </span>
+                            <span nz-icon nzType="database" nzTheme="outline"
+                                (click)="handleProjectId(item.projectId, item.id)"
+                                style="cursor: pointer; color: #FF8C00;">
+                            </span>
+                        </div>
                     </td>
                 </tr>
             </tbody>
+
         </nz-table>
     </nz-tab>
-    <nz-tab nzTitle="{{ 'tabs.resolvedRequests' | translate }}" >
-        <nz-table #basicTable3 [nzData]="doneProjects" [nzBordered]="true">
+    <nz-tab nzTitle="{{ 'tabs.resolvedRequests' | translate }}">
+        <nz-table #basicTable3 [nzData]="doneProjects" [nzBordered]="true" [nzPageSize]="5" [nzShowPagination]="true"
+            nzPaginationPosition="bottom" [nzFrontPagination]="true" ngSkipHydration>
+
             <thead>
                 <tr>
-                    <th>{{ 'table.project' | translate }}</th>
-                    <th>{{ 'table.sendDate' | translate }}</th>
-                    <th>{{ 'table.viewProject' | translate }}</th>
-                    <th>{{ 'table.requestForm' | translate }}</th>
-                    <th>{{ 'table.confirmationForm' | translate }}</th>
+                    <th style="width: 10%; text-align: center;">Tên Dự Án</th>
+                    <th style="width: 20%; text-align: center;">Mô tả</th>
+                    <th style="width: 7%; text-align: center;">Lĩnh vực hoạt động</th>
+                    <th style="width: 7%; text-align: center;">Loại Hình</th>
+                    <th style="width: 7%; text-align: center;">Tiêu Chuẩn</th>
+                    <th style="width: 5%; text-align: center;">Ngày Gửi</th>
+                    <th style="width: 5%; text-align: center;">Liên Hệ</th>
+                    <th style="width: 7%; text-align: center;">Chủ sở hữu</th>
+                    <th style="width: 10%; text-align: center;">Thao tác</th>
                 </tr>
             </thead>
+
             <tbody>
-                <tr *ngFor="let item of basicTable3.data">
-                    <td>{{ item.projectId }}</td> 
-                    <td>{{ item.sendDate | date:'short' }}</td> 
-                    
+                <tr *ngFor="let item of basicTable3.data" (click)="getProjectDetails(item.projectId)">
+                    <td>{{ item.details?.projectName }}</td>
+                    <td>{{ item.details?.projectDescription }}</td>
+                    <td>{{ item.details?.field }}</td>
+                    <td>{{ item.details?.type }}</td>
+                    <td>{{ item.details?.standard }}</td>
+                    <td>{{ item.sendDate | date:'short' }}</td>
+                    <td>{{ item.details?.owner?.username }}</td>
+                    <td>{{ item.details?.owner?.lastname }} {{ item.details?.owner?.firstname }}</td>
                     <td>
-                        <button nz-button (click)="navigateToProject(item.projectId)">{{ 'buttons.view' | translate }}</button>
-                    </td>
-                    <td>
-                        <button nz-button (click)="downloadPdf(item.projectId,item.id)">{{'buttons.downloadRequest' | translate }}</button>
-                    </td>
-                    <td>
-                        <button nz-button (click)="downPdfReceived(item.projectId,item.id)">{{ 'buttons.downloadConfirmation' | translate }}</button>
+                        <div class="action-buttons">
+                            <span nz-icon nzType="eye" nzTheme="outline" (click)="goToMap(item.projectId)"
+                                style="cursor: pointer; color: #1E90FF;">
+                            </span>
+                            <span nz-icon nzType="snippets" nzTheme="outline"
+                                (click)="downloadPdf(item.projectId, item.id)" style="cursor: pointer; color: #4CAF50;">
+                            </span>
+                            <span nz-icon nzType="database" nzTheme="outline"
+                                (click)="handleProjectId(item.projectId, item.id)"
+                                style="cursor: pointer; color: #FF8C00;">
+                            </span>
+                            <span nz-icon nzType="carry-out" nzTheme="outline"
+                                (click)="downPdfReceived(item.projectId, item.id)"
+                                style="cursor: pointer; color: #9C27B0;">
+                            </span>
+                        </div>
                     </td>
                 </tr>
             </tbody>

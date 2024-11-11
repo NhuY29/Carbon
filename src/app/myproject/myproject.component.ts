@@ -35,7 +35,7 @@ export interface ProjectDTO {
   imports: [AppTranslateModule,NzTableModule,CommonModule,NzButtonModule,NzIconModule],
   templateUrl: './myproject.component.html',
   styleUrl: './myproject.component.scss',
-  host: { 'ngSkipHydration': '' } 
+  host: { 'ngSkipHydration': '' }
 })
 export class MyprojectComponent {
   projects: ProjectDTO[] = [];

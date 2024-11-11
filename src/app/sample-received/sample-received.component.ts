@@ -10,111 +10,198 @@ import { NzIconModule } from 'ng-zorro-antd/icon';
 import { SampleSentDTO } from '../SampleSentDTO';
 import { TranslateService, TranslateModule } from '@ngx-translate/core';
 import { AppTranslateModule } from '../translate.module';
+import { ProjectDTO } from '../ProjectDTO';
+import { CoordinateDTO } from '../CoordinateDTO';
+import { UserDTO } from '../../user.interface';
+import { NzPaginationModule } from 'ng-zorro-antd/pagination';
+import { CommonCategoryDTO } from '../CommonCategory.interface';
+interface ProjectDetailsDTO {
+  projectName: string;
+  projectDescription: string;
+  projectStatus: string;
+  projectStartDate: Date;
+  projectEndDate: Date;
+  field: string;
+  type: string;
+  standard: string;
+  coordinates: CoordinateDTO[];
+  owner: UserDTO;
+}
+
+interface PendingProjectDTO {
+  id: string;
+  projectId: string;
+  sendDate: string;
+  details?: ProjectDetailsDTO;
+}
+interface User {
+  userId: string | null;
+  username: string;
+  password: string | null;
+  firstname: string;
+  lastname: string;
+  roles: string | null;
+  status: boolean;
+  delete: boolean;
+}
 @Component({
   selector: 'app-sample-received',
   standalone: true,
-  imports: [AppTranslateModule,NzTableModule,CommonModule,NzTabsModule,NzBadgeModule,NzButtonModule,NzIconModule],
+  imports: [NzPaginationModule,AppTranslateModule, NzTableModule, CommonModule, NzTabsModule, NzBadgeModule, NzButtonModule, NzIconModule],
   templateUrl: './sample-received.component.html',
-  styleUrl: './sample-received.component.scss',
-  host: { 'ngSkipHydration': '' } 
+  styleUrls: ['./sample-received.component.scss'],
+  host: { 'ngSkipHydration': '' }
 })
 export class SampleReceivedComponent {
+
+  projectDetails: ProjectDTO | null = null;
   projectIds: string[] = [];
-  pendingProjects: SampleSentDTO[] = [];
-  doneProjects: SampleSentDTO[] = [];
+  pendingProjects: PendingProjectDTO[] = [];
   projectsSentToday: SampleSentDTO[] = [];
   isWalletActive: boolean = true;
-  constructor(private sampleReceivedService: ApiService,private router: Router, public translate: TranslateService) {
+  doneProjects: PendingProjectDTO[] = [];
+
+  constructor(private sampleReceivedService: ApiService, private router: Router, public translate: TranslateService) {
     translate.addLangs(['en', 'vi']);
     translate.setDefaultLang('vi');
     const savedState = localStorage.getItem('isWalletActive');
-    this.isWalletActive = savedState === 'true'; 
+    this.isWalletActive = savedState === 'true';
     console.log(`Initial wallet state: ${this.isWalletActive ? 'ACTIVE' : 'INACTIVE'}`);
     if (this.isWalletActive) {
-      this.translate.use('vi'); 
+      this.translate.use('vi');
     } else {
       this.translate.use('en');
     }
   }
 
   ngOnInit(): void {
-    // this.loadProjectIds();
     this.getPendingProjects();
     this.getDoneProjects();
-    this.getAllProjectsSentToday();
+  }
+  goToMap(projectId: string): void {
+    this.router.navigate(['/ggmap', projectId]); 
+  }
+  
+  getProjectDetails(projectId: string): Promise<ProjectDetailsDTO> {
+    return new Promise((resolve, reject) => {
+      this.sampleReceivedService.getProjectByProjectId(projectId).subscribe({
+        next: async (data: ProjectDTO) => {
+          try {
+            const typeName = await this.getCategoryNameById(data.type);
+            const standardName = await this.getCategoryNameById(data.standard);
+  
+            const projectDetails: ProjectDetailsDTO = {
+              coordinates: data.coordinates,
+              type: typeName, 
+              standard: standardName, 
+              field: data.field,
+              projectName: data.projectName,
+              projectDescription: data.projectDescription,
+              projectStatus: data.projectStatus,
+              projectStartDate: new Date(data.projectStartDate),
+              projectEndDate: new Date(data.projectEndDate),
+              owner: data.user
+            };
+            resolve(projectDetails);
+          } catch (error) {
+            console.error('Lỗi khi lấy tên danh mục:', error);
+            reject(error);
+          }
+        },
+        error: (error) => {
+          console.error('Lỗi khi lấy chi tiết dự án:', error);
+          reject(error);
+        }
+      });
+    });
+  }
+  getCategoryNameById(id: string): Promise<string> {
+    return new Promise((resolve, reject) => {
+      this.sampleReceivedService.getCategoryById2(id).subscribe({
+        next: (category: CommonCategoryDTO) => {
+          resolve(category.name); 
+        },
+        error: (error) => {
+          console.error('Lỗi khi lấy tên danh mục:', error);
+          reject(error);
+        }
+      });
+    });
   }
   
 
-//   loadProjectIds(): void {
-//     this.sampleReceivedService.getAllProjectIds().subscribe({
-//       next: (data) => {
-//         this.projectIds = data.filter(item => item.projectId !== null).map(item => item.id); // Lấy danh sách id
-//         console.log('Danh sách Project IDs:', this.projectIds);
-//       },
-//       error: (err) => {
-//         console.error('Lỗi khi tải danh sách Project IDs:', err);
-//       }
-//     });
-// }
 
-
-handleProjectId(projectId: string,id:string): void {
-  console.log('ProjectId của dự án được chọn:', projectId);
-  console.log('id của dự án được chọn:', id);
-  this.router.navigate(['/measurementDataList', projectId, id]);
-}
+  handleProjectId(projectId: string, id: string): void {
+    console.log('ProjectId của dự án được chọn:', projectId);
+    console.log('id của dự án được chọn:', id);
+    this.router.navigate(['/measurementDataList', projectId, id]);
+  }
 
   getPendingProjects(): void {
     this.sampleReceivedService.getAllProjectsPending().subscribe({
-      next: (data: SampleSentDTO[]) => {
-        this.pendingProjects = data.map(item => ({
-          id: item.id,           // Lấy id
+      next: async (data: SampleSentDTO[]) => {
+        console.log('Dữ liệu dự ánnn:', data);
+        const pendingProjectsTemp: PendingProjectDTO[] = data.map(item => ({
+          id: item.id,
           projectId: item.projectId,
-          sendDate: item.sendDate
+          sendDate: item.sendDate,
         }));
+
+        const projectDetailsPromises = pendingProjectsTemp.map(async project => {
+          const details = await this.getProjectDetails(project.projectId);
+          return {
+            ...project,
+            details
+          } as PendingProjectDTO;
+        });
+
+        Promise.all(projectDetailsPromises).then(fullProjectData => {
+          this.pendingProjects = fullProjectData;
+          console.log('Dữ liệu dự án đầy đủ:', this.pendingProjects);
+        });
       },
       error: (error) => {
         console.error('Lỗi khi lấy danh sách các dự án:', error);
       }
     });
-}
+  }
 
-getDoneProjects(): void {
+  getDoneProjects(): void {
     this.sampleReceivedService.getAllProjectsDone().subscribe({
-      next: (data: SampleSentDTO[]) => {
-        this.doneProjects = data.map(item => ({
-          id: item.id,           // Lấy id
+      next: async (data: SampleSentDTO[]) => {
+        const doneProjectsTemp: PendingProjectDTO[] = data.map(item => ({
+          id: item.id,
           projectId: item.projectId,
-          sendDate: item.sendDate
+          sendDate: item.sendDate,
         }));
+
+        const projectDetailsPromises = doneProjectsTemp.map(async project => {
+          const details = await this.getProjectDetails(project.projectId);
+          return {
+            ...project,
+            details
+          } as PendingProjectDTO;
+        });
+
+        Promise.all(projectDetailsPromises).then(fullProjectData => {
+          this.doneProjects = fullProjectData;
+          console.log('Dữ liệu dự án đã hoàn thành:', this.doneProjects);
+        });
       },
       error: (error) => {
         console.error('Lỗi khi lấy danh sách các dự án đã hoàn thành:', error);
       }
     });
-}
-
-getAllProjectsSentToday(): void {
-    this.sampleReceivedService.getAllProjectsSentToday().subscribe({
-      next: (data: SampleSentDTO[]) => {
-        this.projectsSentToday = data.map(item => ({
-          id: item.id,           // Lấy id
-          projectId: item.projectId,
-          sendDate: item.sendDate
-        }));
-      },
-      error: (error) => {
-        console.error('Lỗi khi lấy danh sách các dự án gửi hôm nay:', error);
-      }
-    });
-}
+  }
 
   navigateToProject(id: string): void {
     this.router.navigate(['/project', id]);
   }
+
   measurementDataList(id: string): void {
     this.router.navigate(['/measurementDataList', id]);
   }
+
   downloadPdf(projectId: string, id: string): void {
     this.sampleReceivedService.getPdfByProjectIdAndId(projectId, id).subscribe({
       next: (data) => {
@@ -122,16 +209,16 @@ getAllProjectsSentToday(): void {
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = 'yeu-cau-xac-nhan.pdf'; // Đặt tên file tải xuống
+        a.download = 'yeu-cau-xac-nhan.pdf';
         a.click();
-        window.URL.revokeObjectURL(url); // Giải phóng URL sau khi tải
+        window.URL.revokeObjectURL(url);
       },
       error: (err) => {
-        console.error('Lỗi khi tải PDF:', err); // Xử lý lỗi nếu có
+        console.error('Lỗi khi tải PDF:', err);
       }
     });
   }
-  
+
   downPdfReceived(projectId: string, id: string): void {
     console.log('projectId:', projectId);
     console.log('id:', id);
@@ -150,5 +237,4 @@ getAllProjectsSentToday(): void {
       }
     });
   }
-  
 }

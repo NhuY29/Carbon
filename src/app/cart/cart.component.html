@@ -1,12 +1,9 @@
 <html lang="vi">
 
 <head>
-
     <link rel="stylesheet" href="//bizweb.dktcdn.net/100/459/658/themes/935500/assets/plugin.scss.css?1728351069170">
-
     <link href="//bizweb.dktcdn.net/100/459/658/themes/935500/assets/header.scss.css?1728351069170" rel="stylesheet"
         type="text/css" media="all">
-
     <link href="//bizweb.dktcdn.net/100/459/658/themes/935500/assets/ajax-cart-new.scss.css?1728351069170"
         rel="stylesheet" type="text/css" media="all">
 
@@ -34,98 +31,12 @@
             --color-title-featured: #bf664e;
             --color-title-item-featured: #333333;
             --bg-related-blog: #fcf8f4;
-
         }
     </style>
 </head>
 
 <body>
-    <header class="header">
 
-        <div class="container">
-            <div class="category-action d-inline-flex d-lg-none">
-                <svg class="icon">
-                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#categoryicon"></use>
-                </svg>
-            </div>
-            <div class="row">
-                <div class="col-lg-2 d-flex group-action">
-                    <div class="item-action block-cart">
-                        <a href="/cart" class="header-cart" title="Giỏ hàng">
-                            <svg class="icon">
-                                <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#bagcart"></use>
-                            </svg>
-                            <span class="count_item_pr">1</span>
-                        </a>
-                        <div class="top-cart-content cartheader">
-                            <div class="CartHeaderContainer cart-container">
-                                <div class="cart-header-content cart_body">
-                                    <div class="ajaxcart__product cart_product" data-line="1"><input type="checkbox"
-                                            data-id="1" data-price="55000" data-quantity="1" data-variant-id="68561421"
-                                            checked="">
-                                        <a href="/sua-rua-mat-hazeline" class="ajaxcart__product-image cart_image"
-                                            title="Sữa rửa mặt Hazeline"><img
-                                                src="https://bizweb.dktcdn.net/thumb/compact/100/459/658/products/3-jpeg-c5582b5e-e1a6-45a4-90e6-90063370021b.jpg"
-                                                alt="Sữa rửa mặt Hazeline"></a>
-                                        <div class="grid__item cart_info">
-                                            <div class="ajaxcart__product-name-wrapper cart_name">
-                                                <a href="/sua-rua-mat-hazeline" class="ajaxcart__product-name h4"
-                                                    title="Sữa rửa mặt Hazeline">Sữa rửa mặt Hazeline</a>
-                                                <span class="ajaxcart__product-meta variant-title"></span>
-                                                <a onclick="CartBase.removeItemCart(this)"
-                                                    class="cart__btn-remove remove-item-cart ajaxifyCart--remove"
-                                                    href="javascript:;" data-line="1">Xóa</a>
-                                            </div>
-                                            <div class="grid">
-                                                <div class="grid__item one-half text-right cart_prices">
-                                                    <span class="cart-price">55.000₫</span>
-                                                </div>
-                                            </div>
-                                            <div class="grid">
-                                                <div class="input-group quantity-input-group">
-                                                    <div class="count_btn_style quantity_wanted_p">
-                                                        <div class="custom input_number_product soluong1">
-                                                            <a class="btn_num num_1 button button_qty">
-                                                                <i class="fas fa-minus-circle"></i>
-                                                            </a>
-                                                            <input type="number" id="quantity-detail" name="quantity"
-                                                                min="1" max="1000" class="form-control prd_quantity" />
-                                                            <a class="btn_num num_2 button button_qty">
-                                                                <i class="fas fa-plus-circle"></i>
-                                                            </a>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="grid line-price">
-                                                <div class="grid__item one-half text-right cart_prices">
-                                                    <span class="cart-price">55.000₫</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="ajaxcart__footer ajaxcart__footer--fixed cart-footer">
-                                    <div class="ajaxcart__subtotal">
-                                        <div class="cart__subtotal">
-                                            <div class="cart__col-6">Tổng tiền:</div>
-                                            <div class="text-right cart__totle"><span class="total-price">55.000₫</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="cart__btn-proceed-checkout-dt">
-                                        <button onclick="CartBase.checkout()" type="button"
-                                            class="button btn btn-default cart__btn-proceed-checkout"
-                                            id="btn-proceed-checkout" title="Thanh toán">Thanh toán</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </header>
     <main class="bodywrap">
         <section class="main-cart-page main-container col1-layout page-default">
             <div class="main container cartpcstyle">
@@ -141,54 +52,57 @@
                                     <div>Đơn giá</div>
                                     <div>Số lượng</div>
                                     <div>Thành tiền</div>
+                                    <div>Thao tác</div>
                                 </div>
-                                <div id="cart-content"
+                                <div id="cart-content" *ngFor="let item of cartItems"
                                     class="ajaxcart__inner ajaxcart__inner--has-fixed-footer cart_body body-cart-page items">
-                                    <div class="ajaxcart__product cart_product" data-line="1"><input type="checkbox"
-                                            data-id="1" data-price="55000" data-quantity="1" data-variant-id="68561421"
-                                            checked="">
-                                        <a href="/sua-rua-mat-hazeline" class="ajaxcart__product-image cart_image"
-                                            title="Sữa rửa mặt Hazeline"><img
-                                                src="https://bizweb.dktcdn.net/thumb/compact/100/459/658/products/3-jpeg-c5582b5e-e1a6-45a4-90e6-90063370021b.jpg"
-                                                alt="Sữa rửa mặt Hazeline"></a>
+                                    <div class="ajaxcart__product cart_product" data-line="1">
+                                        <input type="checkbox" [checked]="item.checked"
+                                            (change)="onItemCheck(item, $event)" style="width: 100px;height: 20px;">
+                                        <a class="ajaxcart__product-image cart_image" title="{{ item.projectName }}">
+                                            <img [src]="getFirstImageUrl(item.imageUrls)"
+                                                alt="{{ item.projectName }}" />
+                                        </a>
+
                                         <div class="grid__item cart_info">
                                             <div class="ajaxcart__product-name-wrapper cart_name">
-                                                <a href="/sua-rua-mat-hazeline" class="ajaxcart__product-name h4"
-                                                    title="Sữa rửa mặt Hazeline">Sữa rửa mặt Hazeline</a>
+                                                <a class="ajaxcart__product-name h3">{{ item.projectName }}</a>
                                                 <span class="ajaxcart__product-meta variant-title"></span>
-                                                <a onclick="CartBase.removeItemCart(this)"
-                                                    class="cart__btn-remove remove-item-cart ajaxifyCart--remove"
-                                                    href="javascript:;" data-line="1">Xóa</a>
-                                            </div>
-                                            <div class="grid">
-                                                <div class="grid__item one-half text-right cart_prices">
-                                                    <span class="cart-price">55.000₫</span>
-                                                </div>
-                                            </div>
-                                            <div class="grid">
-                                                <div class="input-group quantity-input-group">
-                                                    <div class="count_btn_style quantity_wanted_p">
-                                                        <div class="custom input_number_product soluong1">
-                                                            <a class="btn_num num_1 button button_qty">
-                                                                <i class="fas fa-minus-circle"></i>
-                                                            </a>
-                                                            <input type="number" id="quantity-detail" name="quantity"
-                                                                min="1" max="1000" class="form-control prd_quantity" />
-                                                            <a class="btn_num num_2 button button_qty">
-                                                                <i class="fas fa-plus-circle"></i>
-                                                            </a>
-                                                        </div>
-                                                    </div>
-                                                </div>
                                             </div>
 
-                                            <div class="grid line-price">
-                                                <div class="grid__item one-half text-right cart_prices">
-                                                    <span class="cart-price">55.000₫</span>
+                                        </div>
+
+
+                                        <div class="grid__item one-third text-right cart_prices"
+                                            style="width: 100px; margin: 100px;">
+                                            <span class="cart-price">{{ item.price | currency:'VND':'symbol'
+                                                }}</span>
+                                        </div>
+                                        <div class="grid__item one-third text-right cart_prices">
+                                            <div class="input-group quantity-input-group">
+                                                <div class="custom input_number_product">
+                                                    <input type="number" id="quantity-{{ item.cartId }}"
+                                                        name="quantity-{{ item.cartId }}" min="1" max="1000"
+                                                        class="form-control prd_quantity" [(ngModel)]="item.amount"
+                                                        (ngModelChange)="logAmount(item)" />
                                                 </div>
                                             </div>
                                         </div>
+
+                                        <div class="grid__item one-third text-right cart_prices"
+                                            style="width: 100px;margin: 60px;">
+                                            <span class="cart-price" style="color: red;">{{ (item.price * item.amount) |
+                                                currency:'VND':'symbol' }}</span>
+                                        </div>
+                                        <div class="ajaxcart__product-name-wrapper cart_name" style="margin: 20px;">
+                                            <a (click)="deleteCartItem(item.cartId)"
+                                                class="cart__btn-remove remove-item-cart ajaxifyCart--remove"
+                                                style="color: #fd7e14;font-weight: bold;">Xóa</a> <br>
+                                            <a class="cart__btn-remove remove-item-cart ajaxifyCart--remove"
+                                                style="color: #28a745;font-weight: bold;">Xem</a>
+                                        </div>
                                     </div>
+
                                 </div>
                                 <div class="ajaxcart__footer ajaxcart__footer--fixed cart-footer">
                                     <div class="row">
@@ -196,25 +110,30 @@
                                             <div class="ajaxcart__subtotal">
                                                 <div class="cart__subtotal">
                                                     <div class="cart__col-6">Tổng tiền:</div>
-                                                    <div class="text-right cart__totle"><span
-                                                            class="total-price">55.000₫</span></div>
+                                                    <div class="text-right cart__totle">
+                                                        <span class="total-price" style="color: red">{{ calculateTotal()
+                                                            | currency:'VND':'symbol' }}</span>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <div class="cart__btn-proceed-checkout-dt">
-                                                <button onclick="CartBase.checkout()" type="button"
-                                                    class="button btn button-default cart__btn-proceed-checkout"
-                                                    id="btn-proceed-checkout" title="Thanh toán">Thanh toán</button>
+
+                                                <div class="cart__btn-proceed-checkout-dt">
+                                                    <button type="button"
+                                                        class="button btn button-default cart__btn-proceed-checkout"
+                                                        title="Thanh toán" (click)="processAllPayments()">Thanh
+                                                        toán</button>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </form>
                         </div>
+
                     </div>
                 </div>
             </div>
-        </section>
 
+        </section>
     </main>
 </body>
 

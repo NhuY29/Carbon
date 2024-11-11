@@ -1,4 +1,3 @@
-
 <nz-layout>
     <div class="container">
         <div class="additional-info" (mouseenter)="isPopoverVisible = true" (mouseleave)="isPopoverVisible = false">
@@ -47,34 +46,43 @@
         <button nz-button nzType="primary" (click)="showDepositForm()">
             <i nz-icon nzType="plus" nzTheme="outline"></i> {{ 'GDVI.DEPOSIT' | translate }}
         </button>
-        <button nz-button nzType="primary">
+        <button nz-button nzType="primary" (click)="showWithdrawalForm()">
             <i nz-icon nzType="minus" nzTheme="outline"></i> {{ 'GDVI.WITHDRAW' | translate }}
         </button>
+        
     </div>
 </div>
 
-<div *ngIf="isDepositFormVisible" class="overlay">
-    <div class="deposit-form-container">
+<div *ngIf="isDepositFormVisible" class="overlay" (click)="hideDepositForm()">
+    <div class="deposit-form-container" (click)="$event.stopPropagation()">
+        <!-- Nút Đóng -->
+        <button class="close-button" (click)="hideDepositForm()">&times;</button>
+        
         <h3>{{ 'GDVI.DEPOSIT_REQUEST' | translate }}</h3>
+        
         <form (ngSubmit)="onPay()" #paymentForm="ngForm">
             <div class="form-group">
                 <label for="amount">{{ 'GDVI.AMOUNT_VND' | translate }}</label>
                 <input class="form-control" id="amount" name="amount" type="text" [(ngModel)]="amount"
-                    (input)="formatAmount()" (keydown)="restrictNonNumeric($event)" required [placeholder]="'GDVI.ENTER_AMOUNT' | translate">
+                       (input)="formatAmount()" (keydown)="restrictNonNumeric($event)" required
+                       [placeholder]="'GDVI.ENTER_AMOUNT' | translate">
             </div>
-
+            
             <div *ngIf="errorMessage" class="alert alert-danger">
                 {{ errorMessage }}
             </div>
-
+            
             <button type="submit" class="btn btn-primary">{{ 'GDVI.PAY_REDIRECT' | translate }}</button>
         </form>
+        
         <p>&nbsp;</p>
+        
         <footer class="footer">
             <p>© VNPAY 2024</p>
         </footer>
     </div>
 </div>
+
 <nz-tabset [(nzSelectedIndex)]="selectedIndex">
     <nz-tab [nzTitle]="'GDVI.TRANSACTION_HISTORY' | translate">
         <app-transaction-history></app-transaction-history>
@@ -94,12 +102,12 @@
 
 <div *ngIf="SendVisible" class="send-form-overlay" (click)="closeSendForm()"></div>
 <div *ngIf="SendVisible" class="send-form-modal">
-    <button class="close-button" (click)="closeSendForm()" >
+    <button class="close-button" (click)="closeSendForm()">
         &times;
     </button>
-    <!-- aria-label="{{ 'GDVI.CLOSE' | translate }}" -->
     <div class="account-info">
-        <h3>{{ 'GDVI.SOURCE_ACCOUNT' | translate }}: {{ walletInfo?.address || ('GDVI.ADDITIONAL_INFO' | translate) }}</h3>
+        <h3>{{ 'GDVI.SOURCE_ACCOUNT' | translate }}: {{ walletInfo?.address || ('GDVI.ADDITIONAL_INFO' | translate) }}
+        </h3>
         <h4>{{ 'GDVI.OWNER' | translate }}: {{ username }}</h4>
         <p>{{ 'GDVI.BALANCE' | translate }}: {{ (walletInfo?.balance || 0) | currency:'VND':'symbol':'1.0-0' }} VND</p>
     </div>
@@ -109,7 +117,8 @@
             <nz-form-label [nzSpan]="6" nzRequired>{{ 'GDVI.RECIPIENT_ADDRESS' | translate }}</nz-form-label>
             <nz-form-control [nzSpan]="18">
                 <div class="input-with-button">
-                    <input nz-input formControlName="recipient" [placeholder]="'GDVI.ENTER_RECIPIENT_ADDRESS' | translate"
+                    <input nz-input formControlName="recipient"
+                        [placeholder]="'GDVI.ENTER_RECIPIENT_ADDRESS' | translate"
                         (input)="fetchUsernameFromPublicKey(transactionForm.get('recipient')?.value)" />
                     <button nz-button nzType="default" (click)="openContactList()" class="contact-button">
                         <i nz-icon nzType="contacts"></i>
@@ -128,14 +137,16 @@
         <nz-form-item>
             <nz-form-label [nzSpan]="6" nzRequired>{{ 'GDVI.AMOUNT' | translate }}</nz-form-label>
             <nz-form-control [nzSpan]="18">
-                <input nz-input formControlName="amount" [placeholder]="'GDVI.ENTER_AMOUNT' | translate" type="number" />
+                <input nz-input formControlName="amount" [placeholder]="'GDVI.ENTER_AMOUNT' | translate"
+                    type="number" />
             </nz-form-control>
         </nz-form-item>
 
         <nz-form-item>
             <nz-form-label [nzSpan]="6">{{ 'GDVI.MESSAGE' | translate }}</nz-form-label>
             <nz-form-control [nzSpan]="18">
-                <textarea nz-input formControlName="message" [placeholder]="'GDVI.ENTER_MESSAGE' | translate"></textarea>
+                <textarea nz-input formControlName="message"
+                    [placeholder]="'GDVI.ENTER_MESSAGE' | translate"></textarea>
             </nz-form-control>
         </nz-form-item>
 
@@ -149,3 +160,32 @@
         <app-contact [senderSecretKey]="secretKeyValue" (contactSelected)="onContactSelected($event)"></app-contact>
     </div>
 </div>
+<div *ngIf="isWithdrawalFormVisible" class="overlay" (click)="hideWithdrawalForm()"></div>
+
+<div *ngIf="isWithdrawalFormVisible" class="withdrawal-form-modal">
+    <button class="close-button" (click)="hideWithdrawalForm()">&times;</button>
+    
+    <div class="withdrawal-form">
+        <h2>Yêu cầu rút tiền</h2>
+        
+        <form (ngSubmit)="submitWithdrawal()">
+            <label>Số tiền:</label>
+            <input type="number" [(ngModel)]="amountWithdrawal" name="amountWithdrawal" required />
+            
+
+            <label>Tên ngân hàng:</label>
+            <input type="text" [(ngModel)]="bankName" name="bankName" required />
+
+            <label>Số tài khoản:</label>
+            <input type="text" [(ngModel)]="bankAccountNumber" name="bankAccountNumber" required />
+
+            <label>Tên chủ tài khoản:</label>
+            <input type="text" [(ngModel)]="accountHolderName" name="accountHolderName" required />
+            <button type="submit" class="btn btn-primary">Xác nhận</button>
+        </form>
+
+        <p *ngIf="message">{{ message }}</p>
+    </div>
+</div>
+
+

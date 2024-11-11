@@ -70,17 +70,17 @@ nz-header {
 }
 
 nz-content {
-  margin: 0; /* Đặt margin của nội dung bằng 0 */
-  overflow-y: auto; /* Cho phép nội dung trượt */
-  height: calc(100vh - 64px); /* Chiều cao của nội dung bằng chiều cao viewport trừ chiều cao header */
+  margin: 0;
+  overflow-y: auto;
+  height: calc(100vh - 64px);
 }
 
 .inner-content {
   padding: 24px;
   background: #fff;
-  min-height: 100%; /* Đảm bảo chiều cao tối thiểu là 100% */
-  height: auto; /* Cho phép chiều cao tự động nếu nội dung dài hơn */
-  overflow: auto; /* Đảm bảo nội dung có thể cuộn nếu vượt quá chiều cao */
+  min-height: 100%;
+  height: auto;
+  overflow: auto;
 }
 
 
@@ -111,4 +111,21 @@ ul[nz-menu] li {
 
 ul[nz-menu] li:last-child {
   margin-right: 0;
+}
+.app-header {
+  display: flex;
+  align-items: center; /* Canh giữa theo chiều dọc */
+  justify-content: space-between; /* Giữa phần trigger và các menu item */
+  width: 100%;
+  padding: 0 24px; /* Thêm padding bên trái và bên phải */
+}
+
+.header-trigger {
+  display: flex; /* Đảm bảo là flex để dễ dàng canh giữa */
+  align-items: center; /* Canh giữa nội dung bên trong */
+  cursor: pointer;
+}
+
+.header-trigger .trigger {
+  font-size: 20px; /* Kích thước icon */
 }

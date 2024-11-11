@@ -74,7 +74,14 @@ export class GDViComponent implements OnInit {
   secretKeyValue: string = '';
   private previousBalance: number | null = null;
   private hasNotifiedBalanceChange: boolean = false;
+  isWithdrawalFormVisible = false;
+  amountWithdrawal: number | null = null;
+  bankName: string = '';
+  bankAccountNumber: string = '';
+  accountHolderName: string = '';
+  message: string | null = null
   constructor(
+    private modal: NzModalService,
     private messageService: NzMessageService,
     private fb: FormBuilder,
     private apiService: ApiService,
@@ -90,14 +97,74 @@ export class GDViComponent implements OnInit {
     translate.addLangs(['en', 'vi']);
     translate.setDefaultLang('vi');
     const savedState = localStorage.getItem('isWalletActive');
-    this.isWalletActive = savedState === 'true'; 
+    this.isWalletActive = savedState === 'true';
     console.log(`Initial wallet state: ${this.isWalletActive ? 'ACTIVE' : 'INACTIVE'}`);
     if (this.isWalletActive) {
-      this.translate.use('vi'); 
+      this.translate.use('vi');
     } else {
       this.translate.use('en');
     }
   }
+  showWithdrawalForm() {
+    this.isWithdrawalFormVisible = true;
+  }
+  hideWithdrawalForm() {
+    this.isWithdrawalFormVisible = false;
+  }
+
+  submitWithdrawal() {
+    const token = localStorage.getItem('token');
+  
+    if (!token) {
+      this.messageService.error('Authentication error. Please log in again.');
+      return;
+    }
+  
+    if (this.amountWithdrawal === null || isNaN(this.amountWithdrawal)) {
+      this.messageService.warning('Please enter a valid amount.');
+      return;
+    }
+  
+    if (!this.bankName || !this.bankAccountNumber || !this.accountHolderName) {
+      this.messageService.warning('Please fill in all required fields.');
+      return;
+    }
+  
+    const withdrawalAmount = this.amountWithdrawal ?? 0;
+  
+    this.modal.confirm({
+      nzTitle: 'Xác nhận yêu cầu rút tiền',
+      nzContent: 'Bạn có chắc chắn muốn gửi yêu cầu rút tiền này?',
+      nzOnOk: () => {
+        this.apiService.requestWithdrawal(
+          withdrawalAmount,
+          this.bankName,
+          this.bankAccountNumber,
+          this.accountHolderName
+        ).subscribe({
+          next: (response) => {
+            if (response.status === 'failure') {
+              // Nếu status là "failure", hiển thị thông báo lỗi
+              this.messageService.error(response.message || 'An error occurred during the withdrawal process.');
+            } else {
+              // Nếu status là "success", hiển thị thông báo thành công
+              this.messageService.success(response.message || 'Withdrawal request submitted successfully!');
+              this.hideWithdrawalForm();
+            }
+          },
+          error: (error) => {
+            this.messageService.error(error?.error?.message || 'An error occurred. Please try again.');
+            console.error('Withdrawal request failed', error);
+          }
+        });
+      },
+      nzOnCancel: () => {
+        console.log('Withdrawal request was canceled');
+      }
+    });
+  }
+  
+  
   switchLanguage(language: string) {
     this.translate.use(language);
   }
@@ -108,6 +175,10 @@ export class GDViComponent implements OnInit {
   showDepositForm() {
     this.isDepositFormVisible = true;
   }
+  hideDepositForm() {
+    this.isDepositFormVisible = false;
+  }
+
   onPay() {
     this.errorMessage = '';
     const numericAmount = parseInt(this.amount.replace(/[^\d]/g, ''), 10);
@@ -283,7 +354,7 @@ export class GDViComponent implements OnInit {
     }
 
     const { senderSecretKey, recipient, amount, message } = this.transactionForm.value;
-    const adjustedAmount = amount/10000;
+    const adjustedAmount = amount / 10000;
     this.apiService.sendTransaction(senderSecretKey, recipient, adjustedAmount, message).subscribe(
       (response) => {
         console.log('Transaction successful:', response);
