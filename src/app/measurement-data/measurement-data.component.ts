@@ -59,7 +59,7 @@ export class MeasurementDataComponent implements OnInit {
   }
   getTotalSum(): number {
     const total = this.calculateTotalSum(this.rows);
-    this.totalSumChange.emit(total); // Phát ra giá trị tổng
+    this.totalSumChange.emit(total);
     return total;
   }
 
@@ -192,20 +192,6 @@ export class MeasurementDataComponent implements OnInit {
       return total + (value * column.conversionPrice);
     }, 0);
   }
-  // getTotalSum(): number {
-  //   const calculateTotal = (rows: CategoryParentChild[]): number => {
-  //     return rows.reduce((totalSum, row) => {
-  //       const rowTotal = this.getRowTotal(row.id);
-  //       const childrenTotal = row.children && row.children.length > 0
-  //         ? calculateTotal(row.children)
-  //         : 0;
-  //       return totalSum + rowTotal + childrenTotal;
-  //     }, 0);
-  //   };
-  //   return calculateTotal(this.rows);
-  // }
-
-  
   fetchChildCategoriesRecursive(category: CategoryParentChild, parentSerial: string): void {
     this.dataService.getAllChildCategories(category.id).subscribe({
       next: (children: CategoryParentChild[]) => {

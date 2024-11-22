@@ -12,15 +12,22 @@ import { WalletResponse } from '../wallet/WalletResponse';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { CartDTO } from '../cart/cart.dto';
 import { NzModalService } from 'ng-zorro-antd/modal';
+import { TranslateService, TranslateModule } from '@ngx-translate/core';
+import { AppTranslateModule } from '../translate.module';
+import { TradeRequest } from './TradeRequest ';
+import { SolanaService } from '../../solanaApi.service';
+import { NzProgressModule } from 'ng-zorro-antd/progress';
+
 @Component({
   selector: 'app-sample-sent',
   standalone: true,
-  imports: [CommonModule, FormsModule, NzSliderModule, NzInputNumberModule, NzGridModule],
+  imports: [NzProgressModule,AppTranslateModule, CommonModule, FormsModule, NzSliderModule, NzInputNumberModule, NzGridModule],
   templateUrl: './sample-sent.component.html',
   styleUrls: ['./sample-sent.component.scss'],
   host: { 'ngSkipHydration': '' }
 })
 export class SampleSentComponent {
+  public tokenAddress: string = "";
   showModal: boolean = false;
   selectedTrade: any;
   trades: TradeDTO[] = [];
@@ -32,7 +39,21 @@ export class SampleSentComponent {
   cartItems: CartDTO[] = [];
   currentUserId: string | null = null;
   cartItemCount: number = 0;
-  constructor(private tradeService: ApiService, private message: NzMessageService, private modal: NzModalService) { }
+  isWalletActive: boolean = true;
+  selectedTransaction: any = null;
+  progressPercent = 0;
+  constructor(private solanaServiec: SolanaService, public translate: TranslateService, private tradeService: ApiService, private message: NzMessageService, private modal: NzModalService) {
+    translate.addLangs(['en', 'vi']);
+    translate.setDefaultLang('vi');
+    const savedState = localStorage.getItem('isWalletActive');
+    this.isWalletActive = savedState === 'true';
+    console.log(`Initial wallet state: ${this.isWalletActive ? 'ACTIVE' : 'INACTIVE'}`);
+    if (this.isWalletActive) {
+      this.translate.use('vi');
+    } else {
+      this.translate.use('en');
+    }
+  }
   showPurchaseModal: boolean = false;
   ngOnInit(): void {
     this.tradeService.getUserIdFromToken().subscribe(userId => {
@@ -47,7 +68,8 @@ export class SampleSentComponent {
         if (this.trades.length > 0) {
           this.selectedTrade = this.trades[0];
         }
-        this.checkAllTradesBalance(); // Kiểm tra số dư cho tất cả giao dịch
+        this.checkAllTradesBalance();
+        console.log('Danh sách giao dịch:', this.trades);
       },
       (error) => {
         console.error('Lỗi khi lấy danh sách giao dịch:', error);
@@ -61,46 +83,40 @@ export class SampleSentComponent {
       const tokenAccountAddress = trade.tokenAddress;
 
       if (tokenAccountAddress) {
-        this.tradeService.getTokenBalance(mintAddress, tokenAccountAddress).subscribe(
-          (response) => {
-            const balance = response.balance;
-            const balanceInBillion = parseFloat(balance) / 1000000000;
-            if (balanceInBillion <= 0) {
-              this.tradeService.deactivateTrade(trade.tradeId).subscribe(() => {
-              }, error => {
-                this.message.error(`Không thể vô hiệu hóa giao dịch ${trade.tradeId}.`);
-              });
-            }
-          },
-          (error) => {
-            console.error('Lỗi khi lấy số dư token:', error);
-          }
-        );
+        const quantity = trade.quantity;
+        console.log('Số lượng còn lại:', quantity);
+        if (quantity <= 0) {
+          this.tradeService.deactivateTrade(trade.tradeId).subscribe(() => {
+            console.log(`Giao dịch ${trade.tradeId} đã được vô hiệu hóa.`);
+          }, error => {
+            this.message.error(`Không thể vô hiệu hóa giao dịch ${trade.tradeId}.`);
+          });
+        }
       }
     });
   }
 
   calculateTotalPrice() {
-    if (this.quantity > this.remainingQuantity) {
-      this.quantity = this.remainingQuantity;
+    if (this.quantity > this.selectedTrade?.quantity) {
+      this.quantity = this.selectedTrade?.quantity;
     }
     this.totalPrice = this.selectedTrade ? this.selectedTrade.price * this.quantity : 0;
   }
+
   loadCartItems(userId: string): void {
     this.tradeService.getAllCartItemsByUserId(userId).subscribe(
       (cartItems: CartDTO[]) => {
-        this.cartItems = cartItems; 
-        this.updateCartItemCount(); 
+        this.cartItems = cartItems;
+        this.updateCartItemCount();
       },
       (error) => {
         console.error('Lỗi khi lấy dữ liệu giỏ hàng:', error);
-        // this.message.error('Không thể lấy dữ liệu giỏ hàng.');
       }
     );
   }
   updateCartItemCount() {
     this.cartItemCount = this.cartItems.length;
-}
+  }
 
   resetQuantity() {
     this.quantity = 0;
@@ -120,7 +136,7 @@ export class SampleSentComponent {
     this.resetQuantity();
   }
   increaseQuantity() {
-    if (this.quantity < this.remainingQuantity) {
+    if (this.quantity < this.selectedTrade?.quantity) {
       this.quantity++;
       this.calculateTotalPrice();
     }
@@ -170,17 +186,34 @@ export class SampleSentComponent {
   updateCurrentImage(imageUrl: string) {
     this.currentImage = `http://localhost:8080/image/get-by-url?imageUrl=${imageUrl}&width=500&height=500`;
   }
+  updateRemainingQuantity(tradeId: string, remainingQuantity: number) {
+    console.log(`Cập nhật số lượng còn lại cho giao dịch ${tradeId}: ${remainingQuantity}`);
+
+    this.tradeService.updateTradeQuantity(tradeId, remainingQuantity).subscribe(
+      () => {
+        console.log('Cập nhật số lượng còn lại thành công!');
+      },
+      (error) => {
+        console.error('Lỗi khi cập nhật số lượng còn lại:', error);
+        this.message.error('Không thể cập nhật số lượng còn lại. Vui lòng thử lại.');
+      }
+    );
+  }
 
   processPayment(trade: TradeDTO) {
     if (!trade) {
       console.error('Không có giao dịch nào được chọn!');
       return;
     }
+  
     const userId = trade.userId;
     const mintToken = trade.mintToken;
     const amount = this.quantity;
     const solAmount = this.totalPrice / 10000;
-
+    const Quantity = trade.quantity;
+    console.log('Số lượng còn lại:', Quantity);
+    const remainingQuantityAfterPurchase = Quantity - amount;
+  
     this.modal.confirm({
       nzTitle: 'Bạn có chắc chắn muốn thực hiện giao dịch này không?',
       nzOkText: 'Xác nhận',
@@ -193,6 +226,25 @@ export class SampleSentComponent {
                 this.tradeService.getWalletByUserId(userId).subscribe(
                   (walletResponse: WalletResponse) => {
                     this.onTransfer(walletResponse.secretKey, walletInfo.address, mintToken, amount, solAmount, receiverSecretKeyBase58);
+                    const tradeRequest: TradeRequest = {
+                      buyerUserId: this.currentUserId !== null ? this.currentUserId : '',
+                      projectId: trade.projectId,
+                      quantity: amount,
+                      mintToken: mintToken,
+                      tokenAddress: "", 
+                      price: "",
+                      purchasedFrom: trade.userId,
+                      purchasePrice: trade.price,
+                    };
+                    this.tradeService.createTrade(tradeRequest).subscribe(
+                      (createdTrade) => {
+                        console.log('Giao dịch đã được tạo:', createdTrade);
+                        this.updateRemainingQuantity(trade.tradeId, remainingQuantityAfterPurchase);
+                      },
+                      (error) => {
+                        console.error('Lỗi khi tạo giao dịch:', error);
+                      }
+                    );
                   },
                   (error) => {
                     console.error('Lỗi khi lấy thông tin ví từ userId:', error);
@@ -212,7 +264,8 @@ export class SampleSentComponent {
       }
     });
   }
-
+  
+  
   onTransfer(
     senderSecretKeyBase58: string,
     toAddressBase58: string,
@@ -225,24 +278,28 @@ export class SampleSentComponent {
       this.message.error('Thông tin tham số không hợp lệ. Vui lòng kiểm tra lại.');
       return;
     }
-
+  
     this.tradeService.transferToken(senderSecretKeyBase58, toAddressBase58, mintAddressBase58, amount, solAmount, receiverSecretKeyBase58 || '')
       .subscribe(response => {
         if (response.success) {
+          const signature = response.signature;  
+          console.log('Chữ ký giao dịch:', signature);
+  
+          this.tokenAddress = signature;  
+  
           this.message.success(response.message);
           this.closePurchaseModal();
-          setTimeout(() => {
-            window.location.reload();
-          }, 2000);
         } else {
           this.message.error(response.message);
           this.closePurchaseModal();
         }
       }, error => {
         this.message.error('Có lỗi xảy ra khi gọi API.');
+        this.closePurchaseModal();
       });
   }
-
+  
+  
 
   checkTokenBalance() {
     if (!this.selectedTrade) {
@@ -273,26 +330,26 @@ export class SampleSentComponent {
   addToCart(): void {
     const userId = this.currentUserId;
     const tradeId = this.selectedTrade ? this.selectedTrade.tradeId : undefined;
-    const amount = this.quantity; 
+    const amount = this.quantity;
 
     if (!userId || !tradeId || !amount) {
-        this.message.error('Vui lòng kiểm tra thông tin giỏ hàng.');
-        return;
+      this.message.error('Vui lòng kiểm tra thông tin giỏ hàng.');
+      return;
     }
 
     this.tradeService.addToCart(userId, tradeId, amount).subscribe(
-        response => {
-            this.message.success('Thêm vào giỏ hàng thành công!');
-            this.closePurchaseModal();
-            setTimeout(() => {
-                window.location.reload(); 
-            }, 2000); 
-        },
-        error => {
-            this.message.error('Có lỗi xảy ra khi thêm vào giỏ hàng.');
-            console.error('Lỗi:', error);
-        }
+      response => {
+        this.message.success('Thêm vào giỏ hàng thành công!');
+        this.closePurchaseModal();
+        setTimeout(() => {
+          this.loadCartItems(userId);
+        }, 4000);
+      },
+      error => {
+        this.message.error('Có lỗi xảy ra khi thêm vào giỏ hàng.');
+        console.error('Lỗi:', error);
+      }
     );
-}
+  }
 
 }

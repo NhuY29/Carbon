@@ -27,6 +27,9 @@ import { PaymentResultComponent } from './payment-result/payment-result.componen
 import { SettingComponent } from './setting/setting.component';
 import { CartComponent } from './cart/cart.component';
 import { WithdrawMoneyComponent } from './withdraw-money/withdraw-money.component';
+import { ListRequestWithdrawComponent } from './list-request-withdraw/list-request-withdraw.component';
+import { MyTradingListComponent } from './my-trading-list/my-trading-list.component';
+
 export const routes: Routes = [
   {
     path: '',
@@ -115,6 +118,14 @@ export const routes: Routes = [
 {
   path: 'withdrawMoney',
   component: WithdrawMoneyComponent
+},
+{
+  path: 'listRequestWithdraw',
+  component: ListRequestWithdrawComponent
+},
+{
+  path: 'myTradingList',
+  component: MyTradingListComponent
 },
  { path: 'ggmap/:projectId', component: MapComponent },
 { path: 'measurementDataList/:id/:projectId', component: MeasurementDataListComponent },

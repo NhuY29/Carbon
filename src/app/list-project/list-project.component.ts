@@ -72,7 +72,6 @@ export class ListProjectComponent implements OnInit {
     this.apiService.getProjects().subscribe({
       next: (projects: ProjectDTO[]) => {
         this.projects = projects;
-        // Kiểm tra trạng thái tham gia cho từng dự án và tải hình ảnh
         projects.forEach(project => {
           this.checkProjectParticipation(project.projectId);
           this.loadImages(project.projectId);
@@ -81,22 +80,17 @@ export class ListProjectComponent implements OnInit {
       error: (err) => console.error('Lỗi khi tải danh sách dự án', err)
     });
   }
-  
-
-  // Kiểm tra xem người dùng đã tham gia dự án hay chưa
   checkProjectParticipation(projectId: string): void {
     const token = localStorage.getItem('token') || '';
     this.apiService.checkProjectParticipation(token, projectId).subscribe({
       next: (isJoined: boolean) => {
-        this.joinedProjects[projectId] = isJoined; // Lưu trạng thái tham gia cho dự án
+        this.joinedProjects[projectId] = isJoined; 
       },
       error: (err) => {
         console.error('Lỗi khi kiểm tra trạng thái tham gia dự án', err);
       }
     });
   }
-
-  // Gọi API tham gia dự án
   joinProject(projectId: string): void {
     const token = localStorage.getItem('token') || '';
     const confirmed = window.confirm('Are you sure you want to join this project?');
@@ -105,7 +99,7 @@ export class ListProjectComponent implements OnInit {
       this.apiService.joinProject(token, projectId).subscribe({
         next: () => {
           this.message.success('Tham gia dự án thành công!');
-          this.joinedProjects[projectId] = true; // Cập nhật trạng thái tham gia
+          this.joinedProjects[projectId] = true; 
         },
         error: (err) => {
           this.message.error('Lỗi khi tham gia dự án.');

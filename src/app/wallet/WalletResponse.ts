@@ -1,4 +1,4 @@
-// wallet-response.model.ts
+
 export class WalletResponse {
     publicKey: string;
     secretKey: string;

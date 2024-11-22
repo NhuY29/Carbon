@@ -41,18 +41,18 @@
         <section class="main-cart-page main-container col1-layout page-default">
             <div class="main container cartpcstyle">
                 <h1 class="title-module">
-                    Giỏ hàng
+                    {{ 'CART.SHOPPING_CART' | translate }}
                 </h1>
                 <div class="cart-page">
                     <div class="drawer__inner">
                         <div class="CartPageContainer cart-container">
                             <form action="/cart" method="post" novalidate="" class="cart ajaxcart cart-mobile cartpage">
                                 <div class="cart-header-info">
-                                    <div>Thông tin sản phẩm</div>
-                                    <div>Đơn giá</div>
-                                    <div>Số lượng</div>
-                                    <div>Thành tiền</div>
-                                    <div>Thao tác</div>
+                                    <div>{{ 'CART.PRODUCT_INFO' | translate }}</div>
+                                    <div>{{ 'CART.PRICE' | translate }}</div>
+                                    <div>{{ 'CART.QUANTITY' | translate }}</div>
+                                    <div>{{ 'CART.TOTAL' | translate }}</div>
+                                    <div>{{ 'CART.ACTIONS' | translate }}</div>
                                 </div>
                                 <div id="cart-content" *ngFor="let item of cartItems"
                                     class="ajaxcart__inner ajaxcart__inner--has-fixed-footer cart_body body-cart-page items">
@@ -97,9 +97,11 @@
                                         <div class="ajaxcart__product-name-wrapper cart_name" style="margin: 20px;">
                                             <a (click)="deleteCartItem(item.cartId)"
                                                 class="cart__btn-remove remove-item-cart ajaxifyCart--remove"
-                                                style="color: #fd7e14;font-weight: bold;">Xóa</a> <br>
+                                                style="color: #fd7e14;font-weight: bold;"> {{ 'CART.REMOVE' | translate
+                                                }}</a> <br>
                                             <a class="cart__btn-remove remove-item-cart ajaxifyCart--remove"
-                                                style="color: #28a745;font-weight: bold;">Xem</a>
+                                                style="color: #28a745;font-weight: bold;"> {{ 'CART.VIEW' | translate
+                                                }}</a>
                                         </div>
                                     </div>
 
@@ -109,18 +111,17 @@
                                         <div class="col-lg-4 col-12 offset-md-8 offset-lg-8 offset-xl-8">
                                             <div class="ajaxcart__subtotal">
                                                 <div class="cart__subtotal">
-                                                    <div class="cart__col-6">Tổng tiền:</div>
+                                                    <div class="cart__col-6">{{ 'CART.TOTAL_PRICE' | translate }}</div>
                                                     <div class="text-right cart__totle">
                                                         <span class="total-price" style="color: red">{{ calculateTotal()
                                                             | currency:'VND':'symbol' }}</span>
                                                     </div>
                                                 </div>
-
                                                 <div class="cart__btn-proceed-checkout-dt">
-                                                    <button type="button"
+                                                    <button type="button" style="background-color: #38e05f;"
                                                         class="button btn button-default cart__btn-proceed-checkout"
-                                                        title="Thanh toán" (click)="processAllPayments()">Thanh
-                                                        toán</button>
+                                                        title="Thanh toán" (click)="processAllPayments()"> {{
+                                                        'CART.CHECKOUT' | translate }}</button>
                                                 </div>
                                             </div>
                                         </div>

@@ -3,9 +3,9 @@
 <div class="search-container">
   <input nz-input placeholder="{{ 'FORM.SEARCH' | translate }}" [(ngModel)]="searchTerm" (ngModelChange)="searchCategories()" />
   <nz-select [(ngModel)]="category" nzAllowClear nzPlaceHolder="{{ 'FORM.CHOOSE' | translate }}" nzShowSearch (ngModelChange)="searchCategories()">
-    <nz-option nzValue="TIEU_CHUAN" nzLabel="Tiêu chuẩn"></nz-option>
-    <nz-option nzValue="LOAI_HINH" nzLabel="Loại hình"></nz-option>
-    <nz-option nzValue="CHAT" nzLabel="Chất"></nz-option>
+    <nz-option nzValue="TIEU_CHUAN" nzLabel="{{ 'FORM.STANDARD' | translate }}"></nz-option>
+    <nz-option nzValue="LOAI_HINH" nzLabel="{{ 'FORM.TYPE' | translate }}"></nz-option>
+    <nz-option nzValue="CHAT" nzLabel="{{ 'FORM.EXHAUST' | translate }}"></nz-option>
   </nz-select>
 </div>
 <div class="overlay" *ngIf="showForm">

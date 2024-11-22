@@ -1,14 +1,15 @@
-<nz-table #nestedTable [nzData]="listOfData" [nzPageSize]="10" ngSkipHydration>
+<nz-table #basicTable [nzData]="listOfData" [nzBordered]="true"
+  [nzPageSize]="pageSize" [nzShowPagination]="true" [nzTotal]="listOfData.length" [nzPageIndex]="pageIndex" (nzPageIndexChange)="onPageChange($event)" ngSkipHydration>
   <thead>
     <tr>
-      <th style="width: 30%; text-align: center;">Address Token</th>
+      <th style="width: 30%; text-align: center;">{{ 'TOKEN_TABLE.ADDRESSTOKEN' | translate }}</th>
       <th style="width: 30%; text-align: center;">{{ 'TOKEN_TABLE.TOKEN_TYPE' | translate }}</th>
       <th style="width: 15%; text-align: center;">{{ 'TOKEN_TABLE.QUANTITY' | translate }}</th>
       <th style="width: 20%; text-align: center;">{{ 'TOKEN_TABLE.ACTION' | translate }}</th>
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let item of listOfData">
+    <tr *ngFor="let item of listOfData.slice((pageIndex - 1) * pageSize, pageIndex * pageSize)">
       <td style="width: 30%; text-align: center;">{{ item.tokenAddress }}</td>
       <td style="width: 30%; text-align: center;">{{ item.mint }}</td>
       <td style="width: 15%; text-align: center;">{{ item.amount / 1000000000 }}</td>
@@ -24,52 +25,48 @@
   <nz-table [nzData]="transactions" [nzPageSize]="10">
     <thead>
       <tr>
-        <th>{{ 'TRANSACTION_HISTORY.SIGNATURE' | translate }}</th>
-        <th>{{ 'TRANSACTION_HISTORY.TRANSACTION_DATE' | translate }}</th>
-        <th>{{ 'TRANSACTION_HISTORY.BLOCK' | translate }}</th>
-        <th>{{ 'TRANSACTION_HISTORY.AGE' | translate }}</th>
-        <th>{{ 'TRANSACTION_HISTORY.ACTION' | translate }}</th>
+        <th></th>
+        <th style=" text-align: center;">{{ 'TRANSACTION_HISTORY.SIGNATURE' | translate }}</th>
+        <th style=" text-align: center;">{{ 'TRANSACTION_HISTORY.TRANSACTION_DATE' | translate }}</th>
+        <th style=" text-align: center;">{{ 'TRANSACTION_HISTORY.BLOCK' | translate }}</th>
+        <th style=" text-align: center;">{{ 'TRANSACTION_HISTORY.AGE' | translate }}</th>
       </tr>
     </thead>
     <tbody>
       <ng-container *ngFor="let transaction of transactions">
         <tr>
-          <td>{{ transaction.signature }}</td>
-          <td>{{ transaction.date }}</td>
-          <td>{{ transaction.block }}</td>
-          <td>{{ transaction.age }}</td>
-          <td>
-            <button nz-button (click)="toggleTransactionDetails(transaction)">
-              {{ transaction.expand ? ('TRANSACTION_HISTORY.HIDE_DETAILS' | translate) : ('TRANSACTION_HISTORY.SHOW_DETAILS' | translate) }}
-            </button>
-          </td>
+          <td  [nzExpand]="transaction.expand" (click)="toggleTransactionDetails(transaction)"></td>
+          <td style=" text-align: center;">{{ transaction.signature }}</td>
+          <td style=" text-align: center;">{{ transaction.date }}</td>
+          <td style=" text-align: center;">{{ transaction.block }}</td>
+          <td style=" text-align: center;">{{ transaction.age }}</td>
         </tr>
         <tr *ngIf="transaction.expand && transaction.details">
           <td colspan="5">
             <nz-table [nzData]="[transaction.details]" nzSize="middle" [nzShowPagination]="false">
               <thead>
                 <tr>
-                  <th style="width: 10%; text-align: center;">Loại giao dịch</th>
-                  <th style="width: 15%; text-align: center;">Thời gian xử lý</th>
-                  <th style="width: 10%; text-align: center;">Thứ tự xử lý</th>
-                  <th style="width: 30%; text-align: center;">Trước giao dịch</th>
-                  <th style="width: 30%; text-align: center;">Sau giao dịch</th>
+                  <th style="width: 10%; text-align: center;">{{ 'TRANSACTION_HISTORY.TYPE' | translate }}</th>
+                  <th style="width: 15%; text-align: center;">{{ 'TRANSACTION_HISTORY.PROCESSINGTIME' | translate }}</th>
+                  <th style="width: 10%; text-align: center;">{{ 'TRANSACTION_HISTORY.PROCESSINGORDER' | translate }}</th>
+                  <th style="width: 30%; text-align: center;">{{ 'TRANSACTION_HISTORY.BFTRANSACTION' | translate }}</th>
+                  <th style="width: 30%; text-align: center;">{{ 'TRANSACTION_HISTORY.ATTRANSACTION' | translate }}</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td>{{ transaction.filteredLogMessages }}</td>
-                  <td>{{ transaction.details?.blockTime * 1000 | date:'dd/MM/yyyy HH:mm:ss' }}</td>
-                  <td>{{ transaction.details?.slot }}</td>
-                  <td>
+                  <td style="width: 10%; text-align: center;">{{ transaction.filteredLogMessages }}</td>
+                  <td style="width: 15%; text-align: center;">{{ transaction.details?.blockTime * 1000 | date:'dd/MM/yyyy HH:mm:ss' }}</td>
+                  <td style="width: 10%; text-align: center;">{{ transaction.details?.slot }}</td>
+                  <td style="width: 30%; text-align: center;">
                     <ul class="transaction-list">
                       <li *ngFor="let tokenBalance of transaction.details?.meta?.preTokenBalances">
                         <p><strong>{{ 'TRANSACTION_HISTORY.OWNER' | translate }}:</strong> {{ tokenBalance.owner }}</p>
-                        <p><strong>{{ 'TRANSACTION_HISTORY.AMOUNT' | translate }}:</strong> {{ tokenBalance.uiTokenAmount?.amount | number }}</p>
+                        <p><strong>{{ 'TOKEN_TABLE.QUANTITY' | translate }}:</strong> {{ tokenBalance.uiTokenAmount?.amount | number }}</p>
                       </li>
                     </ul>
                   </td>
-                  <td>
+                  <td style="width: 30%; text-align: center;"> 
                     <ul class="transaction-list">
                       <li *ngFor="let tokenBalance of transaction.details?.meta?.postTokenBalances">
                         <p><strong>{{ 'TRANSACTION_HISTORY.OWNER' | translate }}:</strong> {{ tokenBalance.owner }}</p>
@@ -86,6 +83,3 @@
     </tbody>
   </nz-table>
 </div>
-<!-- <div *ngIf="transactions.length === 0 && error === ''">
-  <p>{{ 'TRANSACTION_HISTORY.NO_TRANSACTIONS' | translate }}</p>
-</div> -->

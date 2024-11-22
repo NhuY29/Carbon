@@ -21,7 +21,9 @@
     "MEASUREMENT_DATA": "Measurement Data",
     "MY_PROJECT": "My Project",
     "SENT_SAMPLE": "Product Discovery",
-    "SETTING":"Setting"
+    "SETTING": "Setting",
+    "REQUEST": "Withdrawal request",
+    "REQUESTWITHDRAW": "Withdrawal request approved"
   },
   "USER": {
     "SEARCH_PLACEHOLDER": "Enter search text",
@@ -85,7 +87,12 @@
     "USERNAME": "Username",
     "AMOUNT": "Amount",
     "MESSAGE": "Message",
-    "ENTER_MESSAGE": "Enter message"
+    "ENTER_MESSAGE": "Enter message",
+    "REQUEST": "Deposit Request",
+    "BANK": "Bank Name",
+    "ACCOUNT": "Account Number",
+    "HOLDER": "Account Holder",
+    "CONFIRM": "Confirm"
   },
   "TRANSACTION_HISTORY": {
     "SIGNATURE": "Signature",
@@ -95,11 +102,22 @@
     "TRANSACTION_CONTENT": "Transaction Content",
     "SENDER": "Sender",
     "RECIPIENT": "Recipient",
-    "TRANSACTION_AMOUNT": "Transaction Amount"
+    "TRANSACTION_AMOUNT": "Transaction Amount",
+    "ACTION": "Action",
+    "TYPE": "Type",
+    "PROCESSINGTIME": "Processing Time",
+    "PROCESSINGORDER": "Processing Order",
+    "BFTRANSACTION": "Befor The Transaction",
+    "ATTRANSACTION": "After The Transaction",
+    "OWNER": "Owner",
+    "AMOUNT": "Amount"
   },
   "TOKEN_TABLE": {
     "TOKEN_TYPE": "Token Type",
-    "QUANTITY": "Quantity"
+    "QUANTITY": "Quantity",
+    "ACTION": "Action",
+    "VIEW_HISTORY": "View History",
+    "ADDRESSTOKEN": " Token ADDRESS"
   },
   "FORM": {
     "ADD_CATEGORY": "Add Category",
@@ -113,7 +131,10 @@
     "CONVERSION_PRICE": "Conversion Price",
     "CREATE_CATEGORY": "Create Category",
     "UPDATE_CATEGORY": "Update Category",
-    "CANCEL": "Cancel"
+    "CANCEL": "Cancel",
+    "STANDARD": "Standard",
+    "TYPE": "Type",
+    "EXHAUST": "Exhaust"
   },
   "TABLE": {
     "CODE": "Code",
@@ -178,7 +199,6 @@
     "TOTAL": "Total",
     "TOTAL_SUM": "Total of all"
   },
-
   "TABLE_MEASURER": {
     "MEASURER": "Measurer",
     "MEASUREMENT_DATE": "Measurement Date",
@@ -281,7 +301,6 @@
       "contactPhone": "Phone cannot be empty"
     }
   },
-
   "statistics": {
     "totalRequestsToday": "Total Requests Today",
     "pendingRequests": "Number of Pending Requests",
@@ -290,7 +309,16 @@
   "tabs": {
     "todayRequests": "Requests Today",
     "pendingRequests": "Pending Requests",
-    "resolvedRequests": "Resolved Requests"
+    "resolvedRequests": "Resolved Requests",
+    "ProjectName": "Project Name",
+    "Describe": "Describe",
+    "field": "Field",
+    "type": "Type",
+    "standard": "Standard",
+    "DateSent": "Date Sent",
+    "Contact": "Contact",
+    "Owner": "Owner",
+    "Operation": "Operation"
   },
   "table": {
     "project": "Project",
@@ -351,10 +379,65 @@
     "addProject": "Add Project",
     "updateProject": "Update Project",
     "directions": "Get Directions",
-    "upload":"Upload",
-    "entercode":"Enter project code",
-    "entername":"Enter project name",
-    "enterd":"Enter description",
-    "enterf":"Enter field"
+    "upload": "Upload",
+    "entercode": "Enter project code",
+    "entername": "Enter project name",
+    "enterd": "Enter description",
+    "enterf": "Enter field"
+  },
+  "WITHDRAW": {
+    "SEARCH": "Search",
+    "SEARCH_PLACEHOLDER": "Enter transaction signature",
+    "TITLE": "Transaction Details",
+    "Field": "Field",
+    "VALUE": "Value",
+    "blockTime": "Block Time",
+    "LOGS": "Logs",
+    "MEMO": "Memo",
+    "SENDER": "Sender",
+    "RECIPIENT": "Recipient",
+    "transactionAmount": "Transaction Amount",
+    "USER": "User",
+    "BANKNAME": "Bank Name",
+    "accountHolderName": "Account Holder Name",
+    "requestTime": "Request Time",
+    "approvalTime": "Approval Time",
+    "signature": "Signature",
+    "Status": "Status",
+    "Operation": "Operation",
+    "APPROVAL": "Approval",
+    "nzNotFoundContent": "No data",
+    "nzDescription": "Details for the transaction signature",
+    "h2": "List of withdrawal requests"
+  },
+  "CART":{
+    "SHOPPING_CART":"Shopping Cart",
+    "PRODUCT_INFO": "Product Information",
+    "PRICE": "Price",
+    "QUANTITY": "Quantity",
+    "TOTAL": "Total",
+    "ACTIONS": "Actions",
+     "REMOVE": "Remove",
+    "VIEW": "View",
+    "TOTAL_PRICE": "Total Price",
+     "CHECKOUT": "Checkout"
+  },
+  "TRADE": {
+    "PROJECT_NAME": "Project Name",
+    "COMPANY_NAME": "Company Name",
+    "QUANTITY": "Quantity",
+    "PRICE": "Price",
+    "TOKEN_ADDRESS": "Token Address",
+    "STATUS": "Status",
+    "PROJECT_DESCRIPTION": "Project Description",
+    "APPROVAL_STATUS": "Approval Status",
+    "TYPE_NAME": "Project Type",
+    "OPERATION": "Operation",
+    "ACTIVE": "Active",
+    "INACTIVE": "Inactive",
+    "APPROVE": "Approve",
+    "NO_DATA": "No Data",
+    "FIELD": "Field",
+    "standardName": "Standard Name"
   }
 }

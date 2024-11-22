@@ -47,7 +47,6 @@ export interface SellerInfo {
   
 })
 export class FormXNGDComponent {
-  price: string = ''; 
   idFromRoute: string | null = null; 
   projectId: string | null = null; 
   id: string | null = null; 
@@ -133,7 +132,7 @@ export class FormXNGDComponent {
 getFormattedDate(): string {
   const date = this.currentDate;
   const day = date.getDate();
-  const month = date.getMonth() + 1; // Months are zero-based
+  const month = date.getMonth() + 1;
   const year = date.getFullYear();
   const daysOfWeek = ['Chủ nhật', 'Thứ hai', 'Thứ ba', 'Thứ tư', 'Thứ năm', 'Thứ sáu', 'Thứ bảy'];
   const dayOfWeek = daysOfWeek[date.getDay()];
@@ -210,8 +209,8 @@ async SendexportToPDF() {
           this.message.success('PDF đã được tải lên thành công!');
           console.log('PDF đã được tải lên thành công:', response.message);
 
-          if (this.projectId && this.price) { 
-            this.projectService.supplyToken(this.projectId as string, quantity, this.price).subscribe({
+          if (this.projectId) { 
+            this.projectService.supplyToken(this.projectId as string, quantity).subscribe({
               next: (tokenResponse) => {
                 this.message.success('Token đã được cấp thành công!');
                 console.log('Token đã được cấp:', tokenResponse);
@@ -240,5 +239,4 @@ async SendexportToPDF() {
     console.error('Lỗi khi tạo canvas:', error);
   }
 }
-
 }

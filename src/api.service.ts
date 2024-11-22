@@ -20,9 +20,12 @@ import { WalletResponse } from './app/wallet/WalletResponse';
 import { HttpErrorResponse } from '@angular/common/http';
 import { CartDTO } from './app/cart/cart.dto';
 import { CoordinateDTO } from './app/CoordinateDTO';
-interface WithdrawalResponse{
+import { WithdrawalDTO } from './app/withdraw-money/WithdrawalDTO';
+import { Trade2DTO } from './app/my-trading-list/Trade2DTO';
+import { ProjectOfTrade2 } from './app/my-trading-list/ProjectOfTrade2';
+interface WithdrawalResponse {
   message: string;
-  status:string;
+  status: string;
 }
 @Injectable({
   providedIn: 'root'
@@ -749,7 +752,7 @@ export class ApiService {
 
     return this.http.get<MeasurementDataRequest>(`${this.apiUrl}/measurementData/measurementDataRequest/${id}`, { headers });
   }
-  supplyToken(projectId: string, quantity: number, price: string): Observable<any> {
+  supplyToken(projectId: string, quantity: number): Observable<any> {
     const token = localStorage.getItem('token');
     if (!token) {
       throw new Error('Token không tồn tại.');
@@ -762,8 +765,7 @@ export class ApiService {
 
     const params = new HttpParams()
       .set('projectId', projectId)
-      .set('quantity', quantity.toString())
-      .set('price', price);
+      .set('quantity', quantity.toString());
 
     return this.http.post<any>(`${this.apiUrl}/sampleSent/TokenSupply`, null, { headers, params })
       .pipe(
@@ -1085,28 +1087,22 @@ export class ApiService {
     bankAccountNumber: string,
     accountHolderName: string
   ): Observable<WithdrawalResponse> {
-    // Retrieve the token from localStorage
     const token = localStorage.getItem('token');
-  
-    // Set up headers with token and Content-Type
+
     const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token ?? ''}`, // Fallback to an empty string if token is null
+      'Authorization': `Bearer ${token ?? ''}`,
       'Content-Type': 'application/json'
     });
-  
-    // Prepare parameters
-    const params = {
-      amount: amount.toString(),
-      bankName,
-      bankAccountNumber,
-      accountHolderName
-    };
-  
-    // Send the POST request
+    const params = new HttpParams()
+      .set('amount', amount.toString())
+      .set('bankName', bankName)
+      .set('bankAccountNumber', bankAccountNumber)
+      .set('accountHolderName', accountHolderName);
     return this.http.post<WithdrawalResponse>(`${this.apiUrl}/withdrawal/request`, null, { headers, params });
   }
+
   getTransactionHistoryAddressToken(tokenAddress: string): Observable<any> {
-    const token = localStorage.getItem('token'); 
+    const token = localStorage.getItem('token');
     if (!token) {
       return throwError(() => new Error('Token not found'));
     }
@@ -1117,9 +1113,153 @@ export class ApiService {
     });
 
     const params = new HttpParams().set('tokenAddress', tokenAddress);
-  
+
     return this.http.get<any>(`${this.apiUrl}/wallet/transaction-historyAdressToken`, { headers, params });
   }
-  
+  getAllWithdrawals(): Observable<WithdrawalDTO[]> {
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+    return this.http.get<WithdrawalDTO[]>(`${this.apiUrl}/withdrawal/all`, { headers });
+  }
+  updateWithdrawalStatus(withdrawalId: string, status: string): Observable<any> {
+    const url = `${this.apiUrl}/withdrawal/update-status/${withdrawalId}?newStatus=${status}`;
+    const headers = new HttpHeaders().set('Authorization', 'Bearer ' + localStorage.getItem('jwt_token'));
+
+    return this.http.put(url, {}, { headers });
+  }
+  getWithdrawalsByUserId(userId: string): Observable<WithdrawalDTO[]> {
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+    return this.http.get<WithdrawalDTO[]>(`${this.apiUrl}/withdrawal/user/${userId}`, { headers });
+  }
+  getTradesByUserIdAndMintToken(userId: string, mintToken: string): Observable<TradeDTO[]> {
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+
+    // Gửi userId và mintToken dưới dạng query params
+    const params = new HttpParams()
+      .set('userId', userId)
+      .set('mintToken', mintToken);  // Thay đổi từ projectId thành mintToken
+
+    return this.http.get<TradeDTO[]>(`${this.apiUrl}/trade/user`, { headers, params });
+  }
+
+  updateTradeApproval(
+    tradeId: string,
+    newPrice: number,
+    newApprovalStatus: string,
+    newQuantity: number,
+    newStatus: string
+  ): Observable<any> {
+    const token = localStorage.getItem('token');
+
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+
+    // Cập nhật URL để bao gồm tham số newStatus
+    const url = `http://localhost:8080/trade/updateApproval/${tradeId}?newPrice=${newPrice}&newApprovalStatus=${newApprovalStatus}&newQuantity=${newQuantity}&newStatus=${newStatus}`;
+
+    return this.http.put<any>(url, {}, { headers });
+  }
+
+  updateTradeQuantity(tradeId: string, quantity: number): Observable<void> {
+
+    const token = localStorage.getItem('token');
+
+    if (!token) {
+      console.error('Token không tồn tại!');
+      return new Observable();
+    }
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+    const url = `${this.apiUrl}/trade/${tradeId}/quantity?quantity=${quantity}`;
+    return this.http.put<void>(url, {}, { headers });
+  }
+  getTradeById(tradeId: string): Observable<any> {
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+    return this.http.get(`${this.apiUrl}/trade/${tradeId}`, { headers });
+  }
+  deleteTrade(tradeId: string): Observable<any> {
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+    return this.http.delete(`${this.apiUrl}/trade/${tradeId}`, { headers });
+  }
+  createTrade(tradeRequest: any): Observable<any> {
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+    return this.http.post<any>(`${this.apiUrl}/trade/create`, tradeRequest, { headers });
+  }
+  getTokenAddress(publicKey: string, mintAddress: string): Observable<any> {
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+
+    const params = new HttpParams()
+      .set('publicKey', publicKey)
+      .set('mintAddress', mintAddress);
+    return this.http.get<any>(`${this.apiUrl}/wallet/address`, { headers, params });
+  }
+  updateTradeTokenAddress(tradeId: string, newTokenAddress: string): Observable<any> {
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+
+    const url = `${this.apiUrl}/trade/${tradeId}/updateTokenAddress?newTokenAddress=${encodeURIComponent(newTokenAddress)}`;
+
+    return this.http.put<any>(url, {}, { headers });
+  }
+  getmint(userId: string, projectId: string): Observable<Trade2DTO[]> {
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+
+    const url = `${this.apiUrl}/trade2/user/${userId}/project/${projectId}`;
+    return this.http.get<Trade2DTO[]>(url, { headers });
+  }
+  getProjectsOfTradeByUserId(userId: string): Observable<ProjectOfTrade2[]> {
+    const token = localStorage.getItem('token');
+
+    if (!token) {
+      throw new Error('Người dùng chưa đăng nhập. Token không tồn tại.');
+    }
+
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    });
+
+    return this.http.get<ProjectOfTrade2[]>(`${this.apiUrl}/trade2/user/${userId}/projects`, { headers });
+  }
+
 }
+
 

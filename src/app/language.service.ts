@@ -1,9 +1,9 @@
-// language.service.ts
+
 import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 
 @Injectable({
-  providedIn: 'root' // Đảm bảo dịch vụ này được cung cấp cho toàn bộ ứng dụng
+  providedIn: 'root' 
 })
 export class LanguageService {
   constructor(private translate: TranslateService) {

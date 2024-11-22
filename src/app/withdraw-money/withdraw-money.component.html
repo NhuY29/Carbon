@@ -1,6 +1,100 @@
-<div class="countdown">
-    <div id="timer">
-      <p>{{ timer }}</p>
-    </div>
+<div style="margin: 20px  0px;">
+  <div class="search-container">
+    <input nz-input placeholder=" {{ 'WITHDRAW.SEARCH_PLACEHOLDER' | translate }}" [(ngModel)]="transactionSignature" />
+    <button nz-button nzType="primary" (click)="searchTransactionDetails()">
+      {{ 'WITHDRAW.SEARCH' | translate }}
+    </button>
   </div>
   
+</div>
+<div *ngIf="transactionDetails" style="margin-top: 20px;">
+  <nz-card>
+    <nz-card-meta nzTitle="{{ 'WITHDRAW.TITLE' | translate }}" nzDescription="{{ 'WITHDRAW.nzDescription' | translate }}" />
+    <button (click)="closeTransactionDetails()" style="position: absolute; top: 10px; right: 10px; border: none; background: transparent; font-size: 18px; cursor: pointer;">&times;</button>
+    <nz-table #basicTable [nzData]="[transactionDetails]" [nzBordered]="true">
+      <thead>
+        <tr>
+          <th nzWidth="25%">{{ 'WITHDRAW.Field' | translate }}</th>
+          <th nzWidth="75%">{{ 'WITHDRAW.VALUE' | translate }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>{{ 'WITHDRAW.blockTime' | translate }}</strong></td>
+          <td>{{ transactionDetails.blockTime }}</td>
+        </tr>
+        <tr>
+          <td><strong>{{ 'WITHDRAW.LOGS' | translate }}</strong></td>
+          <td>
+            <ul>
+              <li *ngFor="let log of transactionDetails.logs">{{ log }}</li>
+            </ul>
+          </td>
+        </tr>
+        <tr *ngIf="transactionDetails.memo.length > 0">
+          <td><strong>{{ 'WITHDRAW.MEMO' | translate }}</strong></td>
+          <td>
+            <ul>
+              <li *ngFor="let m of transactionDetails.memo">{{ m.memo }}</li>
+            </ul>
+          </td>
+        </tr>
+        <tr>
+          <td><strong>{{ 'WITHDRAW.SENDER' | translate }}</strong></td>
+          <td>{{ transactionDetails.sender }}</td>
+        </tr>
+        <tr>
+          <td><strong>{{ 'WITHDRAW.RECIPIENT' | translate }}</strong></td>
+          <td>{{ transactionDetails.recipient }}</td>
+        </tr>
+        <tr>
+          <td><strong>{{ 'WITHDRAW.transactionAmount' | translate }}</strong></td>
+          <td>{{ transactionDetails.transactionAmount }}</td>
+        </tr>
+      </tbody>
+    </nz-table>
+  </nz-card>
+</div>
+
+<div *ngIf="withdrawals.length > 0; else noData">
+  <nz-table #basicTable [nzData]="withdrawals" [nzBordered]="true"
+  [nzPageSize]="pageSize" [nzScroll]="{ x: '1100px' }" [nzShowPagination]="true" [nzTotal]="withdrawals.length" [nzPageIndex]="pageIndex" (nzPageIndexChange)="onPageChange($event)" ngSkipHydration>
+    <thead>
+      <tr>
+        <th nzColumnKey="user" style="text-align: center; ">{{ 'WITHDRAW.USER' | translate }}</th>
+        <th nzColumnKey="bankName" style="text-align: center;">{{ 'WITHDRAW.BANKNAME' | translate }}</th>
+        <th nzColumnKey="accountHolderName" style="text-align: center;">{{ 'WITHDRAW.accountHolderName' | translate }}</th>
+        <th nzColumnKey="requestTime" style="text-align: center;">{{ 'WITHDRAW.requestTime' | translate }}</th>
+        <th nzColumnKey="approvalTime" style="text-align: center;">{{ 'WITHDRAW.approvalTime' | translate }}</th> 
+        <th nzColumnKey="requestTime" style="text-align: center;width: 400px;">{{ 'WITHDRAW.signature' | translate }}</th>
+        <th nzColumnKey="status" style="text-align: center;width: 100px;" nzRight>{{ 'WITHDRAW.Status' | translate }}</th>
+        <th nzColumnKey="action" style="text-align: center;width: 100px;" nzRight>{{ 'WITHDRAW.Operation' | translate }}</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let withdrawal of basicTable.data">
+        <td>{{ withdrawal.user.username }}</td>
+        <td>{{ withdrawal.bankName }}</td>
+        <td>{{ withdrawal.accountHolderName }}</td>
+        <td style="text-align: center;">{{ withdrawal.requestTime }}</td>
+        <td style="text-align: center;">{{ withdrawal.approvalTime}}</td> 
+        <td style="text-align: center;">{{ withdrawal.transactionSignature }}</td>
+        <td nzRight >
+          <nz-tag [nzColor]="withdrawal.status === 'DAXULY' ? 'green' : 'red'">
+            {{ withdrawal.status }}
+          </nz-tag>
+        </td>
+        <td nzRight>
+          <button nz-button [nzType]="'primary'" [disabled]="withdrawal.status === 'DAXULY'"
+            (click)="updateStatus(withdrawal.withdrawalId, 'DAXULY')">
+            {{ 'WITHDRAW.APPROVAL' | translate }}
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </nz-table>
+</div>
+
+<ng-template #noData>
+  <nz-empty nzNotFoundContent=" {{ 'WITHDRAW.nzNotFoundContent' | translate }}"></nz-empty>
+</ng-template>

@@ -45,6 +45,8 @@ export class TransactionHistoryComponent implements OnInit {
   transactions: Transaction[] = [];
   selectedTransaction: any = null;
   isWalletActive: boolean;
+  pageIndex: number = 1;  
+  pageSize: number = 5;  
   constructor(
     private message: NzMessageService,
     private modal: NzModalService,
@@ -57,6 +59,10 @@ export class TransactionHistoryComponent implements OnInit {
     const savedState = localStorage.getItem('isWalletActive');
     this.isWalletActive = savedState === 'false'; 
     console.log(`Initial airdrop state: ${this.isWalletActive ? 'ACTIVE' : 'INACTIVE'}`);
+  }
+  onPageChange(page: number): void {
+    this.pageIndex = page; 
+    this.loadTransactions(); 
   }
   loadTransactions(): void {
     this.api.getTransactionHistory().subscribe(
@@ -138,8 +144,6 @@ export class TransactionHistoryComponent implements OnInit {
     const preBalance = response.meta?.preBalances?.[0] || 0;
     const postBalance = response.meta?.postBalances?.[0] || 0;
     const transactionAmount = ((preBalance - postBalance - (parseInt(fee) || 0)) / 100000).toString();
-
-    // Xác định `memo` dựa trên mẫu `logMessages`
     let memo: { memo: string; }[] = [];
 
     if (logMessages.some(msg => msg.includes('Program log: Transaction Content:'))) {
@@ -154,9 +158,11 @@ export class TransactionHistoryComponent implements OnInit {
     } else if (
         logMessages.some(msg => msg === "Program 11111111111111111111111111111111 invoke [1]") &&
         logMessages.some(msg => msg === "Program 11111111111111111111111111111111 success")
-    ) {
+    ) 
+    {
         memo = [{ memo: 'mua tin chi' }];
-    } else {
+    } 
+    else {
         memo = [{ memo: 'Không xác định' }];
     }
 

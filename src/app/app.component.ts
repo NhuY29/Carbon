@@ -41,7 +41,8 @@ import { SharedService } from './shared-service.service';
     AppTranslateModule,
   ],
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  styleUrls: ['./app.component.scss'],
+  host: { 'ngSkipHydration': '' }
 })
 export class AppComponent implements OnInit {
   walletInfo: any;
@@ -59,34 +60,46 @@ export class AppComponent implements OnInit {
     private apiService: ApiService,
     public translate: TranslateService,
     private sharedService: SharedService
-  ) {
-    translate.addLangs(['en', 'vi']);
-    translate.setDefaultLang('en');
-  }
+  ) {}
 
   ngOnInit(): void {
     this.getUsername();
-    const savedState = localStorage.getItem('isWalletActive');
-    this.isWalletActive = savedState === 'true'; 
-    console.log(`Initial wallet state: ${this.isWalletActive ? 'ACTIVE' : 'INACTIVE'}`);
-    if (this.isWalletActive) {
-      this.translate.use('vi'); 
-    } else {
-      this.translate.use('en');
+    if (isPlatformBrowser(this.platformId)) {
+      const savedState = localStorage.getItem('isWalletActive');
+      this.isWalletActive = savedState === 'true';
+      console.log(`menu: ${this.isWalletActive ? 'ACTIVE' : 'INACTIVE'}`);
+
+      if (this.isWalletActive) {
+        this.translate.use('vi'); 
+        console.log('use vi');
+      } else {
+        this.translate.use('en'); 
+        console.log('use en');
+      }
     }
+
     this.sharedService.currentLanguage.subscribe(language => {
-      this.translate.use(language);
+      
+      if (this.isWalletActive) {
+        this.translate.use('vi'); 
+        console.log('use vi');
+      } else {
+        this.translate.use('en'); 
+        console.log('use en');
+      }
     });
-  }
+}
+
 
   switchLanguage(language: string) {
     this.translate.use(language);
-    this.sharedService.changeLanguage(language);
   }
-
   logout() {
     this.authService.logout();
-    localStorage.removeItem('token');
+    if (isPlatformBrowser(this.platformId)) {
+      localStorage.removeItem('token');
+      localStorage.removeItem('language');
+    }
     window.location.replace('/login');
     this.notification.success('Success', 'Logout successful!');
   }

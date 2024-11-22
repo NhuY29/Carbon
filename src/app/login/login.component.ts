@@ -62,8 +62,8 @@ export class LoginComponent {
           } else {
             this.notification.error('Error', 'Login failed. Please try again.', {
               nzPlacement: 'topRight',
-              nzStyle: { top: '50px', right: '50px', zIndex: 10000 }, // Đảm bảo zIndex cao hơn overlay
-              nzDuration: 5000 // Thời gian hiển thị thông báo (ms)
+              nzStyle: { top: '50px', right: '50px', zIndex: 10000 }, 
+              nzDuration: 5000 
             });
             
           }
@@ -74,7 +74,7 @@ export class LoginComponent {
             nzPlacement: 'topRight',
             nzStyle: { top: '50px', right: '50px' }
           });
-          this.closeForm(); // Đóng form khi có lỗi xảy ra
+          this.closeForm(); 
         }
       });
     } else {
@@ -88,7 +88,7 @@ export class LoginComponent {
   }
   
   closeForm(): void {
-    this.location.back(); // Đóng form hoặc quay về trang trước đó
+    this.location.back(); 
   }
   
 }

@@ -6,7 +6,7 @@ export class TradeDTO {
   standard: string;
   companyName: string;
   quantity: number;
-  price: string;
+  price: number;
   mintToken: string;
   tradeId: string;
   standardId: string;
@@ -17,7 +17,11 @@ export class TradeDTO {
   imageUrls: string[];
   userId: string;
   tokenAddress: string;
-  status: boolean;
+  status: string;
+  approvalStatus: string;
+  balance: string;
+  purchasedFrom: string;
+  purchasePrice: number;
 
   constructor(
     projectId: string,
@@ -27,7 +31,7 @@ export class TradeDTO {
     standard: string,
     companyName: string,
     quantity: number,
-    price: string,
+    price: number,
     mintToken: string,
     typeName: string,
     standardName: string,
@@ -38,7 +42,11 @@ export class TradeDTO {
     projectDescription?: string,
     userId?: string,
     tokenAddress?: string,
-    status?: boolean
+    status?: string,
+    approvalStatus?: string,
+    balance?: string,
+    purchasedFrom?: string,
+    purchasePrice?: number
   ) {
     this.projectId = projectId;
     this.projectName = projectName;
@@ -58,6 +66,10 @@ export class TradeDTO {
     this.projectDescription = projectDescription || '';
     this.userId = userId || '';
     this.tokenAddress = tokenAddress || '';
-    this.status = status || false;
+    this.status = status || '';
+    this.approvalStatus = approvalStatus || '';
+    this.balance = balance || '';
+    this.purchasedFrom = purchasedFrom || '';
+    this.purchasePrice = purchasePrice || 0;
   }
 }

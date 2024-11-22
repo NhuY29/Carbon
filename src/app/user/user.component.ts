@@ -86,8 +86,6 @@ export class UserComponent implements OnInit {
     });
     translate.addLangs(['en', 'vi']);
     translate.setDefaultLang('vi');
-
-    // Lấy giá trị từ localStorage khi khởi tạo
     const savedState = localStorage.getItem('isWalletActive');
     this.isWalletActive = savedState === 'true'; 
     console.log(`Initial wallet state: ${this.isWalletActive ? 'ACTIVE' : 'INACTIVE'}`);

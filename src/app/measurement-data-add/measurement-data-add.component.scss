@@ -9,14 +9,14 @@
 }
 .measurement-add {
     display: flex;
-    flex-direction: column; /* Căn chỉnh theo chiều dọc */
-    align-items: center; /* Căn giữa theo chiều ngang */
-    width: 80%; /* Chiếm toàn bộ chiều rộng */
+    flex-direction: column;
+    align-items: center; 
+    width: 80%; 
 }
 
 .measurement-add nz-form-item {
-    width: 100%; /* Đảm bảo mỗi form item chiếm toàn bộ chiều rộng */
-    max-width: 600px; /* Giới hạn chiều rộng tối đa */
+    width: 100%;
+    max-width: 600px; 
 }
 
 .measurement-item {
@@ -29,18 +29,16 @@
 }
 
 .nz-form-item {
-    width: 100%; /* Đảm bảo mỗi form item chiếm toàn bộ chiều rộng */
+    width: 100%; 
 }
 
 .nz-form-item nz-form-label,
 .nz-form-item nz-form-control {
     margin-bottom: 10px;
 }
-
-/* Đặt chiều rộng cụ thể cho các input và select */
 .nz-select,
 .nz-input {
-    width: 300px; /* Giới hạn chiều rộng của select và input */
+    width: 300px; 
 }
 
 .remove-button {

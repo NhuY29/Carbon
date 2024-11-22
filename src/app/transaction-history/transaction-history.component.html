@@ -1,22 +1,22 @@
-<nz-table [nzData]="transactions" [nzPageSize]="10">
+<nz-table #basicTable [nzData]="transactions" [nzBordered]="true"
+  [nzPageSize]="pageSize" [nzShowPagination]="true" [nzTotal]="transactions.length" [nzPageIndex]="pageIndex" (nzPageIndexChange)="onPageChange($event)" ngSkipHydration>
   <thead>
-    <tr>
+    <tr >
       <th></th>
-      <th nzWidth="20%">{{ 'TRANSACTION_HISTORY.SIGNATURE' | translate }}</th>
-      <th nzWidth="20%">{{ 'TRANSACTION_HISTORY.TRANSACTION_DATE' | translate }}</th>
-      <th nzWidth="20%">{{ 'TRANSACTION_HISTORY.BLOCK' | translate }}</th>
-      <th nzWidth="20%">{{ 'TRANSACTION_HISTORY.AGE' | translate }}</th>
-      <th></th>
+      <th nzWidth="20%;text-align: center;">{{ 'TRANSACTION_HISTORY.SIGNATURE' | translate }}</th>
+      <th nzWidth="20%;text-align: center;">{{ 'TRANSACTION_HISTORY.TRANSACTION_DATE' | translate }}</th>
+      <th nzWidth="20%;text-align: center;">{{ 'TRANSACTION_HISTORY.BLOCK' | translate }}</th>
+      <th nzWidth="20%;text-align: center;">{{ 'TRANSACTION_HISTORY.AGE' | translate }}</th>
     </tr>
   </thead>
   <tbody>
-    <ng-container *ngFor="let transaction of transactions">
+    <ng-container *ngFor="let transaction of transactions.slice((pageIndex - 1) * pageSize, pageIndex * pageSize)">
       <tr>
         <td [(nzExpand)]="transaction.expand" (click)="viewTransactionDetails(transaction)"></td>
-        <td>{{ transaction.signature }}</td>
-        <td>{{ transaction.date }}</td>
-        <td>{{ transaction.block }}</td>
-        <td>{{ transaction.age }}</td>
+        <td style=" text-align: center;">{{ transaction.signature }}</td>
+        <td style=" text-align: center;">{{ transaction.date }}</td>
+        <td style=" text-align: center;">{{ transaction.block }}</td>
+        <td style=" text-align: center;">{{ transaction.age }}</td>
       </tr>
 
       <tr *ngIf="transaction.expand && transaction.details">
@@ -24,22 +24,22 @@
           <nz-table [nzData]="[transaction.details]" nzSize="middle" [nzShowPagination]="false">
             <thead>
               <tr>
-                <th>{{ 'TRANSACTION_HISTORY.TRANSACTION_CONTENT' | translate }}</th>
-                <th>{{ 'TRANSACTION_HISTORY.SENDER' | translate }}</th>
-                <th>{{ 'TRANSACTION_HISTORY.RECIPIENT' | translate }}</th>
-                <th>{{ 'TRANSACTION_HISTORY.TRANSACTION_AMOUNT' | translate }}</th>
+                <th style=" text-align: center;">{{ 'TRANSACTION_HISTORY.TRANSACTION_CONTENT' | translate }}</th>
+                <th style=" text-align: center;">{{ 'TRANSACTION_HISTORY.SENDER' | translate }}</th>
+                <th style=" text-align: center;">{{ 'TRANSACTION_HISTORY.RECIPIENT' | translate }}</th>
+                <th style=" text-align: center;">{{ 'TRANSACTION_HISTORY.TRANSACTION_AMOUNT' | translate }}</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td>
+                <td style=" text-align: center;">  
                   <li *ngFor="let memo of transaction.details.memo">
                     {{ memo.memo }}
                   </li>
                 </td>
-                <td>{{ transaction.details.sender }}</td>
-                <td>{{ transaction.details.recipient }}</td>
-                <td>{{ transaction.details.transactionAmount }} VND</td>
+                <td style=" text-align: center;">{{ transaction.details.sender }}</td>
+                <td style=" text-align: center;">{{ transaction.details.recipient }}</td>
+                <td style=" text-align: center;">{{ transaction.details.transactionAmount }} VND</td>
               </tr>
             </tbody>
           </nz-table>

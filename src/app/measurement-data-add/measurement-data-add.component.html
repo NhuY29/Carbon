@@ -5,7 +5,7 @@
         <nz-form-item>
           <nz-form-label [nzFor]="'wasteSource-' + i">{{ 'wasteSource' | translate }}:</nz-form-label>
           <nz-form-control>
-            <nz-select formControlName="wasteSource" id="wasteSource-{{i}}" [nzPlaceHolder]="'selectWasteSource' | translate">
+            <nz-select style="min-width: 400px;" formControlName="wasteSource" id="wasteSource-{{i}}" [nzPlaceHolder]="'selectWasteSource' | translate">
               <nz-option *ngFor="let category of categoriesPC" [nzLabel]="category.name" [nzValue]="category.id"></nz-option>
             </nz-select>
           </nz-form-control>
@@ -14,7 +14,7 @@
         <nz-form-item>
           <nz-form-label [nzFor]="'gas-' + i">{{ 'gas' | translate }}:</nz-form-label>
           <nz-form-control>
-            <nz-select formControlName="gas" id="gas-{{i}}" [nzPlaceHolder]="'selectGas' | translate">
+            <nz-select style="min-width: 100px;"  formControlName="gas" id="gas-{{i}}" [nzPlaceHolder]="'selectGas' | translate">
               <nz-option *ngFor="let category of categories" [nzLabel]="category.name" [nzValue]="category.id"></nz-option>
             </nz-select>
           </nz-form-control>
@@ -23,11 +23,11 @@
         <nz-form-item>
           <nz-form-label [nzFor]="'data-' + i">{{ 'data' | translate }}:</nz-form-label>
           <nz-form-control>
-            <input nz-input formControlName="data" id="data-{{i}}" type="text"/>
+            <input style="min-width: 50px;" nz-input formControlName="data" id="data-{{i}}" type="text"/>
           </nz-form-control>
         </nz-form-item>
 
-        <button nz-button type="button" (click)="removeMeasurement(i)" class="remove-button">{{ 'remove' | translate }}</button>
+        <button style="margin-top: 0px;"  nz-button type="button" (click)="removeMeasurement(i)" class="remove-button">{{ 'remove' | translate }}</button>
       </div>
     </div>
   </div>

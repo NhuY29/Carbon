@@ -74,7 +74,9 @@ export class TokenComponent implements OnInit {
   selectedTransaction: any = null;
   error: string = '';
   tokenAddress: string = '';
-
+  isLoadingDetails: boolean = false;
+  pageIndex: number = 1; 
+  pageSize: number = 5;  
   constructor(
     private solanaService: SolanaService,
     public translate: TranslateService,
@@ -88,7 +90,10 @@ export class TokenComponent implements OnInit {
     console.log(`Initial wallet state: ${this.isWalletActive ? 'ACTIVE' : 'INACTIVE'}`);
     this.translate.use(this.isWalletActive ? 'vi' : 'en');
   }
-
+  onPageChange(page: number): void {
+    this.pageIndex = page
+    this.getTokenData(); 
+  }
   ngOnInit(): void {
     this.getTokenData();
     this.listOfData.forEach(item => {
@@ -96,45 +101,47 @@ export class TokenComponent implements OnInit {
     });
   }
   onGetTransactionHistory(tokenAddress: string): void {
-    if (!tokenAddress) {
-      this.error = 'Please enter a token address.';
-      return;
-    }
-
-    this.api.getTransactionHistoryAddressToken(tokenAddress).subscribe(
-      data => {
-        if (data && Array.isArray(data.transactions)) {
-          const transactionsWithDetails: Observable<Transaction>[] = data.transactions.map((transaction: any) => {
-            return this.solanaService.getTransactionDetails(transaction.signature).pipe(
-              map((details: any) => {
-                return {
-                  signature: transaction.signature,
-                  date: transaction.timestamp,
-                  block: transaction.block,
-                  age: transaction.age,
-                };
-              })
+    if (this.transactions.some(tx => tx.tokenAddress === tokenAddress)) {
+      this.transactions = this.transactions.filter(tx => tx.tokenAddress !== tokenAddress);
+    } else {
+      this.api.getTransactionHistoryAddressToken(tokenAddress).subscribe(
+        data => {
+          if (data && Array.isArray(data.transactions)) {
+            const transactionsWithDetails: Observable<Transaction>[] = data.transactions.map((transaction: any) => {
+              return this.solanaService.getTransactionDetails(transaction.signature).pipe(
+                map((details: any) => {
+                  return {
+                    tokenAddress: tokenAddress,
+                    signature: transaction.signature,
+                    date: transaction.timestamp,
+                    block: transaction.block,
+                    age: transaction.age,
+                  };
+                })
+              );
+            });
+  
+            forkJoin(transactionsWithDetails).subscribe(
+              (transactionsWithDetails: Transaction[]) => {
+                this.transactions = [...this.transactions, ...transactionsWithDetails];
+              },
+              error => {
+                console.error('Lỗi khi tải chi tiết giao dịch', error);
+              }
             );
-          });
-
-          forkJoin(transactionsWithDetails).subscribe(
-            (transactionsWithDetails: Transaction[]) => {
-              this.transactions = transactionsWithDetails;
-            },
-            error => {
-              console.error('Lỗi khi tải chi tiết giao dịch', error);
-            }
-          );
-        } else {
-          console.error('Dữ liệu không hợp lệ:', data);
+          } else {
+            console.error('Dữ liệu không hợp lệ:', data);
+          }
+        },
+        error => {
+          console.error('Lỗi khi tải dữ liệu giao dịch', error);
         }
-      },
-      error => {
-        console.error('Lỗi khi tải dữ liệu giao dịch', error);
-      }
-    );
+      );
+    }
   }
+  
   toggleTransactionDetails(tx: TransactionToken): void {
+    if (this.isLoadingDetails) return;
     tx.expand = !tx.expand;
 
     this.solanaService.getTransactionDetails(tx.signature).subscribe(

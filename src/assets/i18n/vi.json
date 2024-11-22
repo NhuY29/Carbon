@@ -1,46 +1,48 @@
 {
-    "HEADER": {
-      "TRANSACTION": "Giao dịch",
-      "TRANSACTION_HISTORY": "Lịch sử giao dịch",
-      "LOGIN": "Đăng nhập",
-      "LOGOUT": "Đăng xuất",
-      "REGISTER": "Đăng ký"
-    },
-    "MENU": {
-      "USER_MANAGEMENT": "Quản lý về người dùng",
-      "USER_LIST": "Danh sách người dùng",
-      "MAP": "Bản đồ",
-      "WALLET_INFO": "Tra Thông Tin Ví",
-      "AIR_DROP": "Nạp tiền",
-      "MY_WALLET": "Ví của tôi",
-      "PROJECT_MANAGEMENT": "Quản lý dự án",
-      "PROJECT_LIST": "Danh sách dự án",
-      "APPROVE_REQUEST": "Duyệt yêu cầu xác nhận",
-      "EMISSION_SOURCE": "Danh mục nguồn phát thải",
-      "COMMON_CATEGORY": "Danh mục chung",
-      "MEASUREMENT_DATA": "Nhập liệu đo đạc",
-      "MY_PROJECT": "Dự án của tôi",
-      "SENT_SAMPLE": "Khám phá sản phẩm",
-      "SETTING":"Cài đặt"
-    },
-    "USER":{
-      "SEARCH_PLACEHOLDER": "Nhập từ khóa tìm kiếm",
-      "+ADD": "+ Thêm",
-      "SEARCH": "Tìm kiếm",
-      "USERNAME": "Tên đăng nhập",
-      "FIRST_NAME": "Tên",
-      "LAST_NAME": "Họ",
-      "PASSWORD": "Mật khẩu",
-      "CONFIRM_PASSWORD": "Xác nhận mật khẩu",
-      "ROLE": "Vai trò",
-      "CANCEL": "Hủy",
-      "SAVE": "Lưu",
-      "ACTIVE": "Hoạt động",
-      "PENDING_APPROVAL": "Chờ duyệt",
-      "STATUS": "Trạng thái",
-      "ACTION": "Hành động"
-    },
-    "WALLET": {
+  "HEADER": {
+    "TRANSACTION": "Giao dịch",
+    "TRANSACTION_HISTORY": "Lịch sử giao dịch",
+    "LOGIN": "Đăng nhập",
+    "LOGOUT": "Đăng xuất",
+    "REGISTER": "Đăng ký"
+  },
+  "MENU": {
+    "USER_MANAGEMENT": "Quản lý về người dùng",
+    "USER_LIST": "Danh sách người dùng",
+    "MAP": "Bản đồ",
+    "WALLET_INFO": "Tra Thông Tin",
+    "AIR_DROP": "Nạp tiền",
+    "MY_WALLET": "Ví của tôi",
+    "PROJECT_MANAGEMENT": "Quản lý dự án",
+    "PROJECT_LIST": "Danh sách dự án",
+    "APPROVE_REQUEST": "Duyệt yêu cầu xác nhận",
+    "EMISSION_SOURCE": "Danh mục nguồn phát thải",
+    "COMMON_CATEGORY": "Danh mục chung",
+    "MEASUREMENT_DATA": "Nhập liệu đo đạc",
+    "MY_PROJECT": "Dự án của tôi",
+    "SENT_SAMPLE": "Khám phá sản phẩm",
+    "SETTING": "Cài đặt",
+    "REQUEST": "Yêu cầu rút tiền",
+    "REQUESTWITHDRAW": "Phê duyệt yêu cầu rút tiền"
+  },
+  "USER": {
+    "SEARCH_PLACEHOLDER": "Nhập từ khóa tìm kiếm",
+    "+ADD": "+ Thêm",
+    "SEARCH": "Tìm kiếm",
+    "USERNAME": "Tên đăng nhập",
+    "FIRST_NAME": "Tên",
+    "LAST_NAME": "Họ",
+    "PASSWORD": "Mật khẩu",
+    "CONFIRM_PASSWORD": "Xác nhận mật khẩu",
+    "ROLE": "Vai trò",
+    "CANCEL": "Hủy",
+    "SAVE": "Lưu",
+    "ACTIVE": "Hoạt động",
+    "PENDING_APPROVAL": "Chờ duyệt",
+    "STATUS": "Trạng thái",
+    "ACTION": "Hành động"
+  },
+  "WALLET": {
     "ACCOUNT_OVERVIEW": "Tổng quan tài khoản",
     "PUBLIC_KEY": "Khóa công khai",
     "ENTER_PUBLIC_KEY": "Nhập khóa công khai",
@@ -85,21 +87,37 @@
     "USERNAME": "Tên người dùng",
     "AMOUNT": "Số tiền",
     "MESSAGE": "Tin nhắn",
-    "ENTER_MESSAGE": "Nhập tin nhắn"
+    "ENTER_MESSAGE": "Nhập tin nhắn",
+    "REQUEST": "Yêu cầu rút tiền",
+    "BANK": "Ngân hàng",
+    "ACCOUNT": "Số tài khoản",
+    "HOLDER": "Chủ tài khoản",
+    "CONFIRM": "Xác nhận"
   },
   "TRANSACTION_HISTORY": {
     "SIGNATURE": "Chữ ký",
     "TRANSACTION_DATE": "Ngày giao dịch",
-    "BLOCK": "Block",
-    "AGE": "Age",
+    "BLOCK": "Khối",
+    "AGE": "Khoảng thời gian",
     "TRANSACTION_CONTENT": "Nội Dung Giao Dịch",
     "SENDER": "Người Gửi",
     "RECIPIENT": "Người Nhận",
-    "TRANSACTION_AMOUNT": "Số Tiền Giao Dịch"
+    "TRANSACTION_AMOUNT": "Số Tiền Giao Dịch",
+    "ACTION": "Thao tác",
+    "TYPE": "Loại giao dịch",
+    "PROCESSINGTIME": "Thời gian xử lý",
+    "PROCESSINGORDER": "Thứ tự xử lý",
+    "BFTRANSACTION": "Trước giao dịch",
+    "ATTRANSACTION": "Sau giao dịch",
+    "OWNER": "Chủ sở hữu",
+    "AMOUNT": "Số tiền"
   },
   "TOKEN_TABLE": {
     "TOKEN_TYPE": "Loại Tín Chỉ",
-    "QUANTITY": "Số Lượng"
+    "QUANTITY": "Số Lượng",
+    "ACTION": "Thao tác",
+    "VIEW_HISTORY": "Xem lịch sử",
+    "ADDRESSTOKEN": "Địa chỉ tín chỉ"
   },
   "FORM": {
     "ADD_CATEGORY": "Thêm danh mục",
@@ -113,7 +131,10 @@
     "CONVERSION_PRICE": "Đơn giá quy đổi",
     "CREATE_CATEGORY": "Tạo danh mục",
     "UPDATE_CATEGORY": "Cập nhật danh mục",
-    "CANCEL": "Hủy"
+    "CANCEL": "Hủy",
+    "STANDARD": "Tiêu chuẩn",
+    "TYPE": "Loại hình",
+    "EXHAUST": "Khí thải"
   },
   "TABLE": {
     "CODE": "Mã",
@@ -164,7 +185,6 @@
     "VIEW_PARTICIPANTS": "Danh sách tham gia",
     "MEASUREMENT_DATA": "Danh sách đo lường"
   },
-
   "LOGIN": {
     "TITLE": "Mẫu Đăng Nhập",
     "USERNAME": "Tên người dùng",
@@ -173,7 +193,7 @@
     "LOGIN_BUTTON": "Đăng nhập",
     "SIGNUP_LINK": "Chưa phải là thành viên? Đăng ký ngay!"
   },
-"TABLE_DATA": {
+  "TABLE_DATA": {
     "STT": "STT",
     "SOURCE": "Nguồn phát thải",
     "TOTAL": "Tổng",
@@ -289,7 +309,16 @@
   "tabs": {
     "todayRequests": "Yêu cầu hôm nay",
     "pendingRequests": "Chưa giải quyết",
-    "resolvedRequests": "Đã giải quyết"
+    "resolvedRequests": "Đã giải quyết",
+    "ProjectName": "Tên dự án",
+    "Describe": "Mô tả",
+    "field": "Lĩnh vực",
+    "type": "Loại hình",
+    "standard": "Tiêu chuẩn",
+    "DateSent": "Ngày gửi",
+    "Contact": "Liên hệ",
+    "Owner": "Chủ sở hữu",
+    "Operation": "Thao tác"
   },
   "table": {
     "project": "Dự án",
@@ -350,12 +379,65 @@
     "addProject": "Thêm dự án",
     "updateProject": "Cập nhật dự án",
     "directions": "Chỉ đường",
-    "upload":"Tải lên",
-    "entercode":"Nhập mã dự án",
-    "entername":"Nhập tên dự án",
-    "enterd":"Nhập mô tả",
-    "enterf":"Nhập lĩnh vực"
+    "upload": "Tải lên",
+    "entercode": "Nhập mã dự án",
+    "entername": "Nhập tên dự án",
+    "enterd": "Nhập mô tả",
+    "enterf": "Nhập lĩnh vực"
+  },
+  "WITHDRAW": {
+    "SEARCH": "Tìm kiếm",
+    "SEARCH_PLACEHOLDER": "Nhập chữ ký giao dịch",
+    "TITLE": "Chi tiết giao dịch",
+    "Field": "Các trường",
+    "VALUE": "Giá trị",
+    "blockTime": "Thời gian khối",
+    "LOGS": "Nhật ký",
+    "MEMO": "Ghi chú",
+    "SENDER": "Người gửi",
+    "RECIPIENT": "Người nhận",
+    "transactionAmount": "Số tiền giao dịch",
+    "USER": "Tên người dùng",
+    "BANKNAME": "Tên ngân hàng",
+    "accountHolderName": "Tên chủ tài khoản",
+    "requestTime": "Thời gian yêu cầu",
+    "approvalTime": "Thời gian phê duyệt",
+    "signature": "Chữ ký",
+    "Status": "Trạng thái",
+    "Operation": "Thao tác",
+    "APPROVAL": "Duyệt",
+    "nzNotFoundContent": "Không tìm thấy dữ liệu",
+    "nzDescription": "Chi tiết về chữ ký giao dịch",
+    "h2": "Danh sách yêu cầu rút tiền"
+  },
+  "CART":{
+    "SHOPPING_CART": "Giỏ hàng",
+    "PRODUCT_INFO": "Thông tin sản phẩm",
+    "PRICE": "Đơn giá",
+    "QUANTITY": "Số lượng",
+    "TOTAL": "Thành tiền",
+    "ACTIONS": "Thao tác",
+     "REMOVE": "Xóa",
+    "VIEW": "Xem",
+     "TOTAL_PRICE": "Tổng tiền",
+     "CHECKOUT": "Thanh toán"
+  },
+  "TRADE": {
+    "PROJECT_NAME": "Tên Dự Án",
+    "COMPANY_NAME": "Tên Công Ty",
+    "QUANTITY": "Số Lượng Bán",
+    "PRICE": "Giá bán",
+    "TOKEN_ADDRESS": "Địa Chỉ Token",
+    "STATUS": "Tình trạng sản phẩm",
+    "PROJECT_DESCRIPTION": "Mô Tả Dự Án",
+    "APPROVAL_STATUS": "Trạng Thái Phê Duyệt",
+    "TYPE_NAME": "Loại Dự Án",
+    "OPERATION": "Thao Tác",
+    "ACTIVE": "Hoạt Động",
+    "INACTIVE": "Không Hoạt Động",
+    "APPROVE": "Phê Duyệt",
+    "NO_DATA": "Không Có Dữ Liệu",
+    "FIELD": "Lĩnh Vực",
+    "standardName": "Tiêu Chuẩn"
   }
-  
-  }
-  
+}

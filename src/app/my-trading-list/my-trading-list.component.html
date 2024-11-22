@@ -1,0 +1,162 @@
+<nz-select [(ngModel)]="selectedProjectId" (ngModelChange)="onProjectChange($event)"
+  nzPlaceHolder="Chọn dự án để lấy danh sách trades" style="width: 100%;" name="projectId">
+  <nz-option *ngFor="let project of projects" [nzValue]="project.value" [nzLabel]="project.label"></nz-option>
+</nz-select>
+<button nz-button nzType="primary" (click)="openAddTradeModal()">Thêm</button>
+<div *ngIf="newTrade.mintToken || newTrade.tokenAddress || newTrade.balance">
+  <nz-row [nzGutter]="16">
+    <nz-col nzSpan="8">
+      <strong>Loại TC:</strong> {{ newTrade.mintToken || 'Chưa có dữ liệu' }}
+    </nz-col>
+    <nz-col nzSpan="8">
+      <strong>Ví TC:</strong> {{ newTrade.tokenAddress || 'Chưa có dữ liệu' }}
+    </nz-col>
+    <nz-col nzSpan="8">
+      <strong>SL tồn:</strong> {{ newTrade.balance || 'Chưa có dữ liệu' }}
+    </nz-col>
+  </nz-row>
+  <nz-row [nzGutter]="16">
+    <nz-col nzSpan="8">
+      <strong>Số lượng lên sàn:</strong> {{ totalQuantity || 'Chưa có dữ liệu' }}
+    </nz-col>
+    <nz-col nzSpan="8">
+      <strong>Sl chưa lên sàn:</strong> 
+      {{ calculateRemainingQuantity(newTrade.balance, totalQuantity) || 0 }}
+    </nz-col>
+  </nz-row>
+</div>
+
+<div *ngIf="trades.length > 0; else noData">
+  <nz-table #basicTable [nzData]="trades" [nzBordered]="true" [nzPageSize]="pageSize" [nzScroll]="{ x: '1100px' }"
+    [nzShowPagination]="true" [nzTotal]="trades.length" [nzPageIndex]="pageIndex"
+    (nzPageIndexChange)="onPageChange($event)" ngSkipHydration>
+    <thead>
+      <tr>
+        <th nzColumnKey="projectName" style="text-align: center;">{{ 'TRADE.PROJECT_NAME' | translate }}</th>
+        <th nzColumnKey="typeName" style="text-align: center;">{{ 'TRADE.TYPE_NAME' | translate }}</th>
+        <th nzColumnKey="field" style="text-align: center;">{{ 'TRADE.FIELD' | translate }}</th>
+        <th nzColumnKey="standardName" style="text-align: center;">{{ 'TRADE.standardName' | translate }}</th>
+        <th nzColumnKey="quantity" style="text-align: center;">{{ 'TRADE.QUANTITY' | translate }}</th>
+        <th nzColumnKey="price" style="text-align: center;">{{ 'TRADE.PRICE' | translate }}</th>
+        <th nzColumnKey="price" style="text-align: center;">Giá mua</th>
+        <th nzColumnKey="price" style="text-align: center;">Mua từ </th>
+        <th nzColumnKey="status" style="text-align: center;width: 100px;">{{ 'TRADE.STATUS' | translate }}</th>
+        <th nzColumnKey="approvalStatus" style="text-align: center;">{{ 'TRADE.APPROVAL_STATUS' | translate }}</th>
+        <th nzColumnKey="action" style="text-align: center;width: 150px;" nzRight>{{ 'TRADE.OPERATION' | translate }}
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let trade of trades.slice((pageIndex - 1) * pageSize, pageIndex * pageSize)">
+        <td>{{ trade.projectName }}</td>
+        <td>{{ trade.typeName }}</td>
+        <td>{{ trade.field }}</td>
+        <td>{{ trade.standardName }}</td>
+        <td>{{ trade.quantity }}</td>
+        <td>{{ trade.price }}</td>
+        <td>{{ trade.purchasePrice }}</td>
+        <td>{{ trade.purchasedFrom }}</td>
+        <td>
+          <nz-tag [nzColor]="trade.status === 'false' ? 'red' : 'green'">
+            {{ trade.status === 'false' ? 'Đã bán hết' : 'Còn hàng' }}
+          </nz-tag>
+        </td>
+        <td>
+          <nz-tag [nzColor]="trade.approvalStatus === 'CHOXULY' ? 'red' : 'green'">
+            {{ trade.approvalStatus === 'CHOXULY' ? 'Chờ xử lý' : 'Đã xử lý' }}
+          </nz-tag>
+        </td>
+        <td nzRight>
+          <span nz-icon nzType="form" nzTheme="outline" class="table-icon" (click)="openUpdateModal(trade)"></span>
+          <nz-divider nzType="vertical" class="nz-divider"></nz-divider>
+          <span nz-icon nzType="delete" nzTheme="outline" class="table-icon"
+            (click)="deleteTrade(trade.tradeId)"></span>
+        </td>
+      </tr>
+    </tbody>
+
+  </nz-table>
+</div>
+
+<ng-template #noData>
+  <p>{{ 'TRADE.NO_DATA' | translate }}</p>
+</ng-template>
+
+<ng-template #updateTradeTemplate>
+  <form nz-form>
+    <nz-form-item>
+      <nz-form-label [nzSpan]="6">Giá mới</nz-form-label>
+      <nz-form-control [nzSpan]="18" nzHasFeedback>
+        <input 
+          nz-input 
+          [(ngModel)]="updatedPrice" 
+          placeholder="Nhập giá mới" 
+          name="price" 
+          required
+          #price="ngModel" 
+          [ngModelOptions]="{standalone: true}" />
+        <nz-form-explain *ngIf="price.invalid && price.touched">Giá mới không thể để trống</nz-form-explain>
+      </nz-form-control>
+    </nz-form-item>    
+    <nz-form-item>
+      <nz-form-label [nzSpan]="6">Trạng thái phê duyệt</nz-form-label>
+      <nz-form-control [nzSpan]="18">
+        <nz-select [(ngModel)]="updatedApprovalStatus" nzPlaceHolder="Chọn trạng thái" name="approvalStatus">
+          <nz-option *ngFor="let status of approvalStatuses" [nzValue]="status.value"
+            [nzLabel]="status.label"></nz-option>
+        </nz-select>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSpan]="6">Số lượng</nz-form-label>
+      <nz-form-control [nzSpan]="18">
+        <div class="input-group">
+          <button nz-button nzType="default" (click)="decreaseQuantity()">Giảm</button>
+          <input nz-input type="number" [(ngModel)]="updatedQuantity" name="quantity" placeholder="Nhập số lượng mới"
+            [min]="0" [max]="balance" (ngModelChange)="onQuantityChange($event)" />
+          <button nz-button nzType="default" (click)="increaseQuantity()">Tăng</button>
+        </div>
+      </nz-form-control>
+    </nz-form-item>
+
+    <nz-form-item>
+      <nz-form-label [nzSpan]="6">Trạng thái</nz-form-label>
+      <nz-form-control [nzSpan]="18">
+        <nz-select [(ngModel)]="updatedStatus" nzPlaceHolder="Chọn trạng thái" name="status">
+          <nz-option *ngFor="let status of statusOptions" [nzValue]="status.value" [nzLabel]="status.label"></nz-option>
+        </nz-select>
+      </nz-form-control>
+    </nz-form-item>
+
+  </form>
+</ng-template>
+<nz-modal nzTitle="Thêm giao dịch" [nzFooter]="null">
+  <ng-template #addTradeTemplate>
+    <form nz-form #tradeForm="ngForm">
+      <nz-form-item>
+        <nz-form-label [nzSpan]="6">Dự án</nz-form-label>
+        <nz-form-control [nzSpan]="18" [nzValidateStatus]="mintProjectId ? 'success' : 'error'">
+          <nz-select [(ngModel)]="mintProjectId" (ngModelChange)="onMintProjectChange()"
+            nzPlaceHolder="Chọn dự án để lấy mint tokens" style="width: 100%;" name="mintProjectId" required>
+            <nz-option *ngFor="let project of projects" [nzValue]="project.value" [nzLabel]="project.label"></nz-option>
+          </nz-select>
+          <nz-form-explain *ngIf="tradeForm.submitted && !mintProjectId">Dự án không được để trống</nz-form-explain>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label [nzSpan]="6">Mint Token</nz-form-label>
+        <nz-form-control [nzSpan]="18">
+          <input nz-input [(ngModel)]="newTrade.mintToken" placeholder="Mint Token sẽ được hiển thị ở đây"
+            name="mintToken" disabled />
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-control [nzSpan]="18" nzOffset="6">
+          <button nz-button nzType="primary" (click)="addTrade()" [disabled]="!tradeForm.valid">Thêm giao dịch</button>
+        </nz-form-control>
+      </nz-form-item>
+    </form>
+  </ng-template>
+</nz-modal>
+

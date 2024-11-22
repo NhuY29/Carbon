@@ -28,7 +28,6 @@
       }
     }
   }
-  /* common-category.component.scss */
 .overlay {
   position: fixed;
   top: 0;
@@ -57,7 +56,7 @@
   border-radius: 4px;
   transition: background-color 0.3s ease, color 0.3s ease;
   text-align: center;
-  line-height: 1.5; /* Adjust as needed to vertically center the text */
+  line-height: 1.5;
 
   &:hover {
     background-color: #40a9ff;
@@ -69,7 +68,7 @@
   background-color: #f5222d;
   color: #fff;
   text-align: center;
-  line-height: 1.5; /* Adjust as needed to vertically center the text */
+  line-height: 1.5; 
 
   &:hover {
     background-color: #ff4d4f;

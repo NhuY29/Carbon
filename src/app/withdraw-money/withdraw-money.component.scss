@@ -13,4 +13,13 @@
     font-weight: bold;
     color: #333;
   }
+  .search-container {
+    display: flex;
+    align-items: center; 
+    gap: 8px; 
+  }
+  
+  .search-container input[nz-input] {
+    flex: 1; 
+  }
   

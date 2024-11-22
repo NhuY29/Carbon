@@ -9,20 +9,15 @@
 
 <body>
   <div>
-    <label>Nhập giá:</label>
-    <input type="number" nz-input [(ngModel)]="price" placeholder="Nhập giá" />
-  </div>
-  
-  <div>
     <button nz-button nzType="primary" (click)="exportToPDF()">
       <span nz-icon nzType="printer" nzTheme="outline"></span> Xuất PDF
     </button>
   
-    <button nz-button nzType="primary" (click)="SendexportToPDF()" [disabled]="!price">
+    <button nz-button nzType="primary" (click)="SendexportToPDF()">
       <span nz-icon nzType="printer" nzTheme="outline"></span> Phản hồi yêu cầu
     </button>
   </div>
-
+  
   
   <div class="container" *ngIf="project" #pdfContent>
     <div class="header">

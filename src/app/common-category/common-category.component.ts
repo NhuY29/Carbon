@@ -55,8 +55,8 @@ export class CommonCategoryComponent implements OnInit {
   showForm = false; 
   isEditing = false;
   selectedCategory: CommonCategoryRequest | null = null; 
-  filteredCategories: CommonCategoryRequest[] = []; // Mảng dữ liệu sau khi lọc
-  searchTerm: string = ''; // Từ khóa tìm kiếm
+  filteredCategories: CommonCategoryRequest[] = [];
+  searchTerm: string = ''; 
   category = ''; 
   isWalletActive: boolean = true;
   constructor( public translate: TranslateService,private fb: FormBuilder, private apiService: ApiService, private message: NzMessageService, private modal: NzModalService ) {
@@ -94,8 +94,6 @@ export class CommonCategoryComponent implements OnInit {
       }
     });
   }
-
-  // Load tất cả categories ban đầu
   loadAllCategories(): void {
     this.apiService.getAllCategories().subscribe({
       next: (response) => {
@@ -128,13 +126,11 @@ export class CommonCategoryComponent implements OnInit {
   onSubmit(): void {
     if (this.categoryForm.valid) {
       const categoryDTO = this.categoryForm.value;
-  
-      // Nếu loại không phải LOAI_HINH hoặc TIEU_CHUAN, gán unit là "tấn"
+
       if (categoryDTO.category === 'LOAI_HINH' || categoryDTO.category === 'TIEU_CHUAN') {
-        categoryDTO.unit = null; // Nếu cần thiết, bạn có thể xóa unit
-        categoryDTO.conversionPrice = null; // Và cũng xóa conversionPrice nếu cần
+        categoryDTO.unit = null; 
+        categoryDTO.conversionPrice = null; 
       } else {
-        // Đặt unit mặc định là "tấn"
         categoryDTO.unit = 'tấn';
       }
   

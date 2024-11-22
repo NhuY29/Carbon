@@ -175,25 +175,6 @@ export class ProjectComponent implements OnInit {
     });
   }
 
-  // getDirections(): void {
-  //   if (this.initialCoordinates.length > 0) {
-  //     const destination = this.initialCoordinates[0];
-
-  //     this.mapComponent.locateUser().then((currentLocation) => {
-  //       if (currentLocation) {
-  //         this.mapComponent.calculateRoute(destination);
-  //       } else {
-  //         this.message.error('Unable to get current location.');
-  //       }
-  //     }).catch((error) => {
-  //       console.error('Error locating user:', error);
-  //       this.message.error('Error locating user.');
-  //     });
-  //   } else {
-  //     this.message.warning('Please draw a point on the map first.');
-  //   }
-  // }
-
   handleChange(info: any): void {
     if (info.file.status === 'done' || info.file.status === 'uploading') {
       this.selectedFiles = info.fileList.map((file: any) => file.originFileObj || file);
@@ -204,14 +185,11 @@ export class ProjectComponent implements OnInit {
 
   onSubmit(): void {
     if (this.projectForm.valid) {
-      // Kiểm tra tọa độ
       const coordinates = this.projectForm.get('coordinates')?.value || [];
       if (coordinates.length === 0) {
         this.message.error('Please add at least one coordinate.');
         return;
       }
-
-      // Tạo đối tượng FormData để gửi dữ liệu
       const formData = new FormData();
       formData.append('projectName', this.projectForm.get('projectName')?.value || '');
       formData.append('projectDescription', this.projectForm.get('projectDescription')?.value || '');
@@ -223,7 +201,6 @@ export class ProjectComponent implements OnInit {
       formData.append('standard', this.projectForm.get('standard')?.value || '');
       formData.append('field', this.projectForm.get('field')?.value || '');
 
-      // Thêm tọa độ vào FormData dưới dạng chuỗi JSON
       const coordinatesJson = JSON.stringify(coordinates);
       formData.append('coordinates', coordinatesJson);
 
@@ -270,7 +247,7 @@ export class ProjectComponent implements OnInit {
     this.projectForm.reset();
     this.selectedFiles = [];
     if (this.mapComponent) {
-      this.mapComponent.clearMap(); // Gọi clearMap để reset bản đồ
+      this.mapComponent.clearMap();
     }
   }
 

@@ -1,0 +1,102 @@
+.input-group {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.input-group button {
+    background-color: #1890ff;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+    margin: 0 5px;
+}
+
+.input-group button:hover {
+    background-color: #40a9ff;
+}
+
+.input-group input {
+    width: 80px;
+    text-align: center;
+    padding: 8px;
+    font-size: 16px;
+    border: 1px solid #d9d9d9;
+    border-radius: 4px;
+    margin: 0 5px;
+}
+
+.input-group input:focus {
+    border-color: #1890ff;
+    outline: none;
+}
+.table-icon {
+    font-size: 18px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    padding: 5px;
+  }
+  .table-icon[nzType="form"] {
+    color: #1890ff;
+  }
+  
+  .table-icon[nzType="form"]:hover {
+    color: #40a9ff;
+    transform: translateY(-2px); 
+  }
+
+  .table-icon[nzType="delete"] {
+    color: #ff4d4f; 
+  }
+  
+  .table-icon[nzType="delete"]:hover {
+    color: #ff7875;
+    transform: translateY(-2px); 
+  }
+  
+
+  .nz-divider {
+    margin: 0 8px; 
+    height: 20px;
+  }
+td {
+    text-align: center;
+    vertical-align: middle;
+  }
+
+  td[nzRight] {
+    text-align: center;
+  }
+  
+
+  nz-tag {
+    display: inline-block;
+    text-align: center;
+    width: 100%; 
+  }
+  .table-icon {
+    font-size: 18px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    padding: 5px;
+    margin: 0 8px;
+  }
+
+  .table-icon[nzType="form"]:hover {
+    color: #40a9ff; 
+    transform: translateY(-2px);
+  }
+  
+  .table-icon[nzType="delete"]:hover {
+    color: #ff7875; 
+    transform: translateY(-2px);
+  }
+
+  .nz-divider {
+    height: 20px;
+    margin: 0 8px;
+  }
+    

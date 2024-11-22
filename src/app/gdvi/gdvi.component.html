@@ -37,46 +37,39 @@
         <button nz-button nzType="primary" (click)="openSendForm()">
             <i nz-icon nzType="send" nzTheme="outline"></i> {{ 'GDVI.SEND' | translate }}
         </button>
-        <button nz-button nzType="primary">
-            <i nz-icon nzType="retweet" nzTheme="outline"></i> {{ 'GDVI.SWAP' | translate }}
-        </button>
-        <button nz-button nzType="primary">
-            <i nz-icon nzType="money-collect" nzTheme="outline"></i> {{ 'GDVI.BUY' | translate }}
-        </button>
         <button nz-button nzType="primary" (click)="showDepositForm()">
             <i nz-icon nzType="plus" nzTheme="outline"></i> {{ 'GDVI.DEPOSIT' | translate }}
         </button>
         <button nz-button nzType="primary" (click)="showWithdrawalForm()">
             <i nz-icon nzType="minus" nzTheme="outline"></i> {{ 'GDVI.WITHDRAW' | translate }}
         </button>
-        
+
     </div>
 </div>
 
 <div *ngIf="isDepositFormVisible" class="overlay" (click)="hideDepositForm()">
     <div class="deposit-form-container" (click)="$event.stopPropagation()">
-        <!-- Nút Đóng -->
         <button class="close-button" (click)="hideDepositForm()">&times;</button>
-        
+
         <h3>{{ 'GDVI.DEPOSIT_REQUEST' | translate }}</h3>
-        
+
         <form (ngSubmit)="onPay()" #paymentForm="ngForm">
             <div class="form-group">
                 <label for="amount">{{ 'GDVI.AMOUNT_VND' | translate }}</label>
                 <input class="form-control" id="amount" name="amount" type="text" [(ngModel)]="amount"
-                       (input)="formatAmount()" (keydown)="restrictNonNumeric($event)" required
-                       [placeholder]="'GDVI.ENTER_AMOUNT' | translate">
+                    (input)="formatAmount()" (keydown)="restrictNonNumeric($event)" required
+                    [placeholder]="'GDVI.ENTER_AMOUNT' | translate">
             </div>
-            
+
             <div *ngIf="errorMessage" class="alert alert-danger">
                 {{ errorMessage }}
             </div>
-            
+
             <button type="submit" class="btn btn-primary">{{ 'GDVI.PAY_REDIRECT' | translate }}</button>
         </form>
-        
+
         <p>&nbsp;</p>
-        
+
         <footer class="footer">
             <p>© VNPAY 2024</p>
         </footer>
@@ -99,6 +92,7 @@
         <button nz-button nzType="default" (click)="closeQRCode()">{{ 'GDVI.CLOSE' | translate }}</button>
     </div>
 </div>
+
 
 <div *ngIf="SendVisible" class="send-form-overlay" (click)="closeSendForm()"></div>
 <div *ngIf="SendVisible" class="send-form-modal">
@@ -152,7 +146,7 @@
 
         <nz-form-item>
             <nz-form-control [nzSpan]="18" [nzOffset]="6">
-                <button nz-button nzType="primary" type="submit">{{ 'GDVI.SEND' | translate }}</button>
+                <button nz-button nzType="primary" type="submit" style="width: 100%;">{{ 'GDVI.SEND' | translate }}</button>
             </nz-form-control>
         </nz-form-item>
     </form>
@@ -164,28 +158,26 @@
 
 <div *ngIf="isWithdrawalFormVisible" class="withdrawal-form-modal">
     <button class="close-button" (click)="hideWithdrawalForm()">&times;</button>
-    
-    <div class="withdrawal-form">
-        <h2>Yêu cầu rút tiền</h2>
-        
-        <form (ngSubmit)="submitWithdrawal()">
-            <label>Số tiền:</label>
-            <input type="number" [(ngModel)]="amountWithdrawal" name="amountWithdrawal" required />
-            
 
-            <label>Tên ngân hàng:</label>
+    <div class="withdrawal-form">
+        <h2>{{ 'GDVI.REQUEST' | translate }}</h2>
+
+        <form (ngSubmit)="submitWithdrawal()">
+            <label>{{ 'GDVI.AMOUNT' | translate }}</label>
+            <input type="number" [(ngModel)]="amountWithdrawal" name="amountWithdrawal" required />
+
+
+            <label>{{ 'GDVI.BANK' | translate }}</label>
             <input type="text" [(ngModel)]="bankName" name="bankName" required />
 
-            <label>Số tài khoản:</label>
+            <label>{{ 'GDVI.ACCOUNT' | translate }}</label>
             <input type="text" [(ngModel)]="bankAccountNumber" name="bankAccountNumber" required />
 
-            <label>Tên chủ tài khoản:</label>
+            <label>{{ 'GDVI.HOLDER' | translate }}</label>
             <input type="text" [(ngModel)]="accountHolderName" name="accountHolderName" required />
-            <button type="submit" class="btn btn-primary">Xác nhận</button>
+            <button type="submit" class="btn btn-primary">{{ 'GDVI.CONFIRM' | translate }}</button>
         </form>
 
         <p *ngIf="message">{{ message }}</p>
     </div>
 </div>
-
-

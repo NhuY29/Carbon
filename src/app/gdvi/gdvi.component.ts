@@ -144,10 +144,8 @@ export class GDViComponent implements OnInit {
         ).subscribe({
           next: (response) => {
             if (response.status === 'failure') {
-              // Nếu status là "failure", hiển thị thông báo lỗi
               this.messageService.error(response.message || 'An error occurred during the withdrawal process.');
             } else {
-              // Nếu status là "success", hiển thị thông báo thành công
               this.messageService.success(response.message || 'Withdrawal request submitted successfully!');
               this.hideWithdrawalForm();
             }

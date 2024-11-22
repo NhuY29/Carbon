@@ -1,7 +1,6 @@
 <html lang="vi">
 
 <head>
-    <!-- --------------------------------------------------------------- -->
     <meta charset="UTF-8">
     <meta name="theme-color" content="#f02b2b">
     <link rel="canonical" href="https://all-green.mysapo.net/">
@@ -111,18 +110,20 @@
                                 <div class="carthd">
                                     <div class="mini-cart text-xs-center">
                                         <div class="icon_cart heading-cart cart_header">
-                                            <a class="img_hover_cart" title="Giỏ hàng" onclick="window.location.href='/cart'">
+                                            <a class="img_hover_cart" title="Giỏ hàng"
+                                                onclick="window.location.href='/cart'">
                                                 <div class="icon_hotline">
                                                     <i class="fas fa-shopping-basket iconcart"></i>
                                                     <div class="border_count">
-                                                        <span class="count_item count_item_pr">{{ cartItemCount }}</span>
+                                                        <span class="count_item count_item_pr">{{ cartItemCount
+                                                            }}</span>
                                                     </div>
                                                     <span class="text_gh hidden-xs">Giỏ hàng</span>
                                                 </div>
                                             </a>
                                         </div>
                                     </div>
-                                </div>                                
+                                </div>
 
                             </div>
                         </div>
@@ -134,7 +135,7 @@
         </div>
 
         <div class="bodywrap clearfix">
-            <h1 class="d-none">All Green - </h1>
+            <h1 class="d-none"></h1>
             <section class="awe-section-1">
                 <div class="section_slider clearfix">
                     <div class="container">
@@ -162,7 +163,7 @@
                         <div class="tab-link item has-content current" data-tab="tab-1">
                             <div class="titlemodule a-center section">
                                 <h2>
-                                   MỚI NHẤT
+                                    MỚI NHẤT
                                 </h2>
                             </div>
                         </div>
@@ -207,7 +208,7 @@
                         <div class="tab-link item has-content current" data-tab="tab-1">
                             <div class="titlemodule a-center section">
                                 <h2>
-                                   DANH SÁCH CÁC SẢN PHẨM
+                                    DANH SÁCH CÁC SẢN PHẨM
                                 </h2>
                             </div>
                         </div>
@@ -328,11 +329,8 @@
                     <div class="head-qv group-status">
                         <p class="qwp-name title-product">Loại hình: {{ selectedTrade.standardName }}</p>
                     </div>
-                    <div class="head-qv group-status">
-                        <p class="qwp-name title-product">Số lượng: {{ selectedTrade.quantity }}</p>
-                    </div>
                     <div class="special-price">
-                        <span class="price product-price">Số lượng còn lại: {{ remainingQuantity }}</span>
+                        <span class="price product-price">Số lượng còn lại: {{ selectedTrade.quantity }}</span>
                     </div>
 
                     <div class="product-description product-summary">
@@ -378,7 +376,7 @@
                                     <span>Giá: {{ selectedTrade?.price | currency: 'VND' : 'symbol' : '3.0-0' }}</span>
                                 </h4>
                                 <h4 class="product-remaining-quantity">
-                                    <span>Số lượng còn lại: {{ remainingQuantity | number: '1.0-0' }} </span>
+                                    <span>Số lượng còn lại: {{ selectedTrade.quantity }}</span>
                                 </h4>
                                 <div class="variant_title"><span></span></div>
                                 <div class="input-group quantity-input-group">
@@ -424,5 +422,5 @@
         </div>
     </div>
 </div>
-
 </html>
+

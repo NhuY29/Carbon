@@ -1,0 +1,33 @@
+<div class="withdrawal-list">
+  <h2>{{ 'WITHDRAW.h2' | translate }}</h2>
+  <nz-table #basicTable [nzData]="withdrawals" [nzBordered]="true"
+  [nzPageSize]="pageSize" [nzScroll]="{ x: '1100px' }" [nzShowPagination]="true" [nzTotal]="withdrawals.length" [nzPageIndex]="pageIndex" (nzPageIndexChange)="onPageChange($event)" ngSkipHydration>
+
+    <thead>
+      <tr>
+        <th nzColumnKey="user" style="text-align: center; ">{{ 'WITHDRAW.USER' | translate }}</th>
+        <th nzColumnKey="bankName" style="text-align: center;">{{ 'WITHDRAW.BANKNAME' | translate }}</th>
+        <th nzColumnKey="accountHolderName" style="text-align: center;">{{ 'WITHDRAW.accountHolderName' | translate }}</th>
+        <th nzColumnKey="requestTime" style="text-align: center;">{{ 'WITHDRAW.requestTime' | translate }}</th>
+        <th nzColumnKey="approvalTime" style="text-align: center;">{{ 'WITHDRAW.approvalTime' | translate }}</th> 
+        <th nzColumnKey="requestTime" style="text-align: center;width: 400px;">{{ 'WITHDRAW.signature' | translate }}</th>
+        <th nzColumnKey="status" style="text-align: center;width: 100px;" nzRight>{{ 'WITHDRAW.Status' | translate }}</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let withdrawal of withdrawals.slice((pageIndex - 1) * pageSize, pageIndex * pageSize)">
+          <td>{{ withdrawal.user.username }}</td>
+          <td>{{ withdrawal.bankName }}</td>
+          <td>{{ withdrawal.accountHolderName }}</td>
+          <td style="text-align: center;">{{ withdrawal.requestTime }}</td>
+          <td style="text-align: center;">{{ withdrawal.approvalTime}}</td> 
+          <td style="text-align: center;">{{ withdrawal.transactionSignature }}</td>
+          <td>
+            <nz-tag [nzColor]="withdrawal.status === 'DAXULY' ? 'green' : 'red'">
+              {{ withdrawal.status }}
+            </nz-tag>
+          </td>
+      </tr>
+    </tbody>
+  </nz-table>
+</div>

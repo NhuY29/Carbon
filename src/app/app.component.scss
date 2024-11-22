@@ -114,18 +114,18 @@ ul[nz-menu] li:last-child {
 }
 .app-header {
   display: flex;
-  align-items: center; /* Canh giữa theo chiều dọc */
-  justify-content: space-between; /* Giữa phần trigger và các menu item */
+  align-items: center; 
+  justify-content: space-between; 
   width: 100%;
-  padding: 0 24px; /* Thêm padding bên trái và bên phải */
+  padding: 0 24px; 
 }
 
 .header-trigger {
-  display: flex; /* Đảm bảo là flex để dễ dàng canh giữa */
-  align-items: center; /* Canh giữa nội dung bên trong */
+  display: flex;
+  align-items: center;
   cursor: pointer;
 }
 
 .header-trigger .trigger {
-  font-size: 20px; /* Kích thước icon */
+  font-size: 20px; 
 }

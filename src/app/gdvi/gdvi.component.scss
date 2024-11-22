@@ -50,13 +50,13 @@
     height: 100px;
     border: none;
     border-radius: 10%;
-    background-color: #ccc;
-    color: #6a0dad;
+    background-color:	#B0C4DE;
+    color: black;
 
     &:hover {
-        background-color: #1890ff;
+        background-color: #ccc;
         transform: scale(1.05);
-        color: #fff;
+        color: black;
     }
 }
 
@@ -92,31 +92,51 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
+    background: rgba(0, 0, 0, 0.5); 
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 1000;
-}
-
-.qr-code-content {
-    background: white;
-    padding: 20px;
+    z-index: 1000; 
+  }
+  
+  .qr-code-content {
+    background: #fff;
+    padding: 24px;
     border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-}
-
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); 
+    text-align: center;
+    max-width: 320px;
+    width: 100%;
+  }
+  
+  .qr-code-content h3 {
+    margin-bottom: 16px;
+    font-size: 18px;
+    color: #333;
+  }
+  
+  .qr-code-content nz-qrcode {
+    margin-bottom: 16px;
+  }
+  
+  .qr-code-content button {
+    margin-top: 16px;
+    width: 100%;
+  }
+  
 .send-form-modal {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 500px;
-    background-color: #fff;
-    border-radius: 12px;
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
-    z-index: 1000;
-    padding: 20px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 90%;
+  max-width: 600px;
+  background: #fff;
+  border-radius: 8px;
+  padding: 24px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  z-index: 1001;
+  overflow: hidden;
 }
 
 .send-form-overlay {
@@ -125,22 +145,54 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.6);
-    z-index: 999;
-}
+    background: rgba(0, 0, 0, 0.5); 
+    z-index: 1000; 
+  }
+  
 
-.account-info {
+  .account-info {
+    text-align: center;
     margin-bottom: 20px;
-    padding: 15px;
-    background-color: #f7f9fc;
-    border: 1px solid #e8e8e8;
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-nz-form-item {
-    margin-bottom: 15px;
-}
+  }
+  
+  .account-info h3, .account-info h4, .account-info p {
+    margin: 0;
+    font-weight: normal;
+  }
+  
+  .account-info h3 {
+    font-size: 18px;
+    color: #333;
+    margin-bottom: 8px;
+  }
+  
+  .account-info h4 {
+    font-size: 16px;
+    color: #666;
+  }
+  
+  .account-info p {
+    font-size: 14px;
+    color: #888;
+  }
+  form nz-form-item {
+    margin-bottom: 16px;
+  }
+  input[nz-input], textarea[nz-input] {
+    width: 100%;
+    padding: 8px;
+    font-size: 14px;
+    border-radius: 4px;
+    border: 1px solid #d9d9d9;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+    transition: border-color 0.2s ease;
+  }
+  
+  input[nz-input]:focus, textarea[nz-input]:focus {
+    border-color: #1890ff;
+    outline: none;
+  }
+  
 
 h3 {
     margin: 0;
@@ -153,10 +205,12 @@ h4 {
 }
 
 button[nz-button] {
-    width: 100%;
-    border-radius: 6px;
+  width: 100px;
+  height: 40px;
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 4px;
 }
-
 button[nz-button]:hover {
     opacity: 0.8;
 }
@@ -179,17 +233,16 @@ textarea[nz-input]:focus {
     position: absolute;
     top: 10px;
     right: 10px;
-    background: none;
+    background: transparent;
     border: none;
     font-size: 24px;
     cursor: pointer;
-    color: #aaa;
-
-    &:hover {
-        color: #000;
-    }
-}
-
+    color: #888;
+    transition: color 0.2s ease;
+  }
+  .close-button:hover {
+    color: #333;
+  }
 .qr-code-scanner-modal {
     position: fixed;
     top: 0;
@@ -263,7 +316,11 @@ textarea[nz-input]:focus {
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     margin-top: -15px;
 }
-
+button[nz-button][nzType="primary"] {
+    margin-top: 20px;
+    padding: 0px;
+  }
+  
 zxing-scanner {
     width: 300px;
     height: auto;
@@ -280,10 +337,21 @@ zxing-scanner {
 }
 
 .contact-button {
-    max-width: 50px;
-    padding: 0 16px;
-    height: 45px;
-}
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 8px;
+    background: #e6f7ff;
+    border: none;
+    color: #1890ff;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    
+  }
+  
+  .contact-button:hover {
+    background-color: #bae7ff;
+  }
 
 .overlay {
     position: fixed;
@@ -362,21 +430,6 @@ zxing-scanner {
     }
   }
   
-  .btn-primary {
-    width: 100%;
-    padding: 10px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 16px;
-  
-    &:hover {
-      background-color: #0056b3;
-    }
-  }
-  
   .footer {
     text-align: center;
     margin-top: 20px;
@@ -386,18 +439,16 @@ zxing-scanner {
       color: #777;
     }
   }     
-  /* Overlay Background */
 .overlay {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.5); /* Hiệu ứng mờ cho nền */
+    background-color: rgba(0, 0, 0, 0.5); 
     z-index: 10;
 }
 
-/* Modal Container */
 .withdrawal-form-modal {
     position: fixed;
     top: 50%;
@@ -406,79 +457,81 @@ zxing-scanner {
     background-color: #fff;
     padding: 30px;
     width: 90%;
-    max-width: 400px;
+    max-width: 600px;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     z-index: 20;
 }
-
-/* Close Button */
 .close-button {
     position: absolute;
     top: 10px;
     right: 10px;
-    background: none;
+    background: transparent;
     border: none;
     font-size: 24px;
-    cursor: pointer;
     color: #888;
-}
-
+    cursor: pointer;
+    transition: color 0.3s ease;
+  }
+  
 .close-button:hover {
     color: #333;
 }
-
-/* Form Styling */
-.withdrawal-form h2 {
-    text-align: center;
-    color: #333;
-    font-size: 1.5rem;
+  .withdrawal-form h2 {
     margin-bottom: 20px;
-}
+    font-size: 24px;
+    color: #333;
+  }
 
-.withdrawal-form label {
+  .withdrawal-form label {
     display: block;
-    font-size: 0.9rem;
-    color: #555;
+    font-size: 14px;
+    color: #666;
+    margin-top: 15px;
     margin-bottom: 5px;
-}
+    text-align: left;
+  }
 
-.withdrawal-form input {
-    width: 100%;
-    padding: 8px;
-    margin-bottom: 15px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    box-sizing: border-box;
-    font-size: 1rem;
-}
-
-/* Submit Button */
-.withdrawal-form button[type="submit"] {
+  .withdrawal-form input[type="text"],
+  .withdrawal-form input[type="number"] {
     width: 100%;
     padding: 10px;
-    font-size: 1rem;
+    border: 1px solid #d9d9d9;
+    border-radius: 5px;
+    font-size: 14px;
+    box-sizing: border-box;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+    transition: border-color 0.3s ease;
+  }
+  
+  .withdrawal-form input[type="text"]:focus,
+  .withdrawal-form input[type="number"]:focus {
+    border-color: #1890ff;
+    outline: none;
+  }
+  
+  .btn-primary {
+    width: 100%;
+    margin-top: 20px;
+    padding: 10px;
+    font-size: 16px;
     color: #fff;
-    background-color: #007bff;
+    background-color: #1890ff;
     border: none;
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s ease;
-}
+  }
+  
+  .btn-primary:hover {
+    background-color: #40a9ff;
+  }
+  .withdrawal-form p {
+    margin-top: 15px;
+    font-size: 14px;
+    color: #e63946;
+  }
 
-.withdrawal-form button[type="submit"]:hover {
-    background-color: #0056b3;
-}
-
-/* Message Styling */
-.withdrawal-form p {
-    text-align: center;
-    color: #28a745;
-    font-size: 1rem;
-    margin-top: 10px;
-}
-
-/* Overlay Background */
 .overlay {
     position: fixed;
     top: 0;
@@ -491,8 +544,6 @@ zxing-scanner {
     justify-content: center;
     align-items: center;
 }
-
-/* Deposit Form Container */
 .deposit-form-container {
     position: relative;
     background-color: #fff;
@@ -503,8 +554,6 @@ zxing-scanner {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     z-index: 20;
 }
-
-/* Close Button */
 .close-button {
     position: absolute;
     top: 10px;
@@ -519,8 +568,6 @@ zxing-scanner {
 .close-button:hover {
     color: #333;
 }
-
-/* Form Group and Button Styling */
 .form-group label {
     font-size: 1rem;
     color: #555;
@@ -551,7 +598,6 @@ zxing-scanner {
     background-color: #0056b3;
 }
 
-/* Footer Styling */
 .footer {
     text-align: center;
     font-size: 0.9rem;

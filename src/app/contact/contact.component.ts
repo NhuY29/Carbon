@@ -60,20 +60,20 @@ export class ContactComponent {
 }
   private longPressTimer: any;
   private longPressDuration: number = 500; 
-  private longPressedContact: Contact | null = null; // Thêm biến để lưu thông tin liên hệ đã nhấn lâu
+  private longPressedContact: Contact | null = null; 
   
   startLongPress(contact: Contact): void {
-    this.longPressedContact = contact; // Lưu thông tin liên hệ đã nhấn lâu
+    this.longPressedContact = contact; 
     this.longPressTimer = setTimeout(() => {
       if (this.longPressedContact) {
-        this.confirmDeleteContact(this.longPressedContact); // Gọi hàm xác nhận xóa
+        this.confirmDeleteContact(this.longPressedContact); 
       }
     }, this.longPressDuration);
   }
   
   endLongPress(): void {
-    clearTimeout(this.longPressTimer); // Xóa timer nếu nhấn không đủ lâu
-    this.longPressedContact = null; // Đặt lại biến khi nhấn không đủ lâu
+    clearTimeout(this.longPressTimer); 
+    this.longPressedContact = null; 
   }
   
 
@@ -108,15 +108,13 @@ export class ContactComponent {
   deleteContact(id: string): void {
     this.contactService.deleteContact(id).subscribe(
       () => {
-        // Xóa liên hệ khỏi danh sách
         this.contacts = this.contacts.filter(c => c.contactId !== id);
         this.filteredContacts = this.filteredContacts.filter(c => c.contactId !== id);
-        // Hiển thị thông báo thành công
+
         this.messageService.success('Liên hệ đã được xóa thành công.');
       },
       error => {
         console.error('Error deleting contact', error);
-        // Hiển thị thông báo lỗi
         this.messageService.error('Lỗi khi xóa liên hệ: ' + (error.error?.message || 'Lỗi không xác định.'));
       }
     );

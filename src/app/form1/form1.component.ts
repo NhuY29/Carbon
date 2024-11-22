@@ -111,7 +111,7 @@ export class Form1Component implements OnInit {
   getFormattedDate(): string {
     const date = this.currentDate;
     const day = date.getDate();
-    const month = date.getMonth() + 1; // Months are zero-based
+    const month = date.getMonth() + 1; 
     const year = date.getFullYear();
     const daysOfWeek = ['Chủ nhật', 'Thứ hai', 'Thứ ba', 'Thứ tư', 'Thứ năm', 'Thứ sáu', 'Thứ bảy'];
     const dayOfWeek = daysOfWeek[date.getDay()];
@@ -129,30 +129,27 @@ export class Form1Component implements OnInit {
     const DATA = this.pdfContent.nativeElement;
 
     html2canvas(DATA).then(canvas => {
-        const fileWidth = 208; // Chiều rộng PDF (A4 - 210mm - padding)
-        const fileHeight = (canvas.height * fileWidth) / canvas.width; // Chiều cao tương ứng với kích thước ảnh
+        const fileWidth = 208;
+        const fileHeight = (canvas.height * fileWidth) / canvas.width; 
 
         const imgData = canvas.toDataURL('image/png');
         const pdf = new jsPDF('p', 'mm', 'a4');
         let position = 0;
-        const pageHeight = 295; // Chiều cao trang PDF (A4)
+        const pageHeight = 295; 
 
-        // Nếu chiều cao của canvas lớn hơn chiều cao trang A4, chia nó ra nhiều trang
         if (fileHeight > pageHeight) {
             let heightLeft = fileHeight;
 
             while (heightLeft > 0) {
-                pdf.addImage(imgData, 'PNG', 0, position, fileWidth, fileHeight); // Chỉ truyền các tham số cần thiết
+                pdf.addImage(imgData, 'PNG', 0, position, fileWidth, fileHeight); 
                 heightLeft -= pageHeight;
-                position = heightLeft - fileHeight; // Cập nhật vị trí cho trang tiếp theo
+                position = heightLeft - fileHeight; 
 
-                // Nếu vẫn còn nội dung, thêm trang mới
                 if (heightLeft > 0) {
                     pdf.addPage();
                 }
             }
         } else {
-            // Nội dung vừa một trang, không cần thêm trang
             pdf.addImage(imgData, 'PNG', 0, position, fileWidth, fileHeight);
         }
 
@@ -170,10 +167,10 @@ async SendexportToPDF() {
 
     const imgData = canvas.toDataURL('image/png');
     const pdf = new jsPDF('p', 'mm', 'a4');
-    const imgWidth = 208; // Chiều rộng PDF (A4 - 210mm - padding)
-    const imgHeight = (canvas.height * imgWidth) / canvas.width; // Chiều cao tương ứng với kích thước ảnh
+    const imgWidth = 208; 
+    const imgHeight = (canvas.height * imgWidth) / canvas.width; 
 
-    pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight); // Chỉ truyền các tham số cần thiết
+    pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight); 
 
     const pdfBlob = pdf.output('blob');
     const file = new File([pdfBlob], 'yeu-cau-xac-nhan.pdf', { type: 'application/pdf' });
@@ -185,20 +182,20 @@ async SendexportToPDF() {
       this.projectService.uploadPdf(this.projectId, file).subscribe({
         next: (response) => {
           console.log('PDF đã được tải lên thành công:', response.message);
-          this.message.success('PDF đã được tải lên thành công!'); // Hiển thị thông báo thành công
+          this.message.success('PDF đã được tải lên thành công!'); 
         },
         error: (error) => {
           console.error('Lỗi khi tải lên PDF:', error);
-          this.message.error('Lỗi khi tải lên PDF. Vui lòng thử lại.'); // Hiển thị thông báo lỗi
+          this.message.error('Lỗi khi tải lên PDF. Vui lòng thử lại.');
         }
       });
     } else {
       console.error('Project ID không hợp lệ, không thể tải lên PDF.');
-      this.message.error('Project ID không hợp lệ.'); // Thông báo lỗi khi Project ID không hợp lệ
+      this.message.error('Project ID không hợp lệ.'); 
     }
   } catch (error) {
     console.error('Lỗi khi tạo canvas:', error);
-    this.message.error('Lỗi khi tạo PDF. Vui lòng thử lại.'); // Hiển thị thông báo lỗi khi tạo PDF thất bại
+    this.message.error('Lỗi khi tạo PDF. Vui lòng thử lại.'); 
   }
 }
 
