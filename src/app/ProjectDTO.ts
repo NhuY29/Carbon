@@ -16,7 +16,8 @@ export class ProjectDTO {
   images: ImageDTO[];
   coordinates: CoordinateDTO[];
   user: UserDTO;
-
+  quantityBurn: number;
+  quantityNoburn: number;
   constructor(
     projectId: string,
     projectName: string,
@@ -30,7 +31,9 @@ export class ProjectDTO {
     standard: string,
     images: ImageDTO[],
     coordinates: CoordinateDTO[],
-    user: UserDTO
+    user: UserDTO,
+    quantityBurn: number,
+    quantityNoburn: number
   ) {
     this.projectId = projectId;
     this.projectName = projectName;
@@ -45,5 +48,7 @@ export class ProjectDTO {
     this.images = images;
     this.coordinates = coordinates;
     this.user = user;
+    this.quantityBurn = quantityBurn;
+    this.quantityNoburn = quantityNoburn;
   }
 }

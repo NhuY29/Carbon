@@ -23,6 +23,18 @@ import { CoordinateDTO } from './app/CoordinateDTO';
 import { WithdrawalDTO } from './app/withdraw-money/WithdrawalDTO';
 import { Trade2DTO } from './app/my-trading-list/Trade2DTO';
 import { ProjectOfTrade2 } from './app/my-trading-list/ProjectOfTrade2';
+import { CoordinateDTOAll } from './app/home/CoordinateDTOAll ';
+ interface CommuneDistrictDTO {
+  commune: string;
+  district: string;
+  projectCount: number;
+}
+interface Echart {
+  name: string;
+  projectCount: number;
+  additionalQuantity: number;
+  emissionReduction:number;
+}
 interface WithdrawalResponse {
   message: string;
   status: string;
@@ -270,6 +282,28 @@ export class ApiService {
 
     return this.http.put(`${this.apiUrl}/project/update/${projectId}`, formData, { headers });
   }
+  updateStatusToDaTuChoi(projectId: string, rejectionReason: string): Observable<any> {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      throw new Error('Token không tồn tại.');
+    }
+  
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+  
+    const params = {
+      projectId: projectId,
+      rejectionReason: rejectionReason
+    };
+  
+    return this.http.put<any>(`${this.apiUrl}/sampleSent/updateStatus`, null, {
+      headers,
+      params
+    });
+  }
+  
+  
   getProjectById(projectId: string): Observable<ProjectDTO> {
     const token = localStorage.getItem('token');
     if (!token) {
@@ -525,6 +559,30 @@ export class ApiService {
     });
     return this.http.get<ProjectDTO[]>(`${this.apiUrl}/project/projects`, { headers });
   }
+  getProjectsByUserWithQuantityBurn(): Observable<ProjectDTO[]> {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      throw new Error('Token không tồn tại.');
+    }
+
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+    return this.http.get<ProjectDTO[]>(`${this.apiUrl}/project/projectWithQuantityBurn`, { headers });
+  }
+  getProjectsByUserWithQuantityNull(): Observable<ProjectDTO[]> {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      throw new Error('Token không tồn tại.');
+    }
+
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+    return this.http.get<ProjectDTO[]>(`${this.apiUrl}/project/projectWithQuantityNull`, { headers });
+  }
   getProjectByProjectId(projectId: string): Observable<ProjectDTO> {
     const token = localStorage.getItem('token');
     if (!token) {
@@ -683,8 +741,18 @@ export class ApiService {
       responseType: 'blob'
     });
   }
-
-
+  getProjectsDeny(): Observable<ProjectDTO[]> {
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${this.getToken()}`
+    });
+    return this.http.get<ProjectDTO[]>(`${this.apiUrl}/project/projectDeny`, { headers });
+  }
+  getProjectsWithStatusDaTuChoi(): Observable<SampleSentDTO[]> {
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${this.getToken()}`
+    });
+    return this.http.get<SampleSentDTO[]>(`${this.apiUrl}/sampleSent/projectsWithStatusDaTuChoi`, { headers });
+  }
 
   getAllProjectsPending(): Observable<SampleSentDTO[]> {
     const headers = new HttpHeaders({
@@ -1145,10 +1213,10 @@ export class ApiService {
       'Content-Type': 'application/json'
     });
 
-    // Gửi userId và mintToken dưới dạng query params
+
     const params = new HttpParams()
       .set('userId', userId)
-      .set('mintToken', mintToken);  // Thay đổi từ projectId thành mintToken
+      .set('mintToken', mintToken);  
 
     return this.http.get<TradeDTO[]>(`${this.apiUrl}/trade/user`, { headers, params });
   }
@@ -1259,7 +1327,135 @@ export class ApiService {
 
     return this.http.get<ProjectOfTrade2[]>(`${this.apiUrl}/trade2/user/${userId}/projects`, { headers });
   }
+  burnTokens(
+    senderSecretKeyBase58: string,
+    mintAddresses: string[],
+    amounts: string[],
+    projectName?: string,
+    projectId?: string,
+    eventDescription?: string,
+    eventField?: string,
+    eventReason?: string,
+    evenContent?: string
+  ): Observable<string> {
+    const token = localStorage.getItem('token');
+  
+    if (!token) {
+      throw new Error('Người dùng chưa đăng nhập. Token không tồn tại.');
+    }
+  
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    });
+  
+    const params = new HttpParams()
+      .set('senderSecretKeyBase58', senderSecretKeyBase58)
+      .set('mintAddresses', mintAddresses.join(','))
+      .set('amounts', amounts.join(','))
+      .set('projectName', projectName || '')
+      .set('projectId', projectId || '')
+      .set('eventDescription', eventDescription || '')
+      .set('eventField', eventField || '')
+      .set('eventReason', eventReason || '')
+      .set('evenContent', evenContent || '');
+  
+    return this.http.post<string>(`${this.apiUrl}/wallet/burn`, null, {
+      headers,
+      params,
+    });
+  }
+  updateQuantityBurn(projectId: string, newQuantityBurn: number): Observable<any> {
+    const token = localStorage.getItem('token');
+    
+    if (!token) {
+      throw new Error('Người dùng chưa đăng nhập. Token không tồn tại.');
+    }
+  
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    });
+  
+    const url = `${this.apiUrl}/project/updateQuantityBurn/${projectId}`;
+    const params = new HttpParams().set('newQuantityBurn', newQuantityBurn.toString());
+    return this.http.put<any>(url, {}, { headers, params });
+  }
+  
+  getTransactionsByProjectId(projectId: string): Observable<string> {
+    const token = localStorage.getItem('token');
+  
+    if (!token) {
+      throw new Error('Người dùng chưa đăng nhập. Token không tồn tại.');
+    }
+  
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    });
+  
+    const params = new HttpParams().set('projectId', projectId);
+  
+    return this.http.get<string>(`${this.apiUrl}/wallet/byProjectId`, { 
+      headers, 
+      params, 
+      responseType: 'text' as 'json' 
+    });
+  }
+  getAllCoordinates(): Observable<CoordinateDTOAll[]> {
+    const token = localStorage.getItem('token');
 
+    if (!token) {
+      throw new Error('Người dùng chưa đăng nhập. Token không tồn tại.');
+    }
+
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    });
+    return this.http.get<CoordinateDTOAll[]>(`${this.apiUrl}/coordinate/active-coordinates`, { headers });
+  }
+
+  getProjectTypeData(): Observable<Echart[]> {
+    const token = localStorage.getItem('token');
+
+    if (!token) {
+      throw new Error('Người dùng chưa đăng nhập. Token không tồn tại.');
+    }
+
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    });
+    return this.http.get<Echart[]>(`${this.apiUrl}/project/typeData`, { headers });
+  }
+  getProjectStandardData(): Observable<Echart[]> {
+    const token = localStorage.getItem('token');
+
+    if (!token) {
+      throw new Error('Người dùng chưa đăng nhập. Token không tồn tại.');
+    }
+
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    });
+    return this.http.get<Echart[]>(`${this.apiUrl}/project/standardData`, { headers });
+  }
+
+  getCommuneDistrictProjectCounts(): Observable<CommuneDistrictDTO[]> {
+    const token = localStorage.getItem('token');
+
+    if (!token) {
+      throw new Error('Người dùng chưa đăng nhập. Token không tồn tại.');
+    }
+
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    });
+    return this.http.get<CommuneDistrictDTO[]>(`${this.apiUrl}/project/commune-district`, { headers });
+  }
 }
 
 

@@ -16,14 +16,23 @@
     "PROJECT_MANAGEMENT": "Quản lý dự án",
     "PROJECT_LIST": "Danh sách dự án",
     "APPROVE_REQUEST": "Duyệt yêu cầu xác nhận",
-    "EMISSION_SOURCE": "Danh mục nguồn phát thải",
+    "EMISSION_SOURCE": "Danh mục phát thải",
     "COMMON_CATEGORY": "Danh mục chung",
     "MEASUREMENT_DATA": "Nhập liệu đo đạc",
     "MY_PROJECT": "Dự án của tôi",
     "SENT_SAMPLE": "Khám phá sản phẩm",
     "SETTING": "Cài đặt",
     "REQUEST": "Yêu cầu rút tiền",
-    "REQUESTWITHDRAW": "Phê duyệt yêu cầu rút tiền"
+    "REQUESTWITHDRAW": "Duyệt yêu cầu rút tiền",
+    "CATEGORY_MANAGER": "Quản lý danh mục",
+    "FINANCIAL_MANAGEMENT": "Quản lý tài chính",
+    "APPRAISAL": "Thẩm định",
+    "PERSONAL_INFORMATION": "Thông tin cá nhân",
+    "DISCOVERY": "Khám phá",
+    "MY_TRADINGLIST": "Quản lý sản phẩm",
+    "BURN":"Dự án phát thải",
+    "NOBURN":"Dự án giảm phát thải",
+    "PROJECTDENY":"Dự án từ chối"
   },
   "USER": {
     "SEARCH_PLACEHOLDER": "Nhập từ khóa tìm kiếm",
@@ -226,7 +235,9 @@
     "DELETE": "Xóa",
     "CONFIRM_REQUEST": "Yêu cầu xác nhận",
     "MEASUREMENT_LIST": "Danh sách đo lường",
-    "VIEW": "Xem"
+    "VIEW": "Xem",
+    "QUANTITY": "Số lượng",
+    "NOBURN":"Số lượng giảm phát thải"
   },
   "PAYMENT_STATUS": {
     "TITLE": "Trạng thái thanh toán",
@@ -304,7 +315,8 @@
   "statistics": {
     "totalRequestsToday": "Tổng yêu cầu hôm nay",
     "pendingRequests": "Số yêu cầu chưa giải quyết",
-    "resolvedRequests": "Số yêu cầu đã giải quyết"
+    "resolvedRequests": "Số yêu cầu đã giải quyết",
+    "requestdenied":"Yêu cầu bị từ chối"
   },
   "tabs": {
     "todayRequests": "Yêu cầu hôm nay",
@@ -318,7 +330,10 @@
     "DateSent": "Ngày gửi",
     "Contact": "Liên hệ",
     "Owner": "Chủ sở hữu",
-    "Operation": "Thao tác"
+    "Operation": "Thao tác",
+    "requestdenied":"Yêu cầu bị từ chối",
+    "Quantity":"Số lượng",
+    "Reasondenied":"Lý do từ chối"
   },
   "table": {
     "project": "Dự án",
@@ -361,6 +376,16 @@
   "submit": "Gửi",
   "projectForm": {
     "image": "Ảnh",
+    "commune": "Xã",
+    "district": "Huyện",
+    "conscious": "Tỉnh",
+    "city": "Thành phố",
+    "aim": "Mục tiêu",
+    "enterDistrict": "Nhập huyện",
+    "enterCommune": "Nhập xã",
+    "enterCity": "Nhập thành phố",
+    "enterAim": "Nhập mục tiêu",
+    "enterConscious": "Nhập tỉnh",
     "uploadText": "Tải lên",
     "projectCode": "Mã dự án",
     "projectName": "Tên dự án",

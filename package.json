@@ -28,6 +28,7 @@
     "@ngx-translate/http-loader": "^8.0.0",
     "@solana/web3.js": "^1.95.3",
     "@zxing/ngx-scanner": "^18.0.1",
+    "echarts": "^5.5.1",
     "express": "^4.18.2",
     "file-saver": "^2.0.5",
     "geojs": "^1.12.0",

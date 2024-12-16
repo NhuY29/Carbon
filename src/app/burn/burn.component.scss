@@ -1,0 +1,83 @@
+.form-item-row {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.form-item-row nz-form-item {
+    flex: 1;
+}
+
+.form-item-row button {
+    align-self: flex-start;
+    flex-shrink: 0;
+    margin-top: 30px;
+}
+
+.ant-modal {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.ant-modal-content {
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    max-width: 600px;
+    width: 90%;
+}
+
+.ant-modal-header {
+    background-color: #1890ff;
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
+    border-radius: 8px 8px 0 0;
+}
+
+
+.ant-modal-body {
+    padding: 16px;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+
+.ant-modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.ant-btn {
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+
+.ant-btn-default {
+    background-color: #f5f5f5;
+    color: #000;
+}
+
+
+.ant-btn-primary {
+    background-color: #1890ff;
+    color: white;
+    border: none;
+}
+
+.ant-btn-primary:hover {
+    background-color: #40a9ff;
+}
+.center-header th {
+    text-align: center;
+  }
+  
+  nz-modal {
+    max-height: 80vh;
+    overflow-y: auto;
+  }
+  

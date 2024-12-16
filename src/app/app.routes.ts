@@ -29,105 +29,137 @@ import { CartComponent } from './cart/cart.component';
 import { WithdrawMoneyComponent } from './withdraw-money/withdraw-money.component';
 import { ListRequestWithdrawComponent } from './list-request-withdraw/list-request-withdraw.component';
 import { MyTradingListComponent } from './my-trading-list/my-trading-list.component';
+import { AuthGuard } from './guards/auth.guard';
+import { BurnComponent } from './burn/burn.component';
+import { NoburnComponent } from './noburn/noburn.component';
+import { EchartComponent } from './echart/echart.component';
+import { ProjectDenyComponent } from './project-deny/project-deny.component';
 
 export const routes: Routes = [
   {
     path: '',
-    component:HomeComponent
-},
-{
-  path: 'register',
-  component:RegisterComponent
-},
-{
-  path: 'login',
-  component:LoginComponent
-},
-{
-  path: 'user',
-  component:UserComponent
-},
+    component: GDViComponent
+  },
+  {
+    path: 'home',
+    component: HomeComponent
+  },
+  // { path: '', redirectTo: 'login', pathMatch: 'full' },
+  // { path: '**', redirectTo: 'login' },
+  {
+    path: 'register',
+    component: RegisterComponent
+  },
+  {
+    path: 'login',
+    component: LoginComponent
+  },
+  {
+    path: 'user',
+    component: UserComponent,
+    canActivate: [AuthGuard]
+  },
 
-{
-  path: 'ggmap',
-  component:MapComponent
-},
-{
-  path: 'wallet',
-  component:WalletComponent
-},
-{
-  path: 'airdrop',
-  component:AirdropComponent
-},
-{
-  path: 'project',
-  component:ProjectComponent
-},
-{
-  path: 'setting',
-  component:SettingComponent
-},
-{
-  path: 'list-project',
-  component:ListProjectComponent
-},
-{ path: 'project/:id', component: ProjectComponent },
-{ path: 'project/:projectId/participants', component: ProjectParticipantsComponent },
-{ path: 'commomCategory', component: CommonCategoryComponent },
-{ path: 'commomCategoryParentChild', component: CommonParentChildComponent },
-{ path: 'measurementData/:id', component: MeasurementDataComponent },
-{ path: 'measurementDataList/:id', component: MeasurementDataListComponent },
-{ path: 'measurementDataListAdd', component: MeasurementDataAddComponent },
-{ path: 'measurementDataListAdd/:id', component: MeasurementDataAddComponent },
-{ path: 'form1/:id', component: Form1Component },
-{ path: 'myproject', component: MyprojectComponent },
-{ path: 'request/:id', component: SignatureComponent },
-{ path: 'form-xngd', component: FormXNGDComponent },
-{ path: 'form-xngd/:id', component: FormXNGDComponent },
-{ path: 'sampleSent', component: SampleSentComponent },
-{ path: 'sampleReceived', component: SampleReceivedComponent },
-{ path: 'measurementDataList/:projectId/:id', component: MeasurementDataListComponent },
-{
-  path: 'project-details/:id',
-  component: ProjectComponent
-},
+  {
+    path: 'ggmap',
+    component: MapComponent
+  },
+  {
+    path: 'wallet',
+    component: WalletComponent
+  },
+  {
+    path: 'airdrop',
+    component: AirdropComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'project',
+    component: ProjectComponent
+  },
+  {
+    path: 'setting',
+    component: SettingComponent
+  },
+  {
+    path: 'list-project',
+    component: ListProjectComponent,
+    canActivate: [AuthGuard]
+  },
+  { path: 'project/:id', component: ProjectComponent },
+  { path: 'project/:projectId/participants', component: ProjectParticipantsComponent },
+  { path: 'commomCategory', component: CommonCategoryComponent, canActivate: [AuthGuard] },
+  { path: 'commomCategoryParentChild', component: CommonParentChildComponent, canActivate: [AuthGuard] },
+  { path: 'measurementData/:id', component: MeasurementDataComponent, },
+  { path: 'measurementDataList/:id', component: MeasurementDataListComponent },
+  { path: 'measurementDataListAdd', component: MeasurementDataAddComponent, canActivate: [AuthGuard] },
+  { path: 'measurementDataListAdd/:id', component: MeasurementDataAddComponent, canActivate: [AuthGuard] },
+  { path: 'form1/:id', component: Form1Component },
+  { path: 'myproject', component: MyprojectComponent },
+  { path: 'request/:id', component: SignatureComponent },
+  { path: 'form-xngd', component: FormXNGDComponent, canActivate: [AuthGuard] },
+  { path: 'form-xngd/:id', component: FormXNGDComponent, canActivate: [AuthGuard] },
+  { path: 'sampleSent', component: SampleSentComponent },
+  { path: 'sampleReceived', component: SampleReceivedComponent, canActivate: [AuthGuard] },
+  { path: 'measurementDataList/:projectId/:id', component: MeasurementDataListComponent },
+  {
+    path: 'project-details/:id',
+    component: ProjectComponent
+  },
 
-{
-  path: 'gdvi',
-  component: GDViComponent
-},
-{
-  path: 'tokenSolana',
-  component: TokenComponent
-},
+  {
+    path: 'gdvi',
+    component: GDViComponent
+  },
+  {
+    path: 'tokenSolana',
+    component: TokenComponent
+  },
 
-{
-  path: 'contact',
-  component: ContactComponent
-},
+  {
+    path: 'contact',
+    component: ContactComponent
+  },
 
-{
-  path: 'test',
-  component: PaymentResultComponent
-},
-{
-  path: 'cart',
-  component: CartComponent
-},
-{
-  path: 'withdrawMoney',
-  component: WithdrawMoneyComponent
-},
-{
-  path: 'listRequestWithdraw',
-  component: ListRequestWithdrawComponent
-},
-{
-  path: 'myTradingList',
-  component: MyTradingListComponent
-},
- { path: 'ggmap/:projectId', component: MapComponent },
-{ path: 'measurementDataList/:id/:projectId', component: MeasurementDataListComponent },
+  {
+    path: 'test',
+    component: PaymentResultComponent
+  },
+  {
+    path: 'cart',
+    component: CartComponent
+  },
+  {
+    path: 'withdrawMoney',
+    component: WithdrawMoneyComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'listRequestWithdraw',
+    component: ListRequestWithdrawComponent,
+
+  },
+  {
+    path: 'myTradingList',
+    component: MyTradingListComponent
+  },
+  {
+    path: 'burn',
+    component: BurnComponent
+  },
+  {
+    path: 'noburn',
+    component: NoburnComponent
+  },
+  {
+    path: 'echart',
+    component: EchartComponent
+  },
+  {
+    path: 'projectDeny',
+    component: ProjectDenyComponent
+  },
+  { path: 'ggmap/:projectId', component: MapComponent },
+  { path: 'measurementDataList/:id/:projectId', component: MeasurementDataListComponent },
   // { path: 'login', loadChildren: () => import('.//login/login.component').then(m => m.LoginComponent) }
 ];

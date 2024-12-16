@@ -168,7 +168,7 @@ export class GDViComponent implements OnInit {
   }
   ngOnInit() {
     this.loadData();
-    this.checkBalanceChange();
+    this.checkBalanceChange();  
   }
   showDepositForm() {
     this.isDepositFormVisible = true;

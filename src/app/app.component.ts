@@ -20,7 +20,9 @@ import { TranslateService, TranslateModule } from '@ngx-translate/core';
 import { AppTranslateModule } from './translate.module';
 import { ApiService } from '../api.service';
 import { SharedService } from './shared-service.service';
-
+import { UserService } from './guards/UserService';
+import { RoleService } from './guards/RoleService';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-root',
   standalone: true,
@@ -51,7 +53,7 @@ export class AppComponent implements OnInit {
   avatarUrl: string = '';
   loading = false;
   isWalletActive: boolean = true;
-
+  role: string | null = null;
   constructor(
     @Inject(PLATFORM_ID) private platformId: Object,
     private modal: NzModalService,
@@ -59,7 +61,10 @@ export class AppComponent implements OnInit {
     private notification: NzNotificationService,
     private apiService: ApiService,
     public translate: TranslateService,
-    private sharedService: SharedService
+    private sharedService: SharedService,
+    private userService: UserService,
+    private roleService: RoleService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -88,9 +93,18 @@ export class AppComponent implements OnInit {
         console.log('use en');
       }
     });
+    this.roleService.getRole().subscribe(role => {
+      this.role = role;
+    });
+     this.checkToken();
 }
-
-
+checkToken(): void {
+  const token = localStorage.getItem('token');
+  if (!token) {
+    console.warn('No token found in localStorage.');
+    this.router.navigate(['/login']);
+  }
+}
   switchLanguage(language: string) {
     this.translate.use(language);
   }

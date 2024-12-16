@@ -1,0 +1,114 @@
+<nz-table #basicTable [nzData]="projects2" [nzScroll]="{ x: '1600px', y: '550px' }" [nzBordered]="true" [nzPageSize]="5"
+  [nzShowPagination]="true">
+  <thead>
+    <tr>
+      <th nzWidth="200px">{{ 'TABLE_MP.PROJECT_NAME' | translate }}</th>
+      <th nzWidth="400px">{{ 'TABLE_MP.PROJECT_DESCRIPTION' | translate }}</th>
+      <th nzWidth="200px">{{ 'TABLE_MP.FIELD' | translate }}</th>
+      <th nzWidth="120px">{{ 'TABLE_MP.STATUS' | translate }}</th>
+      <th nzWidth="160px">{{ 'TABLE_MP.START_DATE' | translate }}</th>
+      <th nzWidth="160px">{{ 'TABLE_MP.END_DATE' | translate }}</th>
+      <th nzWidth="160px">{{ 'TABLE_MP.QUANTITY' | translate }}</th>
+      <th nzWidth="300px">{{ 'TABLE_MP.IMAGE' | translate }}</th>
+      <th nzWidth="250px">{{ 'TABLE_MP.ACTIONS' | translate }}</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let project of basicTable.data">
+      <td>{{ project.projectName }}</td>
+      <td>{{ project.projectDescription }}</td>
+      <td>{{ project.field }}</td>
+      <td>{{ project.projectStatus }}</td>
+      <td>{{ project.projectStartDate | date: 'short' }}</td>
+      <td>{{ project.projectEndDate | date: 'short' }}</td>
+      <td>{{ project.quantityBurn }}</td>
+      <td>
+        <div *ngIf="imageUrls[project.projectId]; else noImage">
+          <img *ngFor="let imageUrl of imageUrls[project.projectId]" [src]="imageUrl" loading="lazy"
+            style="max-width: 100px; max-height: 100px; margin: 5px;" />
+        </div>
+        <ng-template #noImage>
+          <img src="assets/default-image.png" alt="No Image Available" loading="lazy" />
+        </ng-template>
+      </td>
+      <td>
+        <button nz-button nzType="primary" (click)="downloadFile(project.projectId)">
+          <span nz-icon nzType="download" nzTheme="outline"></span>{{ 'TABLE_MP.DOWNLOAD_IMAGES' | translate }}
+        </button>
+        <button nz-button nzType="primary" (click)="navigateToMeasurementData(project.projectId)">
+          <span nz-icon nzType="line-chart" nzTheme="outline"></span>{{ 'TABLE_MP.MEASUREMENT_LIST' | translate }}
+        </button>
+        <button nz-button nzType="default" (click)="viewProjectDetails(project.projectId)">
+          <span nz-icon nzType="eye" nzTheme="outline"></span>{{ 'TABLE_MP.VIEW' | translate }}
+        </button>
+        <button nz-button nzType="default" (click)="openModal(project)" *ngIf="project.quantityBurn < 0">
+          <span nz-icon nzType="eye" nzTheme="outline"></span> Sử dụng
+        </button>
+        <button nz-button nzType="primary" (click)="history(project.projectId)">
+          Xem lịch sử
+        </button>
+      </td>
+    </tr>
+  </tbody>
+</nz-table>
+
+<nz-modal [(nzVisible)]="isModalVisible" [nzTitle]="'Chọn Dự Án'" (nzOnCancel)="closeModal()" (nzOnOk)="onOk()">
+  <div *nzModalContent>
+    <form [formGroup]="projectForm">
+      <div formArrayName="projects">
+        <div *ngFor="let project of projectFormArray.controls; let i = index" [formGroupName]="i" class="form-item-row">
+          <nz-form-item>
+            <nz-form-label [nzFor]="'project-{{i}}'">{{ 'Chọn Tín Chỉ' }}</nz-form-label>
+            <nz-form-control>
+              <nz-select formControlName="selectedOption" [nzPlaceHolder]="'Chọn một dự án'">
+                <nz-option *ngFor="let projectOption of projectOptions" [nzValue]="projectOption.value"
+                  [nzLabel]="projectOption.label"></nz-option>
+              </nz-select>
+            </nz-form-control>
+          </nz-form-item>
+
+          <nz-form-item>
+            <nz-form-label [nzFor]="'quantity-{{i}}'">{{ 'Số lượng' }}</nz-form-label>
+            <nz-form-control>
+              <nz-input-number formControlName="quantity" [nzMin]="1" [nzMax]="1000" [nzStep]="1"
+                [nzPlaceHolder]="'Nhập số lượng'" style="width: 100%;"></nz-input-number>
+            </nz-form-control>
+          </nz-form-item>
+
+          <button type="button" nz-button nzType="dashed" (click)="removeProject(i)">
+            {{ 'Xóa Dự Án' }}
+          </button>
+        </div>
+
+      </div>
+      <button type="button" nz-button nzType="dashed" (click)="addProject()">{{ 'Thêm' }}</button>
+    </form>
+  </div>
+</nz-modal>
+<nz-table
+  [nzData]="transactions"
+  [nzSize]="'middle'"
+  [nzBordered]="true"
+  [nzScroll]="{ x: '1000px' }"
+  [nzShowPagination]="false"
+>
+  <thead>
+    <tr>
+      <th nzWidth="35%">Transaction Signature</th>
+      <th nzWidth="10%">Timestamp</th>
+      <th nzWidth="10%">Block Number</th>
+      <th nzWidth="5%">Age (Days)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let transaction of transactions">
+      <td>{{ transaction.transactionSignature }}</td>
+      <td>{{ transaction.timestamp }}</td>
+      <td>{{ transaction.blockNumber }}</td>
+      <td>{{ transaction.ageInDays }}</td>
+    </tr>
+  </tbody>
+</nz-table>
+
+
+

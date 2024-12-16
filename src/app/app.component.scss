@@ -1,20 +1,3 @@
-:host {
-  display: flex;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-.app-layout {
-  height: 100vh;
-}
-
-.menu-sidebar {
-  position: relative;
-  z-index: 10;
-  min-height: 100vh;
-  box-shadow: 2px 0 6px rgba(0, 21, 41, .35);
-}
 
 .header-trigger {
   height: 64px;
@@ -24,17 +7,13 @@
   transition: all .3s, padding 0s;
 }
 
-.trigger:hover {
-  color: #1890ff;
-}
-
 .sidebar-logo {
   position: relative;
   height: 64px;
   padding-left: 24px;
   overflow: hidden;
   line-height: 64px;
-  background: #001529;
+  background: black;
   transition: all .3s;
 }
 
@@ -84,16 +63,6 @@ nz-content {
 }
 
 
-.app-header {
-  display: flex;
-  align-items: center;
-  width: 100%;
-}
-
-.header-trigger {
-  margin-right: 16px;
-}
-
 .header-trigger .trigger {
   cursor: pointer;
 }
@@ -102,30 +71,26 @@ ul[nz-menu] {
   margin: 0;
   padding: 0;
   align-items: center;
+  background-color: 	#E3F2FD;
+  color: black;
+  font-weight: bolder;
 }
 
 ul[nz-menu] li {
   display: inline-block;
   margin-right: 16px;
+  background-color: 	#E3F2FD
+;
+  color: #1890ff;
 }
-
+ul[nz-menu] li a {
+  display: inline-block;
+  margin-right: 16px;
+  color: black;
+} 
 ul[nz-menu] li:last-child {
   margin-right: 0;
 }
-.app-header {
-  display: flex;
-  align-items: center; 
-  justify-content: space-between; 
-  width: 100%;
-  padding: 0 24px; 
-}
-
-.header-trigger {
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-}
-
-.header-trigger .trigger {
-  font-size: 20px; 
+div.ant-menu-submenu-title{
+ padding: 0px;
 }

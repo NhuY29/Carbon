@@ -53,7 +53,6 @@ export class ProjectComponent implements OnInit {
   destination: { lat: number, lng: number } | null = null;
   isViewMode: boolean = false;
   isWalletActive: boolean = true;
-
   constructor(
     private fb: FormBuilder,
     private message: NzMessageService,
@@ -65,7 +64,7 @@ export class ProjectComponent implements OnInit {
     this.projectForm = this.fb.group({
       projectName: [null, [Validators.required]],
       projectDescription: [null, [Validators.required]],
-      projectStatus: [null, [Validators.required]],
+      projectStatus: ['Không hoạt động', Validators.required],
       projectStartDate: [null, [Validators.required]],
       projectEndDate: [null, [Validators.required]],
       projectCode: [null, [Validators.required]],
@@ -73,18 +72,23 @@ export class ProjectComponent implements OnInit {
       standard: [null, [Validators.required]],
       coordinates: this.fb.array([]),
       field: [null, [Validators.required]],
+      commune: ['', Validators.required],
+      district: ['', Validators.required],
+      conscious: ['', Validators.required],
+      city: ['', Validators.required],
+      aim: ['', Validators.required],
     }, { validator: this.dateRangeValidator });
 
     translate.addLangs(['en', 'vi']);
     translate.setDefaultLang('vi');
     const savedState = localStorage.getItem('isWalletActive');
-    this.isWalletActive = savedState === 'true'; 
+    this.isWalletActive = savedState === 'true';
     console.log(`Initial wallet state: ${this.isWalletActive ? 'ACTIVE' : 'INACTIVE'}`);
     if (this.isWalletActive) {
-      this.translate.use('vi'); 
+      this.translate.use('vi');
     } else {
       this.translate.use('en');
-    } 
+    }
   }
 
   dateRangeValidator(group: FormGroup) {
@@ -181,8 +185,7 @@ export class ProjectComponent implements OnInit {
     } else if (info.file.status === 'removed') {
       this.selectedFiles = this.selectedFiles.filter(f => f.uid !== info.file.uid);
     }
-  }
-
+}
   onSubmit(): void {
     if (this.projectForm.valid) {
       const coordinates = this.projectForm.get('coordinates')?.value || [];
@@ -190,6 +193,7 @@ export class ProjectComponent implements OnInit {
         this.message.error('Please add at least one coordinate.');
         return;
       }
+      
       const formData = new FormData();
       formData.append('projectName', this.projectForm.get('projectName')?.value || '');
       formData.append('projectDescription', this.projectForm.get('projectDescription')?.value || '');
@@ -200,10 +204,15 @@ export class ProjectComponent implements OnInit {
       formData.append('type', this.projectForm.get('type')?.value || '');
       formData.append('standard', this.projectForm.get('standard')?.value || '');
       formData.append('field', this.projectForm.get('field')?.value || '');
-
+      formData.append('commune', this.projectForm.get('commune')?.value || '');
+      formData.append('district', this.projectForm.get('district')?.value || '');
+      formData.append('conscious', this.projectForm.get('conscious')?.value || '');
+      formData.append('city', this.projectForm.get('city')?.value || '');
+      formData.append('aim', this.projectForm.get('aim')?.value || '');
+  
       const coordinatesJson = JSON.stringify(coordinates);
       formData.append('coordinates', coordinatesJson);
-
+  
       if (this.selectedFiles.length > 0) {
         this.selectedFiles.forEach((file, index) => {
           formData.append('images', file.originFileObj || file);
@@ -212,17 +221,16 @@ export class ProjectComponent implements OnInit {
         this.message.error('Please upload at least one image.');
         return;
       }
-
+  
       if (this.isUpdateMode && this.projectId) {
         this.projectService.updateProject(this.projectId, formData).subscribe(
           response => {
             this.message.success('Project updated successfully!');
-            this.router.navigate(['/projects']);
+            this.router.navigate(['/myproject']);
           },
           error => {
             this.message.error('Failed to update project.');
             console.error('Error:', error);
-            window.location.reload();
           }
         );
       } else {
@@ -230,11 +238,11 @@ export class ProjectComponent implements OnInit {
           response => {
             this.message.success('Project created successfully!');
             this.resetForm();
+            this.router.navigate(['/myproject']);
           },
           error => {
             this.message.error('Failed to create project.');
             console.error('Error:', error);
-            window.location.reload();
           }
         );
       }
@@ -242,7 +250,6 @@ export class ProjectComponent implements OnInit {
       this.message.error('Please fill out the form correctly.');
     }
   }
-
   resetForm(): void {
     this.projectForm.reset();
     this.selectedFiles = [];

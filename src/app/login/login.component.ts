@@ -58,7 +58,8 @@ export class LoginComponent {
               nzStyle: { top: '50px', right: '50px' }
             });
             localStorage.setItem('token', response.message);
-            this.router.navigate(['/user']);
+            localStorage.setItem('role', response.role);
+            this.router.navigate(['/gdvi']);
           } else {
             this.notification.error('Error', 'Login failed. Please try again.', {
               nzPlacement: 'topRight',
@@ -86,7 +87,6 @@ export class LoginComponent {
       });
     }
   }
-  
   closeForm(): void {
     this.location.back(); 
   }

@@ -43,7 +43,7 @@
           </nz-form-control>
         </nz-form-item>
 
-        <nz-form-item>
+        <nz-form-item *ngIf="isViewMode">  
           <nz-form-label [nzSpan]="6" [nzRequired]="true">{{ 'projectForm.projectStatus' | translate }}</nz-form-label>
           <nz-form-control [nzSpan]="18">
             <nz-select formControlName="projectStatus" placeholder="Chọn" [disabled]="isViewMode">
@@ -52,6 +52,7 @@
             </nz-select>
           </nz-form-control>
         </nz-form-item>
+
 
         <nz-form-item>
           <nz-form-label [nzSpan]="6" [nzRequired]="true" nzFor="projectStartDate">{{ 'projectForm.projectStartDate' | translate }}</nz-form-label>
@@ -69,7 +70,41 @@
             </div>
           </nz-form-control>
         </nz-form-item>
-
+        <nz-form-item>
+          <nz-form-label [nzSpan]="6" [nzRequired]="true">{{ 'projectForm.commune' | translate }}</nz-form-label>
+          <nz-form-control [nzSpan]="18">
+            <input nz-input formControlName="commune" placeholder="{{ 'projectForm.enterCommune' | translate }}" [disabled]="isViewMode" />
+          </nz-form-control>
+        </nz-form-item>
+        
+        <nz-form-item>
+          <nz-form-label [nzSpan]="6" [nzRequired]="true">{{ 'projectForm.district' | translate }}</nz-form-label>
+          <nz-form-control [nzSpan]="18">
+            <input nz-input formControlName="district" placeholder="{{ 'projectForm.enterDistrict' | translate }}" [disabled]="isViewMode" />
+          </nz-form-control>
+        </nz-form-item>
+        
+        <nz-form-item>
+          <nz-form-label [nzSpan]="6" [nzRequired]="true">{{ 'projectForm.conscious' | translate }}</nz-form-label>
+          <nz-form-control [nzSpan]="18">
+            <input nz-input formControlName="conscious" placeholder="{{ 'projectForm.enterConscious' | translate }}" [disabled]="isViewMode" />
+          </nz-form-control>
+        </nz-form-item>
+        
+        <nz-form-item>
+          <nz-form-label [nzSpan]="6" [nzRequired]="true">{{ 'projectForm.city' | translate }}</nz-form-label>
+          <nz-form-control [nzSpan]="18">
+            <input nz-input formControlName="city" placeholder="{{ 'projectForm.enterCity' | translate }}" [disabled]="isViewMode" />
+          </nz-form-control>
+        </nz-form-item>
+        
+        <nz-form-item>
+          <nz-form-label [nzSpan]="6" [nzRequired]="true">{{ 'projectForm.aim' | translate }}</nz-form-label>
+          <nz-form-control [nzSpan]="18">
+            <textarea nz-input formControlName="aim" placeholder="{{ 'projectForm.enterAim' | translate }}" [disabled]="isViewMode"></textarea>
+          </nz-form-control>
+        </nz-form-item>
+        
         <nz-form-item>
           <nz-form-label [nzSpan]="6" [nzRequired]="true">{{ 'projectForm.type' | translate }}</nz-form-label>
           <nz-form-control [nzSpan]="18">

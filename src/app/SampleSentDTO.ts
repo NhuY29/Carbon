@@ -8,4 +8,6 @@ export interface SampleSentDTO {
     projectStatus?: string; 
     projectStartDate?: Date; 
     projectEndDate?: Date; 
+    quantity: number;
+    reason: string;
   }

@@ -36,17 +36,26 @@ export class MapComponent implements AfterViewInit {
       transportMode: ['driving', Validators.required]
     });
   }
-  ngOnInit(): void {
-    this.route.paramMap.subscribe(params => {
-      this.projectId = params.get('projectId');
-      console.log('Project ID:', this.projectId);
+ 
 
+  ngOnInit(): void {
+    
+    this.route.paramMap.subscribe(params => {
+      const isCustomUrl = window.location.href.includes('/ggmap/');
+      if (isCustomUrl) {
+        this.projectId = params.get('projectId');
+      } else {
+        this.projectId = params.get('id');
+      }
+  
+      console.log('Project ID:', this.projectId);
+      
       if (this.projectId) {
         this.api.getCoordinatesByProjectId(this.projectId).subscribe(
           (data: CoordinateDTO[]) => {
             this.coordinates = data;
             console.log('Coordinates:', this.coordinates);
-            this.drawCoordinatesOnMap();
+  
             const firstCoordinate = this.getFirstCoordinate();
             if (firstCoordinate) {
               console.log('Tọa độ đầu tiên:', firstCoordinate);
@@ -60,8 +69,10 @@ export class MapComponent implements AfterViewInit {
         );
       }
     });
+    
   }
 
+  
 
   public getFirstCoordinate(): CoordinateDTO | null {
     if (this.coordinates.length > 0) {
@@ -69,27 +80,6 @@ export class MapComponent implements AfterViewInit {
     }
     return null;
   }
-
-  private async drawCoordinatesOnMap(): Promise<void> {
-    try {
-      const L = (await import('leaflet')).default;
-      await import('leaflet-draw');
-      await import('leaflet-routing-machine');
-      this.drawnItems = new L.FeatureGroup();
-      this.map.addLayer(this.drawnItems);
-      const latLngs: L.LatLngExpression[] = this.coordinates.map(coordinate => [coordinate.lat, coordinate.lng] as L.LatLngExpression);
-      const polygon = L.polygon(latLngs, { color: 'blue' }).addTo(this.map);
-      this.drawnItems.addLayer(polygon);
-      if (latLngs.length > 0) {
-        const bounds = L.latLngBounds(latLngs);
-        this.map.fitBounds(bounds);
-      }
-
-    } catch (err) {
-      console.error('Không tải được Leaflet hoặc Leaflet-draw', err);
-    }
-  }
-
 
   ngAfterViewInit(): void {
     if (typeof window !== 'undefined') {
@@ -312,21 +302,54 @@ export class MapComponent implements AfterViewInit {
 
     this.renderInitialCoordinates();
   }
+  private async renderInitialCoordinates(): Promise<void> {
+    try {
+      const L = (await import('leaflet')).default;
+      await import('leaflet-draw');
+      await import('leaflet-routing-machine');
+      if (!this.map) {
+        console.error('Map is not initialized');
+        return;
+      }
 
-  private renderInitialCoordinates(): void {
-    if (this.initialCoordinates.length > 0) {
-      const L = (window as any).L;
-      const latLngs = this.initialCoordinates.map(coord => L.latLng(coord.lat, coord.lng));
-      const polygon = L.polygon(latLngs, {
-        color: 'blue',
-        fillColor: 'blue',
-        fillOpacity: 0.3
-      }).addTo(this.map);
-      this.drawnItems.addLayer(polygon);
-      this.drawnPolygonPoints = this.initialCoordinates;
-      this.coordinatesChanged.emit(this.initialCoordinates);
-      const bounds = L.latLngBounds(latLngs);
-      this.map.fitBounds(bounds);
+      if (!this.drawnItems) {
+        this.drawnItems = new L.FeatureGroup();
+        this.map.addLayer(this.drawnItems);
+      }
+
+      if (!this.coordinates || this.coordinates.length === 0) {
+        console.warn('No coordinates data found');
+        return;
+      }
+
+      const sortedCoordinates = this.coordinates.sort((a, b) => a.order - b.order);
+      if (sortedCoordinates.length === 0) {
+        console.warn('No valid coordinates after sorting');
+        return;
+      }
+      const latLngs: L.LatLngExpression[] = sortedCoordinates
+        .map(coordinate => {
+          if (coordinate.lat && coordinate.lng) {
+            return [coordinate.lat, coordinate.lng] as L.LatLngTuple;
+          }
+          return undefined;
+        })
+        .filter((coord): coord is L.LatLngTuple => coord !== undefined);
+
+      if (this.drawnItems.getLayers().length > 0) {
+        this.drawnItems.clearLayers();
+        console.log('Cleared existing layers');
+      }
+
+      if (latLngs.length > 0) {
+        const polygon = L.polygon(latLngs, { color: 'blue' }).addTo(this.map);
+        this.drawnItems.addLayer(polygon);
+
+        const bounds = L.latLngBounds(latLngs);
+        this.map.fitBounds(bounds);
+      }
+    } catch (err) {
+      console.error('Failed to load Leaflet or Leaflet-draw', err);
     }
   }
 

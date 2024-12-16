@@ -7,14 +7,20 @@ import { NzTabsModule } from 'ng-zorro-antd/tabs';
 import { NzBadgeModule } from 'ng-zorro-antd/badge';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzIconModule } from 'ng-zorro-antd/icon';
-import { SampleSentDTO } from '../SampleSentDTO';
+import { NzModalService } from 'ng-zorro-antd/modal';
 import { TranslateService, TranslateModule } from '@ngx-translate/core';
 import { AppTranslateModule } from '../translate.module';
 import { ProjectDTO } from '../ProjectDTO';
 import { CoordinateDTO } from '../CoordinateDTO';
 import { UserDTO } from '../../user.interface';
 import { NzPaginationModule } from 'ng-zorro-antd/pagination';
+import { FormsModule } from '@angular/forms';
 import { CommonCategoryDTO } from '../CommonCategory.interface';
+import { NzFormModule } from 'ng-zorro-antd/form';
+import { NzModalModule } from 'ng-zorro-antd/modal';
+import { NzMessageService } from 'ng-zorro-antd/message';
+import { NgModule } from '@angular/core';
+
 interface ProjectDetailsDTO {
   projectName: string;
   projectDescription: string;
@@ -27,11 +33,21 @@ interface ProjectDetailsDTO {
   coordinates: CoordinateDTO[];
   owner: UserDTO;
 }
+interface SampleSentDTO {
+  id: string;
+  projectId: string;
+  sendDate: string;
+  quantity: number;
+  reason: string;
+  details?: ProjectDetailsDTO;  
+}
+
 
 interface PendingProjectDTO {
   id: string;
   projectId: string;
   sendDate: string;
+  quantity: number;
   details?: ProjectDetailsDTO;
 }
 interface User {
@@ -47,21 +63,23 @@ interface User {
 @Component({
   selector: 'app-sample-received',
   standalone: true,
-  imports: [NzPaginationModule,AppTranslateModule, NzTableModule, CommonModule, NzTabsModule, NzBadgeModule, NzButtonModule, NzIconModule],
+  imports: [NzModalModule,NzFormModule,FormsModule,NzPaginationModule,AppTranslateModule, NzTableModule, CommonModule, NzTabsModule, NzBadgeModule, NzButtonModule, NzIconModule],
   templateUrl: './sample-received.component.html',
   styleUrls: ['./sample-received.component.scss'],
   host: { 'ngSkipHydration': '' }
 })
 export class SampleReceivedComponent {
 
+  isModalVisible = false; 
+  selectedProject: any;
   projectDetails: ProjectDTO | null = null;
   projectIds: string[] = [];
   pendingProjects: PendingProjectDTO[] = [];
   projectsSentToday: SampleSentDTO[] = [];
   isWalletActive: boolean = true;
   doneProjects: PendingProjectDTO[] = [];
-
-  constructor(private sampleReceivedService: ApiService, private router: Router, public translate: TranslateService) {
+  projectsWithStatusDaTuChoi: SampleSentDTO[] = [];
+  constructor( private message: NzMessageService,private modal: NzModalService,private sampleReceivedService: ApiService, private router: Router, public translate: TranslateService) {
     translate.addLangs(['en', 'vi']);
     translate.setDefaultLang('vi');
     const savedState = localStorage.getItem('isWalletActive');
@@ -77,6 +95,43 @@ export class SampleReceivedComponent {
   ngOnInit(): void {
     this.getPendingProjects();
     this.getDoneProjects();
+    this.getProjectsWithStatusDaTuChoi();
+  }
+  showRejectModal(project: any): void {
+    if (project) {
+      this.selectedProject = { ...project };
+      this.selectedProject.rejectionReason = ''; 
+      this.isModalVisible = true; 
+    } else {
+      console.error('Không có dự án nào được chọn.');
+    }
+  }
+  handleCancel(): void {
+    this.isModalVisible = false; 
+    this.selectedProject = null;
+  }
+  handleOk(): void {
+    if (this.selectedProject && this.selectedProject.rejectionReason) {
+      this.sampleReceivedService.updateStatusToDaTuChoi(this.selectedProject.projectId, this.selectedProject.rejectionReason).subscribe(
+        (response) => {
+          if (response.success) {
+            this.message.success(response.message);
+            this.isModalVisible = false; 
+            this.getPendingProjects();
+            this.getDoneProjects();
+            this.getProjectsWithStatusDaTuChoi();
+          } else {
+            this.message.error('Cập nhật thất bại: ' + response.message);
+          }
+        },
+        (error) => {
+          console.error('Lỗi khi gọi API:', error);
+          this.message.error('Lỗi không xác định. Vui lòng thử lại!');
+        }
+      );
+    } else {
+      this.message.warning('Vui lòng nhập lý do từ chối.');
+    }
   }
   goToMap(projectId: string): void {
     this.router.navigate(['/ggmap', projectId]); 
@@ -145,6 +200,8 @@ export class SampleReceivedComponent {
           id: item.id,
           projectId: item.projectId,
           sendDate: item.sendDate,
+          reason: item.reason,
+          quantity: item.quantity
         }));
 
         const projectDetailsPromises = pendingProjectsTemp.map(async project => {
@@ -173,6 +230,8 @@ export class SampleReceivedComponent {
           id: item.id,
           projectId: item.projectId,
           sendDate: item.sendDate,
+          quantity: item.quantity,
+          reason: item.reason
         }));
 
         const projectDetailsPromises = doneProjectsTemp.map(async project => {
@@ -194,6 +253,46 @@ export class SampleReceivedComponent {
     });
   }
 
+  getProjectsWithStatusDaTuChoi(): void {
+    this.sampleReceivedService.getProjectsWithStatusDaTuChoi().subscribe({
+      next: async (data: SampleSentDTO[]) => {
+        const projectsWithStatusDaTuChoiTemp: SampleSentDTO[] = data.map(item => ({
+          id: item.id,
+          projectId: item.projectId,
+          sendDate: item.sendDate,
+          quantity: item.quantity,
+          reason: item.reason
+
+        }));
+  
+        // Mảng chứa các Promise để lấy chi tiết dự án, chỉ lấy khi có chi tiết
+        const projectDetailsPromises = projectsWithStatusDaTuChoiTemp.map(async project => {
+          let details = null;
+          try {
+            details = await this.getProjectDetails(project.projectId);
+          } catch (error) {
+            console.error(`Lỗi khi lấy chi tiết cho dự án ${project.projectId}:`, error);
+          }
+  
+          return {
+            ...project,
+            details: details || {} // Nếu không có chi tiết, gán một đối tượng rỗng
+          } as SampleSentDTO;
+        });
+  
+        // Chờ các Promise hoàn thành và lấy dữ liệu đầy đủ
+        Promise.all(projectDetailsPromises).then(fullProjectData => {
+          this.projectsWithStatusDaTuChoi = fullProjectData;
+          console.log('Dữ liệu các dự án đã bị từ chối:', this.projectsWithStatusDaTuChoi);
+        });
+      },
+      error: (error) => {
+        console.error('Lỗi khi lấy dữ liệu các dự án đã bị từ chối:', error);
+      }
+    });
+  }
+  
+  
   navigateToProject(id: string): void {
     this.router.navigate(['/project', id]);
   }

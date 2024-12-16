@@ -1,4 +1,3 @@
-
 import { Component, OnInit } from '@angular/core';
 import { ApiService } from '../../api.service';
 import { NzTableModule } from 'ng-zorro-antd/table';
@@ -28,17 +27,17 @@ export interface ProjectDTO {
   projectCode: string;
   images: ImageDTO[];
   quantityBurn: number;
+  quantityNoburn: number;
 }
 
 @Component({
-  selector: 'app-myproject',
+  selector: 'app-noburn',
   standalone: true,
-  imports: [AppTranslateModule,NzTableModule,CommonModule,NzButtonModule,NzIconModule],
-  templateUrl: './myproject.component.html',
-  styleUrl: './myproject.component.scss',
-  host: { 'ngSkipHydration': '' }
+  imports: [AppTranslateModule,NzTableModule,CommonModule,NzButtonModule,NzIconModule], 
+  templateUrl: './noburn.component.html',
+  styleUrl: './noburn.component.scss'
 })
-export class MyprojectComponent {
+export class NoburnComponent {
   projects: ProjectDTO[] = [];
   imageUrls: { [key: string]: string[] } = {};
   isWalletActive: boolean = true;
@@ -80,7 +79,7 @@ export class MyprojectComponent {
     });
   }
   loadProjects(): void {
-    this.projectService.getProjectsByUser().subscribe({
+    this.projectService.getProjectsByUserWithQuantityNull().subscribe({
       next: (projects: ProjectDTO[]) => {
         this.projects = projects;
         projects.forEach(project => {

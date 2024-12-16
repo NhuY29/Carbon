@@ -2,7 +2,7 @@
   nzPlaceHolder="Chọn dự án để lấy danh sách trades" style="width: 100%;" name="projectId">
   <nz-option *ngFor="let project of projects" [nzValue]="project.value" [nzLabel]="project.label"></nz-option>
 </nz-select>
-<button nz-button nzType="primary" (click)="openAddTradeModal()">Thêm</button>
+<button nz-button nzType="primary"(click)="addTrade()"  >Thêm</button>
 <div *ngIf="newTrade.mintToken || newTrade.tokenAddress || newTrade.balance">
   <nz-row [nzGutter]="16">
     <nz-col nzSpan="8">
@@ -130,33 +130,4 @@
 
   </form>
 </ng-template>
-<nz-modal nzTitle="Thêm giao dịch" [nzFooter]="null">
-  <ng-template #addTradeTemplate>
-    <form nz-form #tradeForm="ngForm">
-      <nz-form-item>
-        <nz-form-label [nzSpan]="6">Dự án</nz-form-label>
-        <nz-form-control [nzSpan]="18" [nzValidateStatus]="mintProjectId ? 'success' : 'error'">
-          <nz-select [(ngModel)]="mintProjectId" (ngModelChange)="onMintProjectChange()"
-            nzPlaceHolder="Chọn dự án để lấy mint tokens" style="width: 100%;" name="mintProjectId" required>
-            <nz-option *ngFor="let project of projects" [nzValue]="project.value" [nzLabel]="project.label"></nz-option>
-          </nz-select>
-          <nz-form-explain *ngIf="tradeForm.submitted && !mintProjectId">Dự án không được để trống</nz-form-explain>
-        </nz-form-control>
-      </nz-form-item>
-      <nz-form-item>
-        <nz-form-label [nzSpan]="6">Mint Token</nz-form-label>
-        <nz-form-control [nzSpan]="18">
-          <input nz-input [(ngModel)]="newTrade.mintToken" placeholder="Mint Token sẽ được hiển thị ở đây"
-            name="mintToken" disabled />
-        </nz-form-control>
-      </nz-form-item>
-
-      <nz-form-item>
-        <nz-form-control [nzSpan]="18" nzOffset="6">
-          <button nz-button nzType="primary" (click)="addTrade()" [disabled]="!tradeForm.valid">Thêm giao dịch</button>
-        </nz-form-control>
-      </nz-form-item>
-    </form>
-  </ng-template>
-</nz-modal>
 

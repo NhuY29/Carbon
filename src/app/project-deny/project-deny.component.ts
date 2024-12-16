@@ -1,4 +1,3 @@
-
 import { Component, OnInit } from '@angular/core';
 import { ApiService } from '../../api.service';
 import { NzTableModule } from 'ng-zorro-antd/table';
@@ -12,34 +11,16 @@ import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { TranslateService, TranslateModule } from '@ngx-translate/core';
 import { AppTranslateModule } from '../translate.module';
-export interface ImageDTO {
-  imageId: string;
-  url: string;
-}
-
-export interface ProjectDTO {
-  projectId: string;
-  projectName: string;
-  projectDescription: string;
-  field: string,
-  projectStatus: string;
-  projectStartDate: string;
-  projectEndDate: string;
-  projectCode: string;
-  images: ImageDTO[];
-  quantityBurn: number;
-}
-
+import { ProjectDTO } from '../ProjectDTO';
 @Component({
-  selector: 'app-myproject',
+  selector: 'app-project-deny',
   standalone: true,
-  imports: [AppTranslateModule,NzTableModule,CommonModule,NzButtonModule,NzIconModule],
-  templateUrl: './myproject.component.html',
-  styleUrl: './myproject.component.scss',
-  host: { 'ngSkipHydration': '' }
+  imports: [AppTranslateModule,NzTableModule,CommonModule,NzButtonModule,NzIconModule], 
+  templateUrl: './project-deny.component.html',
+  styleUrl: './project-deny.component.scss'
 })
-export class MyprojectComponent {
-  projects: ProjectDTO[] = [];
+export class ProjectDenyComponent {
+  projects: ProjectDTO[] = [];  // Danh sách dự án bị từ chối
   imageUrls: { [key: string]: string[] } = {};
   isWalletActive: boolean = true;
   constructor(public translate: TranslateService,private projectService: ApiService,private message: NzMessageService, private router: Router,private modal: NzModalService,  ) {
@@ -54,33 +35,11 @@ export class MyprojectComponent {
       this.translate.use('en');
     }
   }
-
   ngOnInit(): void {
     this.loadProjects();
   }
-  deleteProject(projectId: string): void {
-    this.modal.confirm({
-      nzTitle: 'Are you sure you want to delete this project?',
-      nzContent: '<b style="color: red;">This action cannot be undone</b>',
-      nzOkText: 'Yes',
-      nzOnOk: () => {
-        this.projectService.deleteProject(projectId).subscribe({
-          next: () => {
-            this.projects = this.projects.filter(project => project.projectId !== projectId);
-            this.message.success('Project deleted successfully');
-          },
-          error: (err) => {
-            console.error('Lỗi khi xóa dự án', err);
-            this.message.error('Failed to delete project');
-          }
-        });
-      },
-      nzCancelText: 'No',
-      nzOnCancel: () => console.log('Cancel')
-    });
-  }
   loadProjects(): void {
-    this.projectService.getProjectsByUser().subscribe({
+    this.projectService.getProjectsDeny().subscribe({
       next: (projects: ProjectDTO[]) => {
         this.projects = projects;
         projects.forEach(project => {
@@ -92,21 +51,6 @@ export class MyprojectComponent {
         this.message.error('Failed to load projects: ' + err.message);
       }
     });
-  }
-  viewProjectDetails(projectId: string): void {
-    this.router.navigate(['/project-details', projectId], {
-      queryParams: { mode: 'view' }  
-    });
-  }
-  
-  navigateToAddProject(): void {
-    this.router.navigate(['/project']);
-  }
-  navigateToRequest(projectId: string) {
-    this.router.navigate([`/form1/${projectId}`]);
-  }
-  navigateToRequest2(projectId: string) {
-    this.router.navigate([`/request/${projectId}`]);
   }
   loadImages(projectId: string): void {
     this.projectService.getImagesByProjectId(projectId, 100, 100).subscribe({
@@ -149,9 +93,8 @@ export class MyprojectComponent {
       }
     );
   }
-  updateProject(projectId: string): void {
-    this.router.navigate(['/project', projectId],{
-      queryParams: { mode: 'edit' }
-    });
+
+  viewProjectDetails(projectId: string): void {
+    this.router.navigate(['/project', projectId]);
   }
 }

@@ -1,6 +1,6 @@
 <div class="statistics-container">
     <div class="statistics-container">
-        <div class="stat-box" id="expired-contracts">
+        <div class="stat-box" id="active-contracts">
             <i class="icon expired"></i>
             <h4>{{ 'statistics.pendingRequests' | translate }}</h4>
             <p class="stat-number">{{ pendingProjects?.length ||0 }}</p>
@@ -9,6 +9,11 @@
             <i class="icon clock"></i>
             <h4>{{ 'statistics.resolvedRequests' | translate }}</h4>
             <p class="stat-number">{{ doneProjects?.length ||0 }}</p>
+        </div>
+        <div class="stat-box" id="new-requests">
+            <i class="icon clock"></i>
+            <h4>{{ 'statistics.requestdenied' | translate }}</h4>
+            <p class="stat-number">{{ projectsWithStatusDaTuChoi?.length ||0 }}</p>
         </div>
     </div>
 </div>
@@ -20,7 +25,6 @@
         </ng-template>
         <nz-table #basicTable2 [nzData]="pendingProjects" [nzBordered]="true" [nzPageSize]="5" [nzShowPagination]="true"
             nzPaginationPosition="bottom" [nzFrontPagination]="true">
-
             <thead>
                 <tr>
                     <th style="width: 10%; text-align: center;"> {{ 'tabs.ProjectName' | translate }}</th>
@@ -35,7 +39,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let item of basicTable2.data" (click)="getProjectDetails(item.projectId)">
+                <tr *ngFor="let item of basicTable2.data">
                     <td>{{ item.details?.projectName }}</td>
                     <td>{{ item.details?.projectDescription }}</td>
                     <td>{{ item.details?.field }}</td>
@@ -56,13 +60,37 @@
                                 (click)="handleProjectId(item.projectId, item.id)"
                                 style="cursor: pointer; color: #FF8C00;">
                             </span>
+                            <span nz-icon nzType="close-circle" nzTheme="outline" (click)="showRejectModal(item)"
+                                style="cursor: pointer; color: #FF0000;">
+                            </span>
                         </div>
                     </td>
                 </tr>
             </tbody>
-
         </nz-table>
+        <nz-modal [(nzVisible)]="isModalVisible" [nzTitle]="modalTitle" (nzOnCancel)="handleCancel()"
+            (nzOnOk)="handleOk()">
+            <ng-template #modalTitle>
+                <span>Xác nhận lý do từ chối</span>
+            </ng-template>
+            <div *nzModalContent>
+                <form>
+                    <div>
+                        <label for="projectName">Tên dự án</label>
+                        <input id="projectName" nz-input [(ngModel)]="selectedProject.details.projectName"
+                            name="projectName" disabled />
+                    </div>
+                    <div>
+                        <label for="rejectionReason">Lý do từ chối</label>
+                        <textarea id="rejectionReason" nz-input [(ngModel)]="selectedProject.rejectionReason"
+                            name="rejectionReason" required placeholder="Nhập lý do từ chối..."></textarea>
+                    </div>
+                </form>
+            </div>
+        </nz-modal>
+
     </nz-tab>
+
     <nz-tab nzTitle="{{ 'tabs.resolvedRequests' | translate }}">
         <nz-table #basicTable3 [nzData]="doneProjects" [nzBordered]="true" [nzPageSize]="5" [nzShowPagination]="true"
             nzPaginationPosition="bottom" [nzFrontPagination]="true" ngSkipHydration>
@@ -77,6 +105,7 @@
                     <th style="width: 5%; text-align: center;">{{ 'tabs.DateSent' | translate }}</th>
                     <th style="width: 5%; text-align: center;">{{ 'tabs.Contact' | translate }}</th>
                     <th style="width: 7%; text-align: center;">{{ 'tabs.Owner' | translate }}</th>
+                    <th style="width: 7%; text-align: center;">{{ 'tabs.Quantity' | translate }}</th>
                     <th style="width: 10%; text-align: center;">{{ 'tabs.Operation' | translate }}</th>
                 </tr>
             </thead>
@@ -91,6 +120,7 @@
                     <td>{{ item.sendDate | date:'short' }}</td>
                     <td>{{ item.details?.owner?.username }}</td>
                     <td>{{ item.details?.owner?.lastname }} {{ item.details?.owner?.firstname }}</td>
+                    <td>{{ item.quantity }}</td>
                     <td>
                         <div class="action-buttons">
                             <span nz-icon nzType="eye" nzTheme="outline" (click)="goToMap(item.projectId)"
@@ -107,10 +137,56 @@
                                 (click)="downPdfReceived(item.projectId, item.id)"
                                 style="cursor: pointer; color: #9C27B0;">
                             </span>
+
                         </div>
                     </td>
                 </tr>
             </tbody>
         </nz-table>
     </nz-tab>
+    <nz-tab nzTitle="{{ 'tabs.requestdenied' | translate }}">
+        <nz-table #resolvedRequestsTable [nzData]="projectsWithStatusDaTuChoi" [nzBordered]="true" [nzPageSize]="5"
+            [nzShowPagination]="true" nzPaginationPosition="bottom" [nzFrontPagination]="true" ngSkipHydration>
+
+            <thead>
+                <tr>
+                    <th style="width: 10%; text-align: center;"> {{ 'tabs.ProjectName' | translate }}</th>
+                    <th style="width: 20%; text-align: center;">{{ 'tabs.Describe' | translate }}</th>
+                    <th style="width: 7%; text-align: center;">{{ 'tabs.field' | translate }}</th>
+                    <th style="width: 7%; text-align: center;">{{ 'tabs.type' | translate }}</th>
+                    <th style="width: 7%; text-align: center;">{{ 'tabs.standard' | translate }}</th>
+                    <th style="width: 5%; text-align: center;">{{ 'tabs.DateSent' | translate }}</th>
+                    <th style="width: 5%; text-align: center;">{{ 'tabs.Contact' | translate }}</th>
+                    <th style="width: 7%; text-align: center;">{{ 'tabs.Owner' | translate }}</th>
+                    <th style="width: 7%; text-align: center;">{{ 'tabs.Reasondenied' | translate }}</th>
+                    <th style="width: 10%; text-align: center;">{{ 'tabs.Operation' | translate }}</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr *ngFor="let item of resolvedRequestsTable.data" (click)="getProjectDetails(item.projectId)">
+                    <td>{{ item.details?.projectName }}</td>
+                    <td>{{ item.details?.projectDescription }}</td>
+                    <td>{{ item.details?.field }}</td>
+                    <td>{{ item.details?.type }}</td>
+                    <td>{{ item.details?.standard }}</td>
+                    <td>{{ item.sendDate | date:'short' }}</td>
+                    <td>{{ item.details?.owner?.username }}</td>
+                    <td>{{ item.details?.owner?.lastname }} {{ item.details?.owner?.firstname }}</td>
+                    <td>{{ item.reason }}</td>
+                    <td>
+                        <div class="action-buttons">
+                            <span nz-icon nzType="eye" nzTheme="outline" (click)="goToMap(item.projectId)"
+                                style="cursor: pointer; color: #1E90FF;">
+                            </span>
+                            <span nz-icon nzType="snippets" nzTheme="outline"
+                                (click)="downloadPdf(item.projectId, item.id)" style="cursor: pointer; color: #4CAF50;">
+                            </span>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </nz-table>
+    </nz-tab>
+
 </nz-tabset>

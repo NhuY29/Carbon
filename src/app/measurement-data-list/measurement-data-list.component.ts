@@ -11,6 +11,7 @@ import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { TranslateService, TranslateModule } from '@ngx-translate/core';
 import { AppTranslateModule } from '../translate.module';
+import { RoleService } from '../guards/RoleService';
 export interface MeasurementDataDTO {
   id: string;
   measurer: string;
@@ -33,6 +34,7 @@ export class MeasurementDataListComponent implements OnInit {
   projectId: string | null = null;
   idFromRoute: string | null = null;
   isWalletActive: boolean = true;
+  role: string | null = null;
   constructor(
     private apiService: ApiService,
     private modal: NzModalService,
@@ -40,6 +42,7 @@ export class MeasurementDataListComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     public translate: TranslateService,
+    private roleService: RoleService,
   ) { 
     translate.addLangs(['en', 'vi']);
     translate.setDefaultLang('vi');
@@ -56,6 +59,9 @@ export class MeasurementDataListComponent implements OnInit {
     this.router.navigate([`/measurementData/${measurementId}`]);
   }
   ngOnInit(): void {
+    this.roleService.getRole().subscribe(role => {
+      this.role = role;
+    });
     this.route.paramMap.subscribe(params => {
       const projectId = params.get('projectId');
       const id = params.get('id');

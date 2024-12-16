@@ -99,10 +99,11 @@ export class MeasurementDataAddComponent {
       measurementArray.push(this.fb.group({
         wasteSource: [measurement.wasteSource, Validators.required],
         gas: [measurement.gas, Validators.required],
-        data: [measurement.data, [Validators.required, Validators.pattern(/^\d+(\.\d+)?$/)]]
+        data: [measurement.data, [Validators.required, Validators.pattern(/^-?\d+(\.\d+)?$/)]] // Cho phép giá trị âm
       }));
     });
   }
+  
   loadRows(): Observable<any> {
     return this.dataService.getAllParentCategories().pipe(
       tap((response: CategoryParentChild[]) => {
@@ -217,7 +218,7 @@ export class MeasurementDataAddComponent {
     measurementArray.push(this.fb.group({
       wasteSource: ['', Validators.required],
       gas: ['', Validators.required],
-      data: ['', [Validators.required, Validators.pattern(/^\d+(\.\d+)?$/)]]
+      data: ['', [Validators.required, Validators.pattern(/^-?\d+(\.\d+)?$/)]] // Cho phép giá trị âm
     }));
   }
 

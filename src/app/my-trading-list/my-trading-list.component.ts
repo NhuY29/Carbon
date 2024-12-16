@@ -112,10 +112,27 @@ export class MyTradingListComponent implements OnInit {
   }
 
   addTrade() {
+    if (!this.selectedProjectId) {
+      this.message.warning('Vui lòng chọn một dự án trước khi thêm giao dịch!');
+      return;
+    }
+  
+    const selectedProject = this.projects.find(project => project.value === this.selectedProjectId);
+    
+    if (!selectedProject) {
+      this.message.warning('Dự án không hợp lệ!');
+      return;
+    }
+  
+
+    this.newTrade.projectId =selectedProject.projectId;  
+    this.newTrade.mintToken = selectedProject.value;  
+  
     this.newTrade.buyerUserId = this.userId || '';
     this.newTrade.purchasedFrom = this.newTrade.purchasedFrom || '';
     this.newTrade.purchasePrice = this.newTrade.purchasePrice || '0';
     this.newTrade.quantity = this.newTrade.quantity || '0';
+
     this.tradeService.createTrade(this.newTrade).subscribe(
       response => {
         console.log('Giao dịch đã được thêm thành công:', response);
@@ -130,25 +147,14 @@ export class MyTradingListComponent implements OnInit {
       }
     );
   }
-
+  
+  
 
 
   handleCancelAdd(): void {
     this.resetForm();
   }
   resetForm(): void {
-    this.newTrade = {
-      buyerUserId: '',
-      projectId: '',
-      quantity: '',
-      mintToken: '',
-      tokenAddress: '',
-      price: '',
-      purchasedFrom: '',
-      purchasePrice: '',
-      balance: ''
-    };
-    this.mintProjectId = null;
   }
 
   onMintProjectChange() {
@@ -170,50 +176,50 @@ export class MyTradingListComponent implements OnInit {
       console.error('Vui lòng chọn dự án');
       return;
     }
-  
+
     this.selectedProjectId = selectedProjectId;
 
     this.tradeService.getWalletInfo().subscribe(
       (response) => {
         console.log('Thông tin ví:', response);
-  
+
         if (response && response.address) {
           this.walletAddress = response.address;
           console.log('Địa chỉ ví:', this.walletAddress);
-  
+
           if (!this.walletAddress) {
             console.error('Địa chỉ ví không hợp lệ');
             this.message.error('Địa chỉ ví không hợp lệ');
             return;
           }
-  
+
           const selectedProject = this.projects.find(project => project.value === this.selectedProjectId);
-  
+
           if (selectedProject) {
             const mintAddress = selectedProject.value;
-  
+
             if (!mintAddress) {
               console.error('Mint Address không hợp lệ');
               this.message.error('Mint Address không hợp lệ');
               return;
             }
             console.log('Selected Mint Token:', mintAddress);
-  
+
             this.newTrade.mintToken = mintAddress;
-  
+
             this.tradeService.getTokenAddress(this.walletAddress, mintAddress).subscribe(
               (tokenResponse) => {
                 console.log('Thông tin token:', tokenResponse);
-                const newTokenAddress = tokenResponse.tokenAddress; 
+                const newTokenAddress = tokenResponse.tokenAddress;
                 console.log('Token Address:', newTokenAddress);
-  
+
                 this.newTrade.tokenAddress = newTokenAddress;
                 this.tradeService.getTokenBalance(mintAddress, newTokenAddress).subscribe(
                   (balanceResponse) => {
                     console.log(`Số dư token cho mintAddress ${mintAddress}:`, balanceResponse.balance);
-                    this.newTrade.balance = (parseFloat(balanceResponse.balance) / 1000000000).toString();  
+                    this.newTrade.balance = (parseFloat(balanceResponse.balance) / 1000000000).toString();
                     console.log('Số dư token đã cập nhật:', this.newTrade.balance);
-  
+
                     this.loadTrades();
                   },
                   (error) => {
@@ -242,8 +248,8 @@ export class MyTradingListComponent implements OnInit {
       }
     );
   }
-  
-  
+
+
   openUpdateModal(trade: TradeDTO): void {
     this.tradeToUpdate = trade;
     this.updatedPrice = trade.price;
@@ -264,7 +270,7 @@ export class MyTradingListComponent implements OnInit {
       nzTitle: 'Thêm giao dịch',
       nzContent: this.addTradeTemplate,
       nzFooter: null,
-      nzOnCancel: () => this.resetForm()  
+      nzOnCancel: () => this.resetForm()
     });
 
     this.modalRef = modalRef;
@@ -273,10 +279,10 @@ export class MyTradingListComponent implements OnInit {
     const maxQuantity = (this.tradeToUpdate.approvalStatus === 'DAXULY')
       ? this.remainingQuantity + this.tradeToUpdate.quantity
       : this.remainingQuantity;
-    
+
     console.log("Max quantity: ", maxQuantity);
-  
-    if (this.updatedQuantity < maxQuantity) { 
+
+    if (this.updatedQuantity < maxQuantity) {
       this.updatedQuantity++;
     } else {
       this.message.warning('Số lượng không thể vượt quá số lượng còn lại cộng với giá trị của giao dịch.');
@@ -291,20 +297,20 @@ export class MyTradingListComponent implements OnInit {
     const maxQuantity = (this.tradeToUpdate.approvalStatus === 'DAXULY')
       ? this.remainingQuantity + this.tradeToUpdate.quantity
       : this.remainingQuantity;
-  
+
     if (value > maxQuantity) {
       this.updatedQuantity = maxQuantity;
       this.message.warning('Số lượng không thể vượt quá số lượng còn lại cộng với giá trị của giao dịch.');
     } else if (value < 0) {
       this.updatedQuantity = 0;
       this.message.warning('Số lượng không thể nhỏ hơn 0.');
-    } 
+    }
     else {
       this.updatedQuantity = value;
     }
   }
-  
-  
+
+
   onPageChange(page: number): void {
     this.pageIndex = page;
     this.loadTrades();
@@ -354,19 +360,19 @@ export class MyTradingListComponent implements OnInit {
       this.message.error('Không có userId để tải giao dịch');
       return;
     }
-  
+
     if (!this.selectedProjectId) {
       return;
     }
-  
+
     console.log('Selected Project ID:', this.selectedProjectId);
-  
+
     this.tradeService.getTradesByUserIdAndMintToken(this.userId, this.selectedProjectId).subscribe(
       (data) => {
         this.trades = data;
         console.log(this.trades);
-  
-        this.totalQuantity = 0;  
+
+        this.totalQuantity = 0;
 
         this.trades.forEach(trade => {
           if (trade.approvalStatus === 'DAXULY') {
@@ -380,7 +386,7 @@ export class MyTradingListComponent implements OnInit {
                   const newTokenAddress = response.tokenAddress;
                   this.tradeService.updateTradeTokenAddress(trade.tradeId, newTokenAddress).subscribe(
                     (updateResponse) => {
-                      console.log('Cập nhật tokenAddress thành công:', updateResponse);	
+                      console.log('Cập nhật tokenAddress thành công:', updateResponse);
                       trade.tokenAddress = newTokenAddress;
                     },
                     (updateError) => {
@@ -398,9 +404,9 @@ export class MyTradingListComponent implements OnInit {
               this.getTokenBalance(trade.mintToken, trade.tokenAddress, trade);
             }
 
-            const quantity =trade.quantity;
+            const quantity = trade.quantity;
             if (!isNaN(quantity)) {
-              this.totalQuantity += quantity;  
+              this.totalQuantity += quantity;
             } else {
               console.error('Số lượng không hợp lệ:', trade.quantity);
             }
@@ -418,10 +424,10 @@ export class MyTradingListComponent implements OnInit {
     if (!balance || isNaN(Number(balance))) {
       return 0;
     }
-  
+
     const balanceNumber = parseFloat(balance);
     const remainingQuantity = balanceNumber - totalQuantity;
-    this.remainingQuantity = remainingQuantity; 
+    this.remainingQuantity = remainingQuantity;
     return remainingQuantity;
   }
   getWalletInfo(): void {
@@ -475,7 +481,7 @@ export class MyTradingListComponent implements OnInit {
 
     if (newQuantity < 0 || newQuantity > maxQuantity) {
       this.message.warning('Số lượng phải lớn hơn 0 và nhỏ hơn hoặc bằng ' + maxQuantity);
-      return; 
+      return;
     }
 
     this.tradeService
@@ -484,7 +490,7 @@ export class MyTradingListComponent implements OnInit {
         (response) => {
           console.log('Trade updated successfully:', response);
           this.message.success('Cập nhật giao dịch thành công!');
-          this.loadTrades(); 
+          this.loadTrades();
         },
         (error) => {
           console.error('Lỗi khi cập nhật giao dịch:', error);
@@ -492,7 +498,7 @@ export class MyTradingListComponent implements OnInit {
         }
       );
   }
-  
+
 
   deleteTrade(tradeId: string): void {
     this.modalService.confirm({

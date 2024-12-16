@@ -23,7 +23,16 @@
     "SENT_SAMPLE": "Product Discovery",
     "SETTING": "Setting",
     "REQUEST": "Withdrawal request",
-    "REQUESTWITHDRAW": "Withdrawal request approved"
+    "REQUESTWITHDRAW": "Withdrawal request A",
+    "CATEGORY_MANAGER": "Category Manager",
+    "FINANCIAL_MANAGEMENT": "Financial Management",
+    "APPRAISAL": "Appraisal",
+    "PERSONAL_INFORMATION": "Personal Information",
+    "DISCOVERY": "Discovery",
+    "MY_TRADINGLIST": "My Trading List",
+    "BURN":"Emission Project",
+    "NOBURN":"Emission Reduction ",
+    "PROJECTDENY":"Project Denied"
   },
   "USER": {
     "SEARCH_PLACEHOLDER": "Enter search text",
@@ -226,7 +235,9 @@
     "DELETE": "Delete",
     "CONFIRM_REQUEST": "Confirm Request",
     "MEASUREMENT_LIST": "Measurement List",
-    "VIEW": "View"
+    "VIEW": "View",
+    "QUANTITY": "Quantity",
+    "NOBURN": "Emission Reduction"
   },
   "PAYMENT_STATUS": {
     "TITLE": "Payment Status",
@@ -304,7 +315,8 @@
   "statistics": {
     "totalRequestsToday": "Total Requests Today",
     "pendingRequests": "Number of Pending Requests",
-    "resolvedRequests": "Number of Resolved Requests"
+    "resolvedRequests": "Number of Resolved Requests",
+    "requestdenied": "Request Denied"
   },
   "tabs": {
     "todayRequests": "Requests Today",
@@ -318,7 +330,10 @@
     "DateSent": "Date Sent",
     "Contact": "Contact",
     "Owner": "Owner",
-    "Operation": "Operation"
+    "Operation": "Operation",
+    "requestdenied": "Request Denied",
+    "Quantity": "Quantity",
+    "Reasondenied": "Reason Denied"
   },
   "table": {
     "project": "Project",
@@ -360,6 +375,16 @@
   "addMeasurement": "Add Measurement",
   "submit": "Submit",
   "projectForm": {
+    "commune": "Commune",
+    "district": "District",
+    "conscious": "Conscious",
+    "city": "City",
+    "aim": "Aim",
+    "enterDistrict": "Enter district",
+    "enterCommune": "Enter commune",
+    "enterCity": "Enter city",
+    "enterAim": "Enter aim",
+    "enterConscious": "Enter conscious",
     "image": "Image",
     "uploadText": "Upload",
     "projectCode": "Project Code",

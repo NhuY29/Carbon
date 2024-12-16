@@ -45,10 +45,6 @@
         <button *ngIf="!joinedProjects[project.projectId]" nz-button nzType="primary" (click)="joinProject(project.projectId)">
           {{ 'PROJECTS.JOIN' | translate }}
         </button>
-        <span *ngIf="joinedProjects[project.projectId]">{{ 'PROJECTS.JOINED' | translate }}</span>
-        
-        <button nz-button nzType="primary" (click)="viewParticipants(project.projectId)"><span nz-icon
-            nzType="unordered-list" nzTheme="outline"></span>{{ 'PROJECTS.VIEW_PARTICIPANTS' | translate }}</button>
         <button nz-button nzType="primary" (click)="navigateToMeasurementData(project.projectId)">
           <span nz-icon nzType="line-chart" nzTheme="outline"></span>{{ 'PROJECTS.MEASUREMENT_DATA' | translate }}
         </button>
