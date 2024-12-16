@@ -130,5 +130,12 @@ export class MeasurementDataListComponent implements OnInit {
     console.log('ID của bản ghi cần cập nhật:', id);
     this.router.navigate(['/measurementDataListAdd', id]);
   }
-
+  navigateToAddMeasurement(): void {
+    if (this.projectId) {
+      this.router.navigate([`/measurementDataListAdd/Add`, this.projectId]);
+    } else {
+      console.log('Project ID not available');
+    }
+  }
+  
 }

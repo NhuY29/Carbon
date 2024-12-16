@@ -32,7 +32,8 @@
     "MY_TRADINGLIST": "Quản lý sản phẩm",
     "BURN":"Dự án phát thải",
     "NOBURN":"Dự án giảm phát thải",
-    "PROJECTDENY":"Dự án từ chối"
+    "PROJECTDENY":"Dự án từ chối",
+    "statistical":"Thống kê"
   },
   "USER": {
     "SEARCH_PLACEHOLDER": "Nhập từ khóa tìm kiếm",
@@ -218,7 +219,8 @@
     "VIEW_DATA": "Xem dữ liệu đo",
     "DELETE_DATA": "Xóa bảng đo",
     "UPDATE": "Cập nhật",
-    "CONFIRM_SALE": "Xác nhận mua bán"
+    "CONFIRM_SALE": "Xác nhận mua bán",
+    "ADD_DATA":"Thêm dữ liệu đo"
   },
   "TABLE_MP": {
     "PROJECT_NAME": "Tên dự án",

@@ -1,3 +1,4 @@
+<button nz-button nzType="primary" (click)="navigateToAddMeasurement()">{{ 'TABLE_MEASURER.ADD_DATA' | translate }}</button>
 <nz-table #basicTable [nzData]="measurement" [nzScroll]="{ x: '1600px', y: '550px' }" [nzBordered]="true" [nzPageSize]="5" [nzShowPagination]="true">
   <thead>
     <tr>

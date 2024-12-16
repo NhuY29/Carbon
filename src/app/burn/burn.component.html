@@ -85,30 +85,25 @@
     </form>
   </div>
 </nz-modal>
-<nz-table
-  [nzData]="transactions"
-  [nzSize]="'middle'"
-  [nzBordered]="true"
-  [nzScroll]="{ x: '1000px' }"
-  [nzShowPagination]="false"
->
-  <thead>
-    <tr>
-      <th nzWidth="35%">Transaction Signature</th>
-      <th nzWidth="10%">Timestamp</th>
-      <th nzWidth="10%">Block Number</th>
-      <th nzWidth="5%">Age (Days)</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let transaction of transactions">
-      <td>{{ transaction.transactionSignature }}</td>
-      <td>{{ transaction.timestamp }}</td>
-      <td>{{ transaction.blockNumber }}</td>
-      <td>{{ transaction.ageInDays }}</td>
-    </tr>
-  </tbody>
-</nz-table>
-
-
-
+<nz-modal [(nzVisible)]="isHistoryVisible" [nzTitle]="'Lịch sử Dự Án'" (nzOnCancel)="closeHistoryModal()" [nzFooter]="null">
+  <div *nzModalContent>
+    <nz-table [nzData]="transactions" [nzBordered]="true" [nzSize]="'middle'" [nzShowPagination]="false" [nzScroll]="{ y: '300px' }">
+      <thead>
+        <tr>
+          <th nzWidth="40%">Transaction Signature</th>
+          <th nzWidth="20%">Timestamp</th>
+          <th nzWidth="20%">Block Number</th>
+          <th nzWidth="20%">Age (Days)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let transaction of transactions">
+          <td>{{ transaction.transactionSignature }}</td>
+          <td>{{ transaction.timestamp }}</td>
+          <td>{{ transaction.blockNumber }}</td>
+          <td>{{ transaction.ageInDays }}</td>
+        </tr>
+      </tbody>
+    </nz-table>
+  </div>
+</nz-modal>

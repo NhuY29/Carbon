@@ -32,7 +32,6 @@ import { MyTradingListComponent } from './my-trading-list/my-trading-list.compon
 import { AuthGuard } from './guards/auth.guard';
 import { BurnComponent } from './burn/burn.component';
 import { NoburnComponent } from './noburn/noburn.component';
-import { EchartComponent } from './echart/echart.component';
 import { ProjectDenyComponent } from './project-deny/project-deny.component';
 
 export const routes: Routes = [
@@ -42,10 +41,9 @@ export const routes: Routes = [
   },
   {
     path: 'home',
-    component: HomeComponent
+    component: HomeComponent,
+    canActivate: [AuthGuard] 
   },
-  // { path: '', redirectTo: 'login', pathMatch: 'full' },
-  // { path: '**', redirectTo: 'login' },
   {
     path: 'register',
     component: RegisterComponent
@@ -93,7 +91,8 @@ export const routes: Routes = [
   { path: 'measurementData/:id', component: MeasurementDataComponent, },
   { path: 'measurementDataList/:id', component: MeasurementDataListComponent },
   { path: 'measurementDataListAdd', component: MeasurementDataAddComponent, canActivate: [AuthGuard] },
-  { path: 'measurementDataListAdd/:id', component: MeasurementDataAddComponent, canActivate: [AuthGuard] },
+   { path: 'measurementDataListAdd/:id', component: MeasurementDataAddComponent, canActivate: [AuthGuard] },
+  { path: 'measurementDataListAdd/Add/:projectId', component: MeasurementDataAddComponent, canActivate: [AuthGuard] },
   { path: 'form1/:id', component: Form1Component },
   { path: 'myproject', component: MyprojectComponent },
   { path: 'request/:id', component: SignatureComponent },
@@ -150,10 +149,6 @@ export const routes: Routes = [
   {
     path: 'noburn',
     component: NoburnComponent
-  },
-  {
-    path: 'echart',
-    component: EchartComponent
   },
   {
     path: 'projectDeny',

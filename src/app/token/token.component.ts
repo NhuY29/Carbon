@@ -77,6 +77,8 @@ export class TokenComponent implements OnInit {
   isLoadingDetails: boolean = false;
   pageIndex: number = 1; 
   pageSize: number = 5;  
+  pageIndex2: number = 1;
+  pageSize2: number = 5;
   constructor(
     private solanaService: SolanaService,
     public translate: TranslateService,
@@ -93,6 +95,10 @@ export class TokenComponent implements OnInit {
   onPageChange(page: number): void {
     this.pageIndex = page
     this.getTokenData(); 
+  }
+  onPageChange2(page: number): void {
+    this.pageIndex2= page
+    console.log(this.pageIndex) 
   }
   ngOnInit(): void {
     this.getTokenData();

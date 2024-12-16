@@ -64,6 +64,10 @@ export class MeasurementDataAddComponent {
     this.route.paramMap.subscribe(params => {
       this.measurementId = params.get('id');
       this.isUpdateMode = !!this.measurementId;
+      const projectId = params.get('projectId');
+      if (projectId) {
+        this.measurementForm.patchValue({ projectId });
+      }
 
       if (this.isUpdateMode && this.measurementId) {
         this.dataService.getMeasurementDataById(this.measurementId).subscribe({
@@ -99,7 +103,7 @@ export class MeasurementDataAddComponent {
       measurementArray.push(this.fb.group({
         wasteSource: [measurement.wasteSource, Validators.required],
         gas: [measurement.gas, Validators.required],
-        data: [measurement.data, [Validators.required, Validators.pattern(/^-?\d+(\.\d+)?$/)]] // Cho phép giá trị âm
+        data: [measurement.data, [Validators.required, Validators.pattern(/^-?\d+(\.\d+)?$/)]] 
       }));
     });
   }
@@ -218,7 +222,7 @@ export class MeasurementDataAddComponent {
     measurementArray.push(this.fb.group({
       wasteSource: ['', Validators.required],
       gas: ['', Validators.required],
-      data: ['', [Validators.required, Validators.pattern(/^-?\d+(\.\d+)?$/)]] // Cho phép giá trị âm
+      data: ['', [Validators.required, Validators.pattern(/^-?\d+(\.\d+)?$/)]] 
     }));
   }
 

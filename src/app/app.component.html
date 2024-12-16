@@ -1,18 +1,16 @@
 <nz-layout class="app-layout">
   <nz-sider class="menu-sidebar" nzCollapsible nzWidth="256px" nzBreakpoint="md" [(nzCollapsed)]="isCollapsed"
-    [nzTrigger]="null" style="  background-color: #E3F2FD
-;">
-    <div class="sidebar-logo" style="  background-color: #1a7cc2
-;">
+    [nzTrigger]="null" style="background-color: #fafafa;">
+    <div class="sidebar-logo" style="background-color: #1a7cc2;">
       <a href="https://ng.ant.design/" target="_blank">
         <img src="https://ng.ant.design/assets/img/logo.svg" alt="logo">
         <h1>Sàn Giao dịch TC Carbon</h1>
       </a>
     </div>
-    <ul nz-menu nzTheme="dark" nzMode="inline" [nzInlineCollapsed]="isCollapsed" *ngIf="role === 'ROLE_SUPERADMIN'">
-      <li nz-submenu nzOpen nzTitle="{{ 'MENU.USER_MANAGEMENT' | translate }}" nzIcon="dashboard">
-        <ul style="  background-color: #E3F2FD
-;">
+
+    <ul nz-menu nzMode="inline">
+      <li nz-submenu nzTitle="{{ 'MENU.USER_MANAGEMENT' | translate }}" nzIcon="contacts" nzOpen *ngIf="role === 'ROLE_SUPERADMIN'">
+        <ul>
           <li nz-menu-item nzMatchRouter>
             <a routerLink="/user">{{ 'MENU.USER_LIST' | translate }}</a>
           </li>
@@ -21,18 +19,15 @@
           </li>
         </ul>
       </li>
-    </ul>
-    <ul nz-menu nzTheme="dark" nzMode="inline" [nzInlineCollapsed]="isCollapsed">
-      <li nz-submenu nzOpen nzTitle="{{ 'MENU.FINANCIAL_MANAGEMENT' | translate }}" nzIcon="dashboard">
-        <ul style="  background-color: #E3F2FD
-;">
+      <li nz-submenu nzTitle="{{ 'MENU.FINANCIAL_MANAGEMENT' | translate }}" nzIcon="dollar" nzOpen>
+        <ul>
           <li nz-menu-item nzMatchRouter *ngIf="role === 'ROLE_SUPERADMIN'">
             <a routerLink="/airdrop">{{ 'MENU.AIR_DROP' | translate }}</a>
           </li>
           <li nz-menu-item nzMatchRouter *ngIf="role === 'ROLE_SUPERADMIN'">
             <a routerLink="/withdrawMoney">{{ 'MENU.REQUESTWITHDRAW' | translate }}</a>
           </li>
-          <li nz-menu-item nzMatchRouter *ngIf="role === 'ROLE_SELLER'">
+          <li nz-menu-item nzMatchRouter  *ngIf="role === 'ROLE_SELLER'">
             <a routerLink="/listRequestWithdraw">{{ 'MENU.REQUEST' | translate }}</a>
           </li>
           <li nz-menu-item nzMatchRouter>
@@ -40,66 +35,56 @@
           </li>
         </ul>
       </li>
-    </ul>
-    <ul nz-menu nzTheme="dark" nzMode="inline" [nzInlineCollapsed]="isCollapsed">
-      <li nz-submenu nzOpen nzTitle="{{ 'MENU.PROJECT_MANAGEMENT' | translate }}" nzIcon="dashboard">
-        <ul style="  background-color: #E3F2FD
-;">
+      <li nz-submenu nzTitle="{{ 'MENU.PROJECT_MANAGEMENT' | translate }}" nzIcon="folder-open" nzOpen>
+        <ul>
           <li nz-menu-item nzMatchRouter *ngIf="role === 'ROLE_SUPERADMIN'">
             <a routerLink="/list-project">{{ 'MENU.PROJECT_LIST' | translate }} </a>
           </li>
           <li nz-menu-item nzMatchRouter *ngIf="role === 'ROLE_SUPERADMIN'">
             <a routerLink="/sampleReceived">{{ 'MENU.APPROVE_REQUEST' | translate }}</a>
           </li>
-          <li nz-menu-item nzMatchRouter *ngIf="role === 'ROLE_SELLER'">
+          <li nz-menu-item nzMatchRouter  *ngIf="role === 'ROLE_SELLER'">
             <a routerLink="/myproject">{{ 'MENU.MY_PROJECT' | translate }}</a>
           </li>
-          <li nz-menu-item nzMatchRouter *ngIf="role === 'ROLE_SELLER'">
+          <li nz-menu-item nzMatchRouter  *ngIf="role === 'ROLE_SELLER'">
             <a routerLink="/burn">{{ 'MENU.BURN' | translate }}</a>
           </li>
-          <li nz-menu-item nzMatchRouter *ngIf="role === 'ROLE_SELLER'">
+          <li nz-menu-item nzMatchRouter  *ngIf="role === 'ROLE_SELLER'">
             <a routerLink="/noburn">{{ 'MENU.NOBURN' | translate }}</a>
           </li>
-          <li nz-menu-item nzMatchRouter *ngIf="role === 'ROLE_SELLER'">
+          <li nz-menu-item nzMatchRouter  *ngIf="role === 'ROLE_SELLER'">
             <a routerLink="/projectDeny">{{ 'MENU.PROJECTDENY' | translate }}</a>
           </li>
-          <li nz-menu-item nzMatchRouter *ngIf="role === 'ROLE_SELLER'">
+          <li nz-menu-item nzMatchRouter  *ngIf="role === 'ROLE_SELLER'">
             <a routerLink="/myTradingList">{{ 'MENU.MY_TRADINGLIST' | translate }}</a>
           </li>
         </ul>
       </li>
-    </ul>
-    <ul nz-menu nzTheme="dark" nzMode="inline" [nzInlineCollapsed]="isCollapsed" *ngIf="role === 'ROLE_SUPERADMIN'">
-      <li nz-submenu nzOpen nzTitle="{{ 'MENU.CATEGORY_MANAGER' | translate }}" nzIcon="dashboard">
-        <ul style="  background-color: #E3F2FD
-;">
+      <li nz-submenu nzTitle="Danh mục" nzIcon="table" *ngIf="role === 'ROLE_SUPERADMIN'" nzOpen>
+        <ul>
           <li nz-menu-item nzMatchRouter>
             <a routerLink="/commomCategoryParentChild">{{ 'MENU.EMISSION_SOURCE' | translate }}</a>
           </li>
           <li nz-menu-item nzMatchRouter>
             <a routerLink="/commomCategory">{{ 'MENU.COMMON_CATEGORY' | translate }}</a>
           </li>
-          <li nz-menu-item nzMatchRouter>
-            <a routerLink="/measurementDataListAdd">{{ 'MENU.MEASUREMENT_DATA' | translate }}</a>
-          </li>
         </ul>
       </li>
-    </ul>
-    <ul nz-menu nzTheme="dark" nzMode="inline" [nzInlineCollapsed]="isCollapsed">
-      <li class="drop" nz-submenu nzOpen nzTitle="{{ 'MENU.DISCOVERY' | translate }}" nzIcon="dashboard">
-        <ul style="  background-color: #E3F2FD
-;">
+      <li nz-submenu nzTitle="{{ 'MENU.DISCOVERY' | translate }}" nzIcon="pie-chart" nzOpen>
+        <ul>
           <li nz-menu-item nzMatchRouter>
             <a routerLink="/sampleSent">{{ 'MENU.SENT_SAMPLE' | translate }}</a>
           </li>
-
+          <li nz-menu-item nzMatchRouter *ngIf="role === 'ROLE_SUPERADMIN'">
+            <a routerLink="/home">{{ 'MENU.statistical' | translate }}</a>
+          </li>
           <li nz-menu-item nzMatchRouter>
             <a routerLink="/setting">{{ 'MENU.SETTING' | translate }}</a>
           </li>
         </ul>
       </li>
-    </ul>
 
+    </ul>
   </nz-sider>
 
   <nz-layout>
@@ -113,19 +98,19 @@
           </li>
           <li nz-menu-item>
             <a routerLink="/login">
-              <span nz-icon nzType="login" nzTheme="outline"></span>
+              <span nz-icon nzType="login"></span>
               {{ 'HEADER.LOGIN' | translate }}
             </a>
           </li>
           <li nz-menu-item>
             <a (click)="logout()">
-              <span nz-icon nzType="logout" nzTheme="outline"></span>
+              <span nz-icon nzType="logout"></span>
               {{ 'HEADER.LOGOUT' | translate }}
             </a>
           </li>
           <li nz-menu-item>
             <a routerLink="/register">
-              <span nz-icon nzType="shake" nzTheme="outline"></span>
+              <span nz-icon nzType="shake"></span>
               {{ 'HEADER.REGISTER' | translate }}
             </a>
           </li>

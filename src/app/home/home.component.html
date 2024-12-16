@@ -1,2 +1,34 @@
-
-<div id="map" style="height: 1000px;"></div> 
+<div class="statistics-container">
+  <div class="statistics-container">
+    <div class="stat-box" id="active-contracts">
+      <i class="icon expired"></i>
+      <h4>Số yêu cầu chưa giải quyết</h4>
+      <p class="stat-number">{{ pendingProjects?.length || 0 }}</p>
+    </div>
+    <div class="stat-box" id="expiring-contracts">
+      <i class="icon clock"></i>
+      <h4>Số yêu cầu đã giải quyết</h4>
+      <p class="stat-number">{{ doneProjects?.length || 0 }}</p>
+    </div>
+    <div class="stat-box" id="new-requests">
+      <i class="icon clock"></i>
+      <h4>Số yêu cầu bị từ chối</h4>
+      <p class="stat-number">{{ projectsWithStatusDaTuChoi?.length || 0 }}</p>
+    </div>
+  </div>
+</div>
+<div class="container">
+    <div id="map" class="map" style="height: 800px;"></div>
+    <div class="charts">
+      <div id="barChart" class="chart" style="height: 400px;"></div>
+      <div>
+        <label for="chartType">Chọn loại biểu đồ:</label>
+        <select id="chartType" (change)="onChartTypeChange($event)">
+          <option value="projectType">Loại hình dự án</option>
+          <option value="standardType">Tiêu chuẩn dự án</option>
+        </select>
+      </div>
+      <div id="pieChart" class="chart" style="height: 400px;"></div>
+    </div>
+  </div>
+  

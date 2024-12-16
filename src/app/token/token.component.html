@@ -22,7 +22,7 @@
   </tbody>
 </nz-table>
 <div *ngIf="transactions.length > 0">
-  <nz-table [nzData]="transactions" [nzPageSize]="10">
+  <nz-table [nzData]="transactions" [nzPageSize]="5" [nzTotal]="listOfData.length" [nzPageIndex]="pageIndex2" (nzPageIndexChange)="onPageChange2($event)" ngSkipHydration>
     <thead>
       <tr>
         <th></th>
@@ -33,7 +33,7 @@
       </tr>
     </thead>
     <tbody>
-      <ng-container *ngFor="let transaction of transactions">
+      <ng-container *ngFor="let transaction of transactions.slice((pageIndex2 - 1) * pageSize, pageIndex2 * pageSize)">
         <tr>
           <td  [nzExpand]="transaction.expand" (click)="toggleTransactionDetails(transaction)"></td>
           <td style=" text-align: center;">{{ transaction.signature }}</td>

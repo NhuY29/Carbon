@@ -32,7 +32,8 @@
     "MY_TRADINGLIST": "My Trading List",
     "BURN":"Emission Project",
     "NOBURN":"Emission Reduction ",
-    "PROJECTDENY":"Project Denied"
+    "PROJECTDENY":"Project Denied",
+    "statistical":"Statistical"
   },
   "USER": {
     "SEARCH_PLACEHOLDER": "Enter search text",
@@ -218,7 +219,8 @@
     "VIEW_DATA": "View Measurement Data",
     "DELETE_DATA": "Delete Measurement Table",
     "UPDATE": "Update",
-    "CONFIRM_SALE": "Confirm Sale"
+    "CONFIRM_SALE": "Confirm Sale",
+    "ADD_DATA": "Add Measurement Data"
   },
   "TABLE_MP": {
     "PROJECT_NAME": "Project Name",

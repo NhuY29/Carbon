@@ -264,8 +264,6 @@ export class SampleReceivedComponent {
           reason: item.reason
 
         }));
-  
-        // Mảng chứa các Promise để lấy chi tiết dự án, chỉ lấy khi có chi tiết
         const projectDetailsPromises = projectsWithStatusDaTuChoiTemp.map(async project => {
           let details = null;
           try {
@@ -276,11 +274,9 @@ export class SampleReceivedComponent {
   
           return {
             ...project,
-            details: details || {} // Nếu không có chi tiết, gán một đối tượng rỗng
+            details: details || {} 
           } as SampleSentDTO;
         });
-  
-        // Chờ các Promise hoàn thành và lấy dữ liệu đầy đủ
         Promise.all(projectDetailsPromises).then(fullProjectData => {
           this.projectsWithStatusDaTuChoi = fullProjectData;
           console.log('Dữ liệu các dự án đã bị từ chối:', this.projectsWithStatusDaTuChoi);

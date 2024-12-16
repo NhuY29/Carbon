@@ -68,15 +68,6 @@
         <input nz-input formControlName="namelandowner" id="namelandowner" type="text"/>
       </nz-form-control>
     </nz-form-item>
-
-    <nz-form-item class="form-group">
-      <nz-form-label [nzFor]="'projectId'">{{ 'projectId' | translate }}:</nz-form-label>
-      <nz-form-control>
-        <nz-select formControlName="projectId" id="projectId" [nzPlaceHolder]="'selectProjectId' | translate">
-          <nz-option *ngFor="let project of projects" [nzLabel]="project.projectName" [nzValue]="project.projectId"></nz-option>
-        </nz-select>
-      </nz-form-control>
-    </nz-form-item>
   </div>
   
   <div class="form-actions">

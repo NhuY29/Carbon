@@ -72,12 +72,17 @@
 .ant-btn-primary:hover {
     background-color: #40a9ff;
 }
+
 .center-header th {
     text-align: center;
-  }
-  
-  nz-modal {
+}
+
+nz-modal {
     max-height: 80vh;
     overflow-y: auto;
-  }
-  
+}
+
+::ng-deep .ant-modal-body {
+    max-height: 80vh;
+    overflow-y: auto;
+}

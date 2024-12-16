@@ -75,22 +75,3 @@ ul[nz-menu] {
   color: black;
   font-weight: bolder;
 }
-
-ul[nz-menu] li {
-  display: inline-block;
-  margin-right: 16px;
-  background-color: 	#E3F2FD
-;
-  color: #1890ff;
-}
-ul[nz-menu] li a {
-  display: inline-block;
-  margin-right: 16px;
-  color: black;
-} 
-ul[nz-menu] li:last-child {
-  margin-right: 0;
-}
-div.ant-menu-submenu-title{
- padding: 0px;
-}

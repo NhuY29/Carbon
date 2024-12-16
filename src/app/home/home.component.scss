@@ -92,3 +92,260 @@ footer a {
 footer a:hover {
     text-decoration: underline;
 }
+.container {
+    display: flex;
+    flex-direction: row; 
+    justify-content: space-between;
+    gap: 20px;
+  }
+
+  .map {
+    flex: 1; 
+    max-width: 60%; 
+  }
+
+  .charts {
+    display: flex;
+    flex-direction: column; 
+    gap: 20px; 
+    flex: 1; 
+  }
+  .chart {
+    width: 100%;
+  }
+  select {
+    padding: 8px;
+    margin-top: 10px;
+    font-size: 16px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    outline: none;
+    transition: border-color 0.3s;
+  }
+  
+  select:focus {
+    border-color: #4caf50;
+  }
+//   ...............................................
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Arial', sans-serif;
+  background-color: #f4f4f9;
+  padding: 20px;
+}
+
+.statistics-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  padding-bottom: 20px;
+}
+
+.stat-box {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+  padding: 20px;
+  color: #fff;
+  width: 250px;
+  height: 100px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  position: relative;
+}
+
+#new-requests {
+  background-color: #00bcd4;
+}
+
+#active-contracts {
+  background-color: #4caf50;
+}
+
+#expiring-contracts {
+  background-color: #ff9800;
+}
+
+#expired-contracts {
+  background-color: #f44336;
+}
+
+.stat-box h4 {
+  font-size: 1rem;
+  margin-bottom: 10px;
+}
+
+.stat-number {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.icon {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  font-size: 2.5rem;
+  opacity: 0.1;
+}
+
+.icon.new::before {
+  content: "\f02e";
+}
+
+.icon.calendar::before {
+  content: "\f073";
+}
+
+.icon.clock::before {
+  content: "\f017";
+}
+
+.icon.expired::before {
+  content: "\f071";
+}
+
+@media (max-width: 768px) {
+  .statistics-container {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .stat-box {
+    width: 100%;
+    margin-bottom: 20px;
+  }
+}
+
+.custom-icon {
+  font-size: 24px;
+  cursor: pointer;
+  color: #1890ff;
+}
+
+.action-buttons {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.action-buttons button {
+  margin: 0 4px;
+  padding: 4px 8px;
+}
+
+.action-buttons span[nz-icon] {
+  font-size: 20px;
+  margin-right: 4px;
+}
+tbody tr:nth-child(even) {
+  background-color: rgba(242, 242, 242, 0.7); 
+}
+
+/* Đặt chiều rộng tối đa cho modal để tránh bị quá rộng */
+.nz-modal {
+  max-width: 500px !important;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px; /* Khoảng cách giữa các trường trong form */
+}
+
+form div {
+  display: flex;
+  flex-direction: column;
+}
+
+label {
+  font-weight: bold;
+  margin-bottom: 8px;
+  font-size: 14px;
+  color: #333;
+}
+
+input[nz-input], 
+textarea[nz-input] {
+  padding: 10px 12px;
+  font-size: 14px;
+  border: 1px solid #d9d9d9;
+  border-radius: 6px;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+input[nz-input]:focus, 
+textarea[nz-input]:focus {
+  border-color: #40a9ff;
+  box-shadow: 0 0 6px rgba(64, 169, 255, 0.6);
+  outline: none;
+}
+
+input[nz-input][disabled] {
+  background-color: #f5f5f5;
+  color: #999;
+  cursor: not-allowed;
+}
+
+textarea[nz-input] {
+  resize: none; /* Không cho phép thay đổi kích thước */
+  height: 100px; /* Chiều cao của textarea */
+}
+
+textarea[nz-input]::placeholder {
+  color: #999;
+  font-style: italic;
+}
+
+button[nz-button] {
+  border-radius: 6px !important;
+}
+
+.nz-modal-content {
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.nz-modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 16px;
+}
+
+button[nz-button] {
+  padding: 8px 16px;
+  font-size: 14px;
+}
+
+button[nz-button]:hover {
+  background-color: #40a9ff;
+  color: #fff;
+  border-color: #40a9ff;
+}
+
+button[nz-button][disabled] {
+  background-color: #f5f5f5;
+  color: #999;
+  cursor: not-allowed;
+}
+
+button[nz-button][nzType="primary"] {
+  background-color: #1890ff;
+  color: #fff;
+  border-color: #1890ff;
+}
+
+button[nz-button][nzType="primary"]:hover {
+  background-color: #40a9ff;
+  border-color: #40a9ff;
+}

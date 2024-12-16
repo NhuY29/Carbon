@@ -224,11 +224,12 @@ export class BurnComponent implements OnInit {
       projectId,
       'Đốt token để phân bổ cho dự án', 
       'Phân bổ token cho quỹ dự án',   
-      'Đốt token vì đã đạt được cột mốc của dự án', 
-      `Đã đốt ${totalQuantityBurned} token để tài trợ cho giai đoạn 1 của dự án`     
+      'Đốt token để đạt được cột mốc của dự án', 
+      `Đã đốt ${totalQuantityBurned} token để sử dụng cho dự án`     
     ).subscribe(
       (response) => {
         this.message.success(`Giao dịch burn thành công. Tổng số lượng đã thực hiện: ${totalQuantityBurned}.`);
+
         this.projectService.updateQuantityBurn(projectId, totalQuantityBurned).subscribe(
           () => {
             this.message.success(`Cập nhật số lượng burn cho dự án thành công.`);
@@ -247,7 +248,7 @@ export class BurnComponent implements OnInit {
         console.error('Lỗi API khi burn token:', error);
       }
     );
-  
+  this.projectFormArray.reset();
     this.closeModal();
   }
   

@@ -21,7 +21,7 @@ import { NzProgressModule } from 'ng-zorro-antd/progress';
 @Component({
   selector: 'app-sample-sent',
   standalone: true,
-  imports: [NzProgressModule,AppTranslateModule, CommonModule, FormsModule, NzSliderModule, NzInputNumberModule, NzGridModule],
+  imports: [NzProgressModule, AppTranslateModule, CommonModule, FormsModule, NzSliderModule, NzInputNumberModule, NzGridModule],
   templateUrl: './sample-sent.component.html',
   styleUrls: ['./sample-sent.component.scss'],
   host: { 'ngSkipHydration': '' }
@@ -191,6 +191,19 @@ export class SampleSentComponent {
 
     this.tradeService.updateTradeQuantity(tradeId, remainingQuantity).subscribe(
       () => {
+          this.tradeService.getAllTrades().subscribe(
+      (data) => {
+        this.trades = data;
+        if (this.trades.length > 0) {
+          this.selectedTrade = this.trades[0];
+        }
+        this.checkAllTradesBalance();
+        console.log('Danh sách giao dịch:', this.trades);
+      },
+      (error) => {
+        console.error('Lỗi khi lấy danh sách giao dịch:', error);
+      }
+    );
         console.log('Cập nhật số lượng còn lại thành công!');
       },
       (error) => {
@@ -205,7 +218,7 @@ export class SampleSentComponent {
       console.error('Không có giao dịch nào được chọn!');
       return;
     }
-  
+
     const userId = trade.userId;
     const mintToken = trade.mintToken;
     const amount = this.quantity;
@@ -213,7 +226,7 @@ export class SampleSentComponent {
     const Quantity = trade.quantity;
     console.log('Số lượng còn lại:', Quantity);
     const remainingQuantityAfterPurchase = Quantity - amount;
-  
+
     this.modal.confirm({
       nzTitle: 'Bạn có chắc chắn muốn thực hiện giao dịch này không?',
       nzOkText: 'Xác nhận',
@@ -231,7 +244,7 @@ export class SampleSentComponent {
                       projectId: trade.projectId,
                       quantity: amount,
                       mintToken: mintToken,
-                      tokenAddress: "", 
+                      tokenAddress: "",
                       price: "",
                       purchasedFrom: trade.userId,
                       purchasePrice: trade.price,
@@ -264,8 +277,8 @@ export class SampleSentComponent {
       }
     });
   }
-  
-  
+
+
   onTransfer(
     senderSecretKeyBase58: string,
     toAddressBase58: string,
@@ -278,15 +291,15 @@ export class SampleSentComponent {
       this.message.error('Thông tin tham số không hợp lệ. Vui lòng kiểm tra lại.');
       return;
     }
-  
+
     this.tradeService.transferToken(senderSecretKeyBase58, toAddressBase58, mintAddressBase58, amount, solAmount, receiverSecretKeyBase58 || '')
       .subscribe(response => {
         if (response.success) {
-          const signature = response.signature;  
+          const signature = response.signature;
           console.log('Chữ ký giao dịch:', signature);
-  
-          this.tokenAddress = signature;  
-  
+
+          this.tokenAddress = signature;
+
           this.message.success(response.message);
           this.closePurchaseModal();
         } else {
@@ -298,8 +311,8 @@ export class SampleSentComponent {
         this.closePurchaseModal();
       });
   }
-  
-  
+
+
 
   checkTokenBalance() {
     if (!this.selectedTrade) {
