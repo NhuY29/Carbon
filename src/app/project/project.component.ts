@@ -75,7 +75,7 @@ export class ProjectComponent implements OnInit {
       commune: ['', Validators.required],
       district: ['', Validators.required],
       conscious: ['', Validators.required],
-      city: ['', Validators.required],
+      city: ['',],
       aim: ['', Validators.required],
     }, { validator: this.dateRangeValidator });
 

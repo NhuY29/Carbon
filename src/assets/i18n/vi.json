@@ -120,7 +120,7 @@
     "BFTRANSACTION": "Trước giao dịch",
     "ATTRANSACTION": "Sau giao dịch",
     "OWNER": "Chủ sở hữu",
-    "AMOUNT": "Số tiền"
+    "AMOUNT": "Số lượng"
   },
   "TOKEN_TABLE": {
     "TOKEN_TYPE": "Loại Tín Chỉ",

@@ -17,18 +17,36 @@
     </div>
   </div>
 </div>
+
 <div class="container">
-    <div id="map" class="map" style="height: 800px;"></div>
-    <div class="charts">
-      <div id="barChart" class="chart" style="height: 400px;"></div>
-      <div>
-        <label for="chartType">Chọn loại biểu đồ:</label>
-        <select id="chartType" (change)="onChartTypeChange($event)">
-          <option value="projectType">Loại hình dự án</option>
-          <option value="standardType">Tiêu chuẩn dự án</option>
-        </select>
-      </div>
-      <div id="pieChart" class="chart" style="height: 400px;"></div>
+  <!-- Bản đồ -->
+  <div id="map" class="map" style="height: 900px;"></div>
+
+  <div class="charts">
+    <!-- Dropdown chọn nhận thức -->
+    <div>
+      <label for="conscious">Chọn tỉnh:</label>
+      <select id="conscious" (change)="onConsciousChange($event)" [(ngModel)]="selectedConscious">
+        <option *ngFor="let item of consciousList" [value]="item.conscious">{{ item.conscious }}</option>
+      </select>
     </div>
+    <!-- Biểu đồ cột -->
+    <div id="barChart" class="chart" style="height: 400px;"></div>
+    
+    <!-- Dropdown chọn loại biểu đồ -->
+    <div>
+      <label for="chartType">Chọn loại biểu đồ:</label>
+      <select id="chartType" (change)="onChartTypeChange($event)">
+        <option value="projectType">Loại hình dự án</option>
+        <option value="standardType">Tiêu chuẩn dự án</option>
+      </select>
+    </div>
+
+    <!-- Biểu đồ tròn -->
+    <div id="pieChart" class="chart" style="height: 400px;"></div>
   </div>
-  
+</div>
+
+
+
+

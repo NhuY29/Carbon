@@ -191,6 +191,12 @@ export class SampleReceivedComponent {
     console.log('id của dự án được chọn:', id);
     this.router.navigate(['/measurementDataList', projectId, id]);
   }
+  
+  handleProjectId2(projectId: string, id: string): void {
+    console.log('ProjectId của dự án được chọn:', projectId);
+    console.log('id của dự án được chọn:', id);
+    this.router.navigate(['/measurementDataList', projectId, id], { queryParams: { readOnly: 'true' } });
+  }
 
   getPendingProjects(): void {
     this.sampleReceivedService.getAllProjectsPending().subscribe({

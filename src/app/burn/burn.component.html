@@ -52,7 +52,7 @@
   </tbody>
 </nz-table>
 
-<nz-modal [(nzVisible)]="isModalVisible" [nzTitle]="'Chọn Dự Án'" (nzOnCancel)="closeModal()" (nzOnOk)="onOk()">
+<nz-modal [(nzVisible)]="isModalVisible" [nzTitle]="'Sử dụng bù đắp'" (nzOnCancel)="closeModal()" (nzOnOk)="onOk()">
   <div *nzModalContent>
     <form [formGroup]="projectForm">
       <div formArrayName="projects">

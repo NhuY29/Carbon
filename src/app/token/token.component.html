@@ -37,7 +37,7 @@
         <tr>
           <td  [nzExpand]="transaction.expand" (click)="toggleTransactionDetails(transaction)"></td>
           <td style=" text-align: center;">{{ transaction.signature }}</td>
-          <td style=" text-align: center;">{{ transaction.date }}</td>
+          <td style=" text-align: center;">{{ transaction.date}}</td>
           <td style=" text-align: center;">{{ transaction.block }}</td>
           <td style=" text-align: center;">{{ transaction.age }}</td>
         </tr>
@@ -62,7 +62,7 @@
                     <ul class="transaction-list">
                       <li *ngFor="let tokenBalance of transaction.details?.meta?.preTokenBalances">
                         <p><strong>{{ 'TRANSACTION_HISTORY.OWNER' | translate }}:</strong> {{ tokenBalance.owner }}</p>
-                        <p><strong>{{ 'TOKEN_TABLE.QUANTITY' | translate }}:</strong> {{ tokenBalance.uiTokenAmount?.amount | number }}</p>
+                        <p><strong>{{ 'TOKEN_TABLE.QUANTITY' | translate }}:</strong> {{ (tokenBalance.uiTokenAmount?.amount / 1000000000) | number }}</p>
                       </li>
                     </ul>
                   </td>
@@ -70,12 +70,13 @@
                     <ul class="transaction-list">
                       <li *ngFor="let tokenBalance of transaction.details?.meta?.postTokenBalances">
                         <p><strong>{{ 'TRANSACTION_HISTORY.OWNER' | translate }}:</strong> {{ tokenBalance.owner }}</p>
-                        <p><strong>{{ 'TRANSACTION_HISTORY.AMOUNT' | translate }}:</strong> {{ tokenBalance.uiTokenAmount?.amount | number }}</p>
+                        <p><strong>{{ 'TRANSACTION_HISTORY.AMOUNT' | translate }}:</strong> {{ (tokenBalance.uiTokenAmount?.amount / 1000000000) | number }}</p>
                       </li>
                     </ul>
                   </td>
                 </tr>
               </tbody>
+              
             </nz-table>
           </td>
         </tr>

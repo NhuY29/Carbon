@@ -40,7 +40,7 @@
           </nz-form-control>
         </nz-form-item>
 
-        <nz-form-item>
+        <!-- <nz-form-item>
           <nz-form-label [nzSpan]="5">{{ 'registerForm.role' | translate }}</nz-form-label>
           <nz-form-control nzHasFeedback [nzSpan]="12" nzErrorTip="Vai trò không để trống">
             <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Lựa chọn vai trò" formControlName="roles">
@@ -48,9 +48,9 @@
               <nz-option nzLabel="Tôi là người cần mua" nzValue="BUYER"></nz-option>
             </nz-select>
           </nz-form-control>
-        </nz-form-item>
+        </nz-form-item> -->
 
-        <div *ngIf="showBuyerFields">
+        <!-- <div *ngIf="showBuyerFields">
           <nz-form-item>
             <nz-form-label [nzSpan]="5">{{ 'registerForm.buyerType' | translate }}</nz-form-label>
             <nz-form-control nzHasFeedback [nzSpan]="12" nzErrorTip="Không để trống">
@@ -95,9 +95,9 @@
               <input nz-input formControlName="personalId" />
             </nz-form-control>
           </nz-form-item>
-        </div>
+        </div> -->
 
-        <div *ngIf="showSellerFields">
+        <div >
           <nz-form-item>
             <nz-form-label [nzSpan]="5">{{ 'registerForm.companyName' | translate }}</nz-form-label>
             <nz-form-control nzHasFeedback [nzSpan]="12" nzErrorTip="Tên công ty không để trống">

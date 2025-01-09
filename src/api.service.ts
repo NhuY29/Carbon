@@ -152,7 +152,20 @@ export class ApiService {
 
     return this.http.get<any>(`${this.apiUrl}/wallet/token`, { headers });
   }
+  getUserById(userId: string): Observable<UserDTO> {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      throw new Error('Token không tồn tại.');
+    }
+
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
+    return this.http.get<UserDTO>(`${this.apiUrl}/user/user/${userId}`,{ headers });
+  }
   getUsername(token: string): Observable<string> {
+    
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     return this.http.get<string>(`${this.apiUrl}/user/getusername`, { headers, responseType: 'text' as 'json' });
   }
@@ -1416,33 +1429,46 @@ export class ApiService {
     return this.http.get<CoordinateDTOAll[]>(`${this.apiUrl}/coordinate/active-coordinates`, { headers });
   }
 
-  getProjectTypeData(): Observable<Echart[]> {
+  getProjectTypeData(conscious?: string): Observable<Echart[]> {
     const token = localStorage.getItem('token');
-
+  
     if (!token) {
       throw new Error('Người dùng chưa đăng nhập. Token không tồn tại.');
     }
-
+  
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`,
       'Content-Type': 'application/json',
     });
-    return this.http.get<Echart[]>(`${this.apiUrl}/project/typeData`, { headers });
+    let url = `${this.apiUrl}/project/typeData`;
+    if (conscious) {
+      url += `?conscious=${encodeURIComponent(conscious)}`;
+    }
+  
+    return this.http.get<Echart[]>(url, { headers });
   }
-  getProjectStandardData(): Observable<Echart[]> {
+  
+  getProjectStandardData(conscious?: string): Observable<Echart[]> {
     const token = localStorage.getItem('token');
-
+  
     if (!token) {
       throw new Error('Người dùng chưa đăng nhập. Token không tồn tại.');
     }
-
+  
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`,
       'Content-Type': 'application/json',
     });
-    return this.http.get<Echart[]>(`${this.apiUrl}/project/standardData`, { headers });
+  
+    // Nếu có tham số conscious, thêm vào query string
+    let url = `${this.apiUrl}/project/standardData`;
+    if (conscious) {
+      url = `${url}?conscious=${conscious}`;
+    }
+  
+    return this.http.get<Echart[]>(url, { headers });
   }
-
+  
   getCommuneDistrictProjectCounts(): Observable<CommuneDistrictDTO[]> {
     const token = localStorage.getItem('token');
 
@@ -1455,6 +1481,46 @@ export class ApiService {
       'Content-Type': 'application/json',
     });
     return this.http.get<CommuneDistrictDTO[]>(`${this.apiUrl}/project/commune-district`, { headers });
+  }
+  getConsciousCounts(): Observable<any[]> {
+    const token = localStorage.getItem('token');
+
+    if (!token) {
+      throw new Error('Người dùng chưa đăng nhập. Token không tồn tại.');
+    }
+
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    });
+    return this.http.get<any[]>(`${this.apiUrl}/project/conscious`, { headers });
+  }
+  getConsciousProjects(conscious: string): Observable<any[]> {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      throw new Error('Người dùng chưa đăng nhập. Token không tồn tại.');
+    }
+  
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    });
+  
+    return this.http.get<any[]>(`${this.apiUrl}/project/conscious/${conscious}`, { headers });
+  }
+  
+  deleteTransaction(signature: string): Observable<any> {
+    const token = localStorage.getItem('token');
+
+    if (!token) {
+      throw new Error('Người dùng chưa đăng nhập. Token không tồn tại.');
+    }
+
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    });
+    return this.http.delete(`${this.apiUrl}/wallet/transactions/${signature}`, { headers });
   }
 }
 

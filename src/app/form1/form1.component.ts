@@ -27,6 +27,7 @@ export interface ProjectDTO {
 }
 
 export interface SellerInfo {
+  userId: string;
   companyName: string;
   contactPerson: string;
   contactEmail: string;
@@ -66,6 +67,7 @@ export class Form1Component implements OnInit {
       this.getSellerInfo();
       this.getSignature(this.projectId);
     }
+    
   }
 
   getSellerInfo() {
@@ -73,6 +75,11 @@ export class Form1Component implements OnInit {
       next: (data) => {
         this.sellerInfo = data;
         console.log('Thông tin người bán:', this.sellerInfo);
+        
+        // Kiểm tra sellerId và gọi getUserById
+        if (this.sellerInfo && this.sellerInfo.userId) {
+          this.getUserById(this.sellerInfo.userId); // Gọi hàm getUserById nếu sellerId có sẵn
+        }
       },
       error: (err) => {
         console.error('Không thể lấy thông tin người bán:', err);
@@ -80,6 +87,20 @@ export class Form1Component implements OnInit {
     });
   }
 
+  getUserById(userId: string) {
+    this.projectService.getUserById(userId).subscribe({
+      next: (data) => {
+        console.log('Thông tin người dùng:', data);
+        // Cập nhật firstname và lastname
+        this.sellerInfo.firstname = data.firstname;
+        this.sellerInfo.lastname = data.lastname;
+      },
+      error: (err) => {
+        console.error('Không thể lấy thông tin người dùng:', err);
+      }
+    });
+  }
+  
   getProjectDetails(projectId: string) {
     this.projectService.getProjectByProjectId(projectId).subscribe({
       next: (data: ProjectDTO) => {

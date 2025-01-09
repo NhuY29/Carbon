@@ -42,9 +42,10 @@
         <button nz-button nzType="primary" nzDanger (click)="deleteProject(project.projectId)"><span nz-icon
             nzType="delete" nzTheme="outline"></span>{{ 'PROJECTS.DELETE' | translate }}</button>
             
-        <button *ngIf="!joinedProjects[project.projectId]" nz-button nzType="primary" (click)="joinProject(project.projectId)">
+        <!-- <button *ngIf="!joinedProjects[project.projectId]" nz-button nzType="primary" (click)="joinProject(project.projectId)">
           {{ 'PROJECTS.JOIN' | translate }}
-        </button>
+        </button> -->
+        <button nz-button nzType="default" (click)="viewProjectDetails(project.projectId)"><span nz-icon nzType="eye" nzTheme="outline"></span>{{ 'TABLE_MP.VIEW' | translate }}</button>
         <button nz-button nzType="primary" (click)="navigateToMeasurementData(project.projectId)">
           <span nz-icon nzType="line-chart" nzTheme="outline"></span>{{ 'PROJECTS.MEASUREMENT_DATA' | translate }}
         </button>

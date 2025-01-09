@@ -31,6 +31,7 @@ export interface MeasurementDataDTO {
 })
 export class MeasurementDataListComponent implements OnInit {
   measurement: MeasurementDataDTO[] = [];
+  readOnly: boolean = false;
   projectId: string | null = null;
   idFromRoute: string | null = null;
   isWalletActive: boolean = true;
@@ -59,6 +60,9 @@ export class MeasurementDataListComponent implements OnInit {
     this.router.navigate([`/measurementData/${measurementId}`]);
   }
   ngOnInit(): void {
+    this.route.queryParams.subscribe(params => {
+      this.readOnly = params['readOnly'] === 'true';
+    });
     this.roleService.getRole().subscribe(role => {
       this.role = role;
     });

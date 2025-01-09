@@ -169,17 +169,18 @@ export class TokenComponent implements OnInit {
         };
 
         const logMessages = tx.details?.meta?.logMessages || [];
-        const filteredMessages = logMessages.map((log: string) => {
-          if (log.includes('Program log: Instruction: Transfer')) {
-            return 'Transfer';
-          } else if (log.includes('Program log: Create')) {
-            return 'Create';
-          } else if (log.includes('Program log: Instruction: MintTo')) {
-            return 'MintTo';
+        const filteredMessages = logMessages.reduce((uniqueMessages: string[], log: string) => {
+          if (log.includes('Program log: Instruction: Transfer') && !uniqueMessages.includes('Giao dịch')) {
+            uniqueMessages.push('Giao dịch');
+          } else if (log.includes('Program log: Create') && !uniqueMessages.includes('Tạo')) {
+            uniqueMessages.push('Tạo');
+          } else if (log.includes('Program log: Instruction: MintTo') && !uniqueMessages.includes('Phát hành')) {
+            uniqueMessages.push('Phát hành');
+          } else if (log.includes('Program log: Instruction: BurnChecked') && !uniqueMessages.includes('Sử dụng')) {
+            uniqueMessages.push('Sử dụng');
           }
-          return '';
-        }).filter((message: string) => message !== '');
-
+          return uniqueMessages;
+        }, []);        
         tx.filteredLogMessages = filteredMessages;
         console.log('Transaction details:', tx.details);
       },

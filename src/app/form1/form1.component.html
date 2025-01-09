@@ -64,6 +64,8 @@
         <p class="upper">TM.{{ sellerInfo.companyName || '________________________' }}</p>
         <p>(Ký tên, ghi rõ họ tên và đóng dấu)</p>
         <img class="imgSignature" *ngIf="signatureDataUrl" [src]="signatureDataUrl" alt="Chữ ký" />
+        <p class="owner-name"><strong>{{ sellerInfo.lastname || '________________________' }} {{ sellerInfo.firstname || '________________________' }} </strong></p>
+
       </div>
     </div>
   </div>

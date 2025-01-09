@@ -8,6 +8,7 @@ import { CommonModule } from '@angular/common';
 import { forkJoin } from 'rxjs';
 import { CoordinateDTO } from '../CoordinateDTO';
 import { UserDTO } from '../../user.interface';
+import { FormsModule } from '@angular/forms'; 
 interface CommuneDistrictDTO {
   commune: string;
   district: string;
@@ -18,6 +19,7 @@ interface Echart {
   projectCount: number;
   additionalQuantity: number;
   emissionReduction: number;
+  rejectedCount?: number;
 }
 interface ProjectDetailsDTO {
   projectName: string;
@@ -50,12 +52,14 @@ interface SampleSentDTO {
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule],
+  imports: [ReactiveFormsModule, CommonModule,FormsModule],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit, AfterViewInit {
   private selectedChartType: string = 'projectType';
+  consciousList: any[] = [];
+  selectedConscious: string = '';
   private map: any;
   private drawnItems: any;
   public coordinates: { [key: string]: CoordinateDTOAll[] } = {};
@@ -67,6 +71,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
   projectId: string | null = null;
   pendingProjects: PendingProjectDTO[] = [];
   doneProjects: PendingProjectDTO[] = [];
+  private barChartInstance: any;
   projectsWithStatusDaTuChoi: SampleSentDTO[] = [];
   constructor(private api: ApiService, private fb: FormBuilder) {
     this.directionsForm = this.fb.group({
@@ -76,6 +81,10 @@ export class HomeComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
+    if (this.consciousList.length > 0) {
+      this.selectedConscious = this.consciousList[0].conscious;
+    }
+    this.fetchConsciousCounts();
     this.fetchStatisticsData();
     this.api.getAllCoordinates().subscribe(
       (data: CoordinateDTOAll[]) => {
@@ -94,6 +103,82 @@ export class HomeComponent implements OnInit, AfterViewInit {
       }
     );
   }
+  fetchConsciousCounts(): void {
+    this.api.getConsciousCounts().subscribe(data => {
+      const uniqueConscious = Array.from(new Set(data.map(item => item.conscious)))
+        .map(conscious => {
+          return data.find(item => item.conscious === conscious);
+        });
+
+      this.consciousList = uniqueConscious;
+      if (this.consciousList.length > 0 && !this.selectedConscious) {
+        this.selectedConscious = this.consciousList[0].conscious;
+        this.updateBarChart(this.selectedConscious);
+        this.initPieChart();  
+      }
+    });
+  }
+  onConsciousChange(event: any): void {
+    const selectedConscious = event.target.value;
+    if (!selectedConscious) {
+      this.selectedConscious = this.consciousList[0]?.conscious || ''; 
+    }
+    console.log('Selected province: ', this.selectedConscious);
+    this.updateBarChart(this.selectedConscious);
+    this.initPieChart();
+  }
+  updateBarChart(conscious: string): void {
+    const chartDom = document.getElementById('barChart');
+    if (this.barChartInstance) {
+      this.barChartInstance.dispose();
+    }
+    const myChart = echarts.init(chartDom!);
+    myChart.clear();
+  
+    this.api.getConsciousProjects(conscious).subscribe((data: any[]) => {
+      const chartData = data.map(item => ({
+        name: item.district,
+        value: item.projectCount,
+      }));
+  
+      const colors = ['green', '#4682B4', '#32CD32', '#FFD700', '#8A2BE2', '#FF4500'];
+  
+      const option = {
+        title: {
+          text: `Biểu đồ dự án thuộc vùng ${conscious}`,
+          left: 'center',
+        },
+        tooltip: {
+          trigger: 'axis',
+          axisPointer: {
+            type: 'shadow',
+          },
+        },
+        xAxis: {
+          type: 'category',
+          data: chartData.map(item => item.name),
+        },
+        yAxis: {
+          type: 'value',
+        },
+        series: [
+          {
+            name: 'Số lượng dự án',
+            type: 'bar',
+            data: chartData.map((item, index) => ({
+              value: item.value,
+              itemStyle: {
+                color: colors[index % colors.length], // Chọn màu sắc theo thứ tự
+              },
+            })),
+          },
+        ],
+      };
+  
+      myChart.setOption(option);
+    });
+  }
+  
   fetchStatisticsData(): void {
     this.api.getAllProjectsPending().subscribe(data => {
       this.pendingProjects = data;
@@ -136,11 +221,11 @@ export class HomeComponent implements OnInit, AfterViewInit {
           if (latLngs.length > 0) {
             this.api.getProjectById(projectId).subscribe(
               (project) => {
-                let polygonColor = 'green';
+                let polygonColor = 'blue';
                 if (project.quantityNoburn === null) {
                   polygonColor = 'red';
                 } else if (project.quantityNoburn > 100) {
-                  polygonColor = 'yellow';
+                  polygonColor = 'green';
                 }
 
                 const polygon = L.polygon(latLngs, { color: polygonColor }).addTo(this.map);
@@ -198,102 +283,37 @@ export class HomeComponent implements OnInit, AfterViewInit {
       console.error('Failed to load Leaflet or Leaflet-draw', err);
     }
   }
-
-
-
   ngAfterViewInit(): void {
     if (typeof window !== 'undefined') {
       this.loadLeaflet();
-      this.initBarChart();
       this.initPieChart();
     }
   }
-  initBarChart(): void {
-    this.api.getCommuneDistrictProjectCounts().subscribe({
-      next: (data: CommuneDistrictDTO[]) => {
-        const chartDom = document.getElementById('barChart');
-        const myChart = echarts.init(chartDom!);
-        const districts = [...new Set(data.map(item => item.district))];
-        const communes = [...new Set(data.map(item => item.commune))];
-
-        const seriesData = communes.map((commune) => {
-          return {
-            name: commune,
-            type: 'bar',
-            stack: 'project',
-            data: districts.map((district) => {
-              const project = data.find(item => item.commune === commune && item.district === district);
-              return project ? project.projectCount : 0;
-            }),
-          };
-        });
-
-        const option = {
-          title: {
-            text: 'Biểu đồ phân bố số lượng dự án theo xã/phường và quận/huyện',
-            left: 'center',
-          },
-          tooltip: {
-            trigger: 'axis',
-            axisPointer: { type: 'shadow' },
-            formatter: function (params: any) {
-              const commune = params[0].name;
-              let tooltipContent = `<b>${commune}</b><br/>`;
-              params.forEach((item: any) => {
-                if (item.value > 0) {
-                  tooltipContent += `${item.marker} ${item.seriesName}: ${item.value} projects<br/>`;
-                }
-              });
-              return tooltipContent;
-            },
-          },
-          legend: {
-            data: communes,
-            top: '10%',
-          },
-          xAxis: {
-            type: 'category',
-            data: districts,
-            axisLabel: {
-              rotate: 30,
-            },
-          },
-          yAxis: {
-            type: 'value',
-          },
-          series: seriesData,
-        };
-
-        myChart.setOption(option);
-      },
-      error: (err) => {
-        console.error('Lỗi khi lấy dữ liệu từ API:', err);
-      },
-    });
-  }
-
   initPieChart(): void {
     const chartDom = document.getElementById('pieChart');
     const myChart = echarts.init(chartDom!);
     myChart.clear();
-  
+    
+    const selectedRegion = this.selectedConscious || 'l';  
+  console.log('Selected region: ', selectedRegion);
     if (this.selectedChartType === 'projectType') {
-      this.api.getProjectTypeData().subscribe((data: Echart[]) => {
+      this.api.getProjectTypeData(selectedRegion).subscribe((data: Echart[]) => {
         const nameRequests = data.map(item => this.api.getCategoryById2(item.name));
         forkJoin(nameRequests).subscribe((names: any[]) => {
           const total = data.reduce((sum, item) => sum + item.projectCount, 0); 
   
           const chartData = data.map((item, index) => ({
             value: item.projectCount,
-            name: names[index].name,
+            name: names[index]?.name || item.name,
             projectCount: item.projectCount,
             additionalQuantity: item.additionalQuantity,
             emissionReduction: item.emissionReduction,
+            rejectedCount: item.rejectedCount,
           }));
   
           const option = {
             title: {
-              text: 'Biểu đồ phân bố số lượng tín chỉ - dự án theo loại hình',
+              text: 'Biểu đồ phân bố tỉ lệ số lượng dự án theo loại hình',
               left: 'center',
             },
             tooltip: {
@@ -303,6 +323,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
                 return `
                   <b>${params.name}</b><br/>
                   Số lượng dự án: ${params.data.projectCount}<br/>
+                  Số lượng dự án bị từ chối: ${params.data.rejectedCount}<br/>
                   Số lượng tín chỉ phát thải: ${params.data.additionalQuantity} tấn CO2<br/>
                   Số lượng tín chỉ giảm phát thải: ${params.data.emissionReduction} tấn CO2<br/>
                   Tỷ lệ: ${percent}%<br/>
@@ -333,21 +354,22 @@ export class HomeComponent implements OnInit, AfterViewInit {
         });
       });
     } else if (this.selectedChartType === 'standardType') {
-      this.api.getProjectStandardData().subscribe((data: Echart[]) => {
+      this.api.getProjectStandardData(selectedRegion).subscribe((data: Echart[]) => {
         const nameRequests = data.map(item => this.api.getCategoryById2(item.name));
         forkJoin(nameRequests).subscribe((names: any[]) => {
           const total = data.reduce((sum, item) => sum + item.projectCount, 0); 
           const chartData = data.map((item, index) => ({
             value: item.projectCount,
-            name: names[index].name,
+            name: names[index]?.name || item.name,
             projectCount: item.projectCount,
             additionalQuantity: item.additionalQuantity,
             emissionReduction: item.emissionReduction,
+            rejectedCount: item.rejectedCount,
           }));
   
           const option = {
             title: {
-              text: 'Biểu đồ phân bố số lượng tín chỉ - dự án theo tiêu chuẩn',
+              text: 'Biểu đồ phân bố tỉ lệ số lượng dự án theo tiêu chuẩn',
               left: 'center',
             },
             tooltip: {
@@ -357,8 +379,9 @@ export class HomeComponent implements OnInit, AfterViewInit {
                 return `
                   <b>${params.name}</b><br/>
                   Số lượng dự án: ${params.data.projectCount}<br/>
+                  Số lượng dự án bị từ chối: ${params.data.rejectedCount}<br/>
                   Số lượng tín chỉ phát thải: ${params.data.additionalQuantity} tấn CO2<br/>
-                  Số lượng tín chỉ giảm phát thải: ${params.data.emissionReduction} tấn CO2<br/>
+                  Số lượng tín chỉ giảm phát thải: ${params.data.emissionReduction} tấn CO2<br/>                 
                   Tỷ lệ: ${percent}%<br/>
                 `;
               },

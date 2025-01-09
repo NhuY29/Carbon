@@ -66,7 +66,12 @@ export class ListProjectComponent implements OnInit {
     this.loadProjects();
   }
   navigateToMeasurementData(projectId: string): void {
-    this.router.navigate(['/measurementDataList', projectId]);
+    this.router.navigate(['/measurementDataList',projectId], { queryParams: { readOnly: 'true' } });
+  }
+  viewProjectDetails(projectId: string): void {
+    this.router.navigate(['/project-details', projectId], {
+      queryParams: { mode: 'view' }  
+    });
   }
   loadProjects(): void {
     this.apiService.getProjects().subscribe({

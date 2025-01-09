@@ -258,7 +258,7 @@ export class MyTradingListComponent implements OnInit {
     this.updatedStatus = (trade.status === "true") ? 'true' : 'false';
     this.balance = trade.balance || '0';
     this.modalService.create({
-      nzTitle: 'Cập nhật giao dịch',
+      nzTitle: 'Cập nhật bài đăng',
       nzContent: this.updateTradeTemplate,
       nzOnOk: () => this.handleOk(),
       nzOnCancel: () => this.handleCancel()

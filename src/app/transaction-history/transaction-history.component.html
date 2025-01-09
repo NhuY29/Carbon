@@ -17,6 +17,7 @@
         <td style=" text-align: center;">{{ transaction.date }}</td>
         <td style=" text-align: center;">{{ transaction.block }}</td>
         <td style=" text-align: center;">{{ transaction.age }}</td>
+        <!-- <button (click)="deleteTransaction(transaction.signature)">Delete</button> -->
       </tr>
 
       <tr *ngIf="transaction.expand && transaction.details">

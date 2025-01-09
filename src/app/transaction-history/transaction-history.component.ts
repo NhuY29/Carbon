@@ -97,7 +97,19 @@ export class TransactionHistoryComponent implements OnInit {
       }
     );
   }
-
+  deleteTransaction(transactionSignature: string): void {
+    this.api.deleteTransaction(transactionSignature).subscribe(
+      (response) => {
+        console.log('Transaction deleted successfully', response);
+        this.transactions = this.transactions.filter(
+          (transaction) => transaction.signature !== transactionSignature
+        );
+      },
+      (error) => {
+        console.error('Error deleting transaction', error);
+      }
+    );
+  }
   ngOnInit(): void {
     this.loadTransactions();
   }
@@ -119,7 +131,6 @@ export class TransactionHistoryComponent implements OnInit {
     }
   }
 
-
   getTransactionDetailsFromResponse(response: any): TransactionDetail {
     const blockTime = response.blockTime
         ? new Date(response.blockTime * 1000).toLocaleString('vi-VN', {
@@ -130,40 +141,65 @@ export class TransactionHistoryComponent implements OnInit {
             minute: '2-digit',
             second: '2-digit',
         })
-        : 'Không xác định';
+        : '';
 
     const fee = response.meta?.fee?.toString() || 'N/A';
     const computeUnits = response.meta?.computeUnitsConsumed?.toString() || 'N/A';
 
     const logMessages: string[] = response.meta?.logMessages || [];
     const accountKeys = response.transaction.message?.accountKeys || [];
+    const instructions = response.transaction.message?.instructions || [];
+    const postTokenBalances = response.meta?.postTokenBalances || [];
 
-    const senderAccount = accountKeys.length > 0 ? accountKeys[0].pubkey : 'Không xác định';
-    const recipientAccount = accountKeys.length > 1 ? accountKeys[1].pubkey : 'Không xác định';
+    let senderAccount = '';
+    let recipientAccount = '';
+
+    // Kiểm tra nếu giao dịch là 'MintTo'
+    const mintToInstruction = instructions.find(
+        (inst: any) =>
+            inst.programId === "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA" &&
+            inst.parsed?.type === "mintTo"
+    );
+
+    if (mintToInstruction) {
+        senderAccount = mintToInstruction.parsed.info.mintAuthority || ''; // Người gửi là mintAuthority
+        recipientAccount = mintToInstruction.parsed.info.account || ''; // Người nhận là account
+    } else if (logMessages.some(msg => msg.includes('Program log: Instruction: InitializeMint2'))) {
+        senderAccount = accountKeys.length > 0 ? accountKeys[0].pubkey : '';
+        recipientAccount = accountKeys.length > 1 ? accountKeys[1].pubkey : ''; // Người nhận là accountKeys[1].pubkey
+    } else if (postTokenBalances.length > 0) {
+        senderAccount = postTokenBalances.length > 0 ? postTokenBalances[0].owner : '';
+        recipientAccount = postTokenBalances.length > 1 ? postTokenBalances[1].owner : '';
+    } else {
+        senderAccount = accountKeys.length > 0 ? accountKeys[0].pubkey : '';
+        recipientAccount = accountKeys.length > 1 ? accountKeys[1].pubkey : '';
+    }
 
     const preBalance = response.meta?.preBalances?.[0] || 0;
     const postBalance = response.meta?.postBalances?.[0] || 0;
     const transactionAmount = ((preBalance - postBalance - (parseInt(fee) || 0)) / 100000).toString();
+
     let memo: { memo: string; }[] = [];
 
     if (logMessages.some(msg => msg.includes('Program log: Transaction Content:'))) {
         const contentLog = logMessages.find(msg => msg.includes('Program log: Transaction Content:'));
-        memo = [{ memo: contentLog?.replace('Program log: Transaction Content:', '').trim() || 'Không có memo' }];
+        memo = [{ memo: contentLog?.replace('Program log: Transaction Content:', '').trim() || 'Không có nội dung' }];
     } else if (logMessages.some(msg => msg.includes('Program log: Instruction: MintTo'))) {
-        memo = [{ memo: 'chuyen nhan tin chi' }];
+        memo = [{ memo: 'Phát hành tín chỉ' }];
     } else if (logMessages.some(msg => msg.includes('Program log: Instruction: InitializeMint2'))) {
-        memo = [{ memo: 'tao mint token' }];
+        memo = [{ memo: 'Tạo loại tín chỉ' }];
     } else if (logMessages.some(msg => msg.includes('Program log: Initialize the associated token account'))) {
-        memo = [{ memo: 'tao token address' }];
+        memo = [{ memo: 'Khởi tạo tài khoản tín chỉ liên kết' }];
+        
+        senderAccount = accountKeys.length > 0 ? accountKeys[0].pubkey : '';  // Người gửi là accountKeys[0].pubkey
+    recipientAccount = accountKeys.length > 1 ? accountKeys[1].pubkey : '';
     } else if (
         logMessages.some(msg => msg === "Program 11111111111111111111111111111111 invoke [1]") &&
         logMessages.some(msg => msg === "Program 11111111111111111111111111111111 success")
-    ) 
-    {
-        memo = [{ memo: 'mua tin chi' }];
-    } 
-    else {
-        memo = [{ memo: 'Không xác định' }];
+    ) {
+        memo = [{ memo: 'Mua tín chỉ' }];
+    } else {
+        memo = [{ memo: 'Chuyển tín chỉ' }];
     }
 
     return {
